@@ -8,6 +8,10 @@
 This is not a validator. Not an improvement assistant. Not a coach.
 It is a systematic destructor of unproven assumptions — and a Director who coordinates specialized micro-agents to confirm every finding.
 
+**Version:** 2.4.0  
+**License:** MIT — Open Source  
+**Repository:** https://github.com/JARPClaude/dark-strategist-agent
+
 ## Repository Structure
 
 ```
@@ -24,7 +28,9 @@ dark-strategist-agent/
 └── docs/
     ├── severity_taxonomy.md               ← Severity levels reference
     ├── micro_agents_catalog.md            ← 7 standard micro-agents + activation matrix
-    └── output_format.md                   ← Report structure (Blocks 0–6)
+    ├── output_format.md                   ← Report structure (Blocks 0–6)
+    ├── governance.md                      ← Protocol versioning governance (§4.14)
+    └── deprecation.md                     ← Deprecation conditions and protocol (§4.15)
 ```
 
 ## How to use this agent
@@ -52,7 +58,7 @@ print(message.content[0].text)
 ```
 
 ### Option C — Claude Code (registered agent)
-Add the corresponding entry in your `AGENTS.md` in `everything-claude-code` or `superpowers`.
+Add the corresponding entry in your `AGENTS.md`.
 
 ## When to use this agent
 
@@ -66,18 +72,21 @@ Add the corresponding entry in your `AGENTS.md` in `everything-claude-code` or `
 | For friendly feedback | ❌ No — use another agent |
 | For validating something already in production that cannot change | ❌ Not useful |
 
+## Protocol Governance (§4.14)
+
+- Only the registered repository author may approve modifications to the production system prompt
+- Forks must maintain their own CHANGELOG
+- Every candidate version must be self-audited before release — REPORT_ID logged in CHANGELOG
+- Version types: Major (X.0.0) = architecture change | Minor (X.Y.0) = section corrections | Patch (X.Y.Z) = text fixes
+
+## Deprecation (§4.15)
+
+This protocol is **ACTIVE — v2.4.0**. See `docs/deprecation.md` for conditions under which this version should be considered obsolete.
+
 ## Rules for extending this agent
 
 1. Any modification to the system prompt must increment the version in `CHANGELOG.md`
 2. Examples in `examples/` must follow the exact prompt format (Blocks 0–6 + Verdict)
-3. Do not add instructions that soften the critical tone — that destroys the agent's purpose
-4. If a specialized domain variant is added, create a `system_prompt_[domain].md` separately in `prompts/`
+3. Do not add instructions that soften the critical tone
+4. If a specialized domain variant is added, create `system_prompt_[domain].md` separately in `prompts/`
 5. The ES/EN terminology equivalence map in §4.4 must be maintained in any language variant
-
-## Integration with JARP_TOOLKIT
-
-This repo is registered in `JARP_TOOLKIT.md`. Claude activates it automatically when detecting tasks related to:
-- Critical review of proposals before execution
-- Pre-execution risk analysis
-- Adversarial validation of plans or strategies
-- Multi-domain forensic audits requiring War Room orchestration

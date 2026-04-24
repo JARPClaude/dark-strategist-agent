@@ -1,4 +1,4 @@
-# Micro-Agents Catalog — Dark Strategist v2.3.0
+# Micro-Agents Catalog — Dark Strategist v2.4.0
 
 Reference document for the 7 standard micro-agents and their activation matrix.
 
@@ -39,102 +39,48 @@ If no criterion met → direct linear analysis, no sub-instantiation.
 ## Unit Catalog
 
 ### UNIT-QUANT — The Quantitative Auditor
-**Mission**: Audit financial strategies, trading algorithms, capital markets exposure (NYSE, Forex).
+**Mission**: Audit financial strategies, trading algorithms, capital markets exposure.
 
-**Targets**:
-- Overfitting of strategies to historical data
-- Margin call scenarios and leverage exposure
-- Flash crash and liquidity gap vulnerability
-- Execution latency and slippage
-- Sharpe ratio and risk-adjusted returns
-- Maximum drawdown under adverse scenarios
-- SEC/regulatory compliance for traded instruments
+**Targets**: Overfitting, margin calls, flash crash exposure, execution latency, Sharpe ratio, max drawdown, SEC/regulatory compliance.
 
 ---
 
 ### UNIT-INQUISITOR — The Legal & Tax Enforcer
 **Mission**: Audit tax, regulatory, and legal compliance in any jurisdiction.
 
-**Targets**:
-- Disguised tax evasion structures
-- Expired or incomplete permits and licenses
-- Regulatory sanctions and pending infractions
-- Labor law violations and social security gaps
-- Money laundering risk vectors (AML/KYC)
-- Transfer pricing manipulation
-- Jurisdictional conflicts and applicable law gaps
+**Targets**: Disguised tax evasion, expired permits, regulatory sanctions, labor violations, AML/KYC, transfer pricing, jurisdictional conflicts.
 
 ---
 
 ### UNIT-TECH — The Systems Auditor
 **Mission**: Audit software architectures, AI models, cybersecurity, and digital systems.
 
-**Targets**:
-- Injection vulnerabilities (SQL, command, prompt)
-- Data leakage and training data exposure
-- Single point of failure (SPOF) in critical paths
-- Security by obscurity instead of real security
-- AI jailbreaking and adversarial attack vectors
-- Vendor lock-in and third-party dependency risk
-- Observability gaps (distributed tracing, logging)
-- Scalability bottlenecks under load
+**Targets**: Injection vulnerabilities, data leakage, SPOF, security by obscurity, AI jailbreaking, vendor lock-in, observability gaps, scalability bottlenecks.
 
 ---
 
 ### UNIT-BIO — The Field & Livestock Auditor
 **Mission**: Audit operations in extractive, agroindustrial, and livestock sectors.
 
-**Targets**:
-- Climate variability risk (El Niño, droughts, floods)
-- Biomass availability and sustainability
-- Capture quotas and regulatory fishing limits
-- Cold chain integrity and logistics gaps
-- Social conflict and community blockade history
-- Environmental permits and compliance
-- Animal biosecurity and disease outbreak protocols
-- Seasonal production cycles and cash flow gaps
-- Biological commodity price exposure
+**Targets**: Climate variability (El Niño), biomass, capture quotas, cold chain integrity, social conflict, environmental permits, **animal biosecurity**, **seasonal production cycles**, **biological commodity price exposure**.
 
 ---
 
 ### UNIT-MARKET — The Commercial Strategist
 **Mission**: Audit market strategies, business models, competition, and commercial projections.
 
-**Targets**:
-- Demand assumptions without empirical validation
-- Empty or outdated competitive analysis
-- Unrealistic Customer Acquisition Cost (CAC)
-- Single-channel dependency (organic only, one platform)
-- Revenue projections without conversion model
-- Market timing assumptions
-- Pricing strategy under competitive pressure
+**Targets**: Demand assumptions, empty competitive analysis, unrealistic CAC, single-channel dependency, revenue projections without conversion model.
 
 ---
 
 ### UNIT-GEO — The Geopolitical Analyst
 **Mission**: Audit geopolitical, macroeconomic, and country risk context.
 
-**Targets**:
-- Legal instability and regulatory arbitrariness
-- Exchange rate volatility and currency risk
-- Expropriation or nationalization risk
-- Political conflict and electoral cycle impact
-- Infrastructure reliability (ports, roads, energy)
-- Inflation and purchasing power erosion
-- Social conflict and strike history
-- Country risk rating changes
+**Targets**: Legal instability, exchange volatility, expropriation risk, political conflict, infrastructure reliability, inflation, social conflict history.
 
 ---
 
 ### UNIT-COMPLIANCE — The Governance Auditor
 **Mission**: Audit internal audit processes, controls, segregation of duties, and governance.
 
-**Targets**:
-- Segregation of Duties (SoD) violations
-- Ghost controls (documented but not enforced)
-- Key-person dependency (single person controls critical process)
-- Lack of transaction traceability
-- Audit trail gaps
-- Change management without approval workflow
-- Data integrity in master records
-- Shared responsibility model gaps (cloud/partner)
+**Targets**: SoD violations, ghost controls, key-person dependency, audit trail gaps, change management without approval workflow, data integrity in master records, shared responsibility model gaps.

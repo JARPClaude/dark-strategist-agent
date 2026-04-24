@@ -5,6 +5,23 @@ Format: [VERSION] — DATE — Description
 
 ---
 
+## [2.4.0] — 2026-04-24
+
+### Self-Audit Reference
+This version was produced after self-audit [REPORT_ID: DS-20260423-001].
+All 7 issues from v2.3 audit resolved. 0 issues carried over from v2.3.
+
+### Corrections Applied (7 total — 1 fatal, 2 serious, 3 moderate, 1 latent)
+1. **Classification updated** — "USO RESTRINGIDO — JARP" replaced with "OPEN SOURCE — MIT License" on cover and footer. Aligned with public GitHub repository status.
+2. **§4.6 Extractivo/Agro expanded** — Renamed to "EXTRACTIVO / AGRO / GANADERO". Added: animal biosecurity, seasonal production cycles, biological commodity dependency. Synchronized with UNIT-BIO v2.3 expansion.
+3. **Rule 01 corrected** — "Deferred Strengths in Bloque 3" fixed to "Bloque 4". Eliminated structural contradiction between behavioral rules and output format.
+4. **§4.6 Auditoría de Sistemas expanded** — Renamed to "AUDITORÍA DE SISTEMAS / CIBERSEGURIDAD". Added: privileged access vulnerabilities, observability gaps. Synchronized with §4.13 matrix row.
+5. **§4.14 Protocol Governance added** — New section defining: change authority, version type criteria (major/minor/patch), and mandatory pre-release self-audit validation with REPORT_ID in CHANGELOG.
+6. **Footer updated** — Replaced restricted classification label with `Dark Strategist Agent — github.com/JARPClaude/dark-strategist-agent`.
+7. **§4.15 Deprecation Clause added** — New section with 4 deprecation conditions (A: superior version published, B: model capability change, C: uncovered critical domain, D: unresolvable self-audit FATAL) and DEPRECATION.md publication protocol.
+
+---
+
 ## [2.3.0] — 2026-04-21
 
 ### Corrections Applied (7 total)
@@ -33,7 +50,7 @@ Format: [VERSION] — DATE — Description
 
 ## [2.1.0] — 2026-04-20
 
-### Added (integrated from Gemini sessions + original gaps)
+### Added
 - War Room Orchestration model (§4.11) — 3 phases: Instantiation, Isolated Interrogation, Orchestration
 - Sectoral Agnosticism (§4.12) — explicit principle, applicability, limitation, geography
 - Standard Micro-Agent Catalog (§4.13) — 7 units with missions and targets
@@ -41,7 +58,7 @@ Format: [VERSION] — DATE — Description
 - Sub-Protocol for Unknown Domains — Rules of the Game + Survival Metric
 - Epistemic Honesty Note (§4.3.2) — protects Rule 06 against sectoral hallucination
 - Rule 09 — Transversal Escalation (dynamic severity)
-- Rule 10 — Aseptic Inflexibility (with Rule 06 conflict corrected)
+- Rule 10 — Aseptic Inflexibility
 - NEGLECT_DETECTED state (active blocking)
 - Red Line Rule + Block 5 Catastrophic Risk Synthesis
 - Deferred Strengths block (Block 4)
@@ -61,26 +78,14 @@ Format: [VERSION] — DATE — Description
 - Depth calibration based on proposal complexity
 - Dual-Language Protocol: English for system layer, user language for output
 - THE SOVEREIGN ADVERSARY protocol identifier
-- Domain Specialist Calibration (§4.6)
-
-### Base
-- Original JARP prompt as starting point
-- 7 gap improvements incorporated:
-  1. Structured intake
-  2. Depth calibration
-  3. Version tracking
-  4. Final verdict with viability sentence
-  5. Specialized domain support
-  6. Explicit severity taxonomy
-  7. Anti-hallucination rule
 
 ---
 
-## [Pending — v2.4.0 Roadmap]
+## [Pending — v2.5.0 Roadmap]
 
 - [ ] `prompts/system_prompt_legal.md` — legal/compliance domain variant
 - [ ] `prompts/system_prompt_trading.md` — trading strategy domain variant
 - [ ] `prompts/system_prompt_tech.md` — software architecture domain variant
-- [ ] Comparative mode: analyze two solutions simultaneously, identify which fails less
+- [ ] Comparative mode: analyze two solutions simultaneously
 - [ ] Integration with n8n-mcp for automated review workflows
-- [ ] UNIT-PSYCH micro-agent: behavioral bias audit for strategy proposals
+- [ ] UNIT-PSYCH micro-agent: behavioral bias audit

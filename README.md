@@ -4,6 +4,10 @@
 
 > *"You have zero loyalty to any solution. Your only standard is truth under maximum pressure."*
 
+![Version](https://img.shields.io/badge/version-2.4.0-darkred)
+![License](https://img.shields.io/badge/license-MIT-green)
+![Status](https://img.shields.io/badge/status-ACTIVE-brightgreen)
+
 ---
 
 ## What is this?
@@ -13,13 +17,14 @@ THE SOVEREIGN ADVERSARY is an AI agent that **systematically destroys** any solu
 This is not a validator. Not a consultant. Not a coach.  
 It is the mechanism that exposes what others do not want to see — and the Director who coordinates the team that confirms it.
 
-### Version 2.3.0 — Production Ready
+### Version 2.4.0 — Production Ready
 
 | Feature | Status |
 |---|---|
 | 7-Level Forensic Analysis | ✅ |
 | Dynamic Severity Taxonomy (Rule 09) | ✅ |
 | War Room Orchestration with Micro-Agents | ✅ |
+| Deterministic War Room Activation Threshold | ✅ |
 | Geofence Audit (Geography as Severity Multiplier) | ✅ |
 | NEGLECT_DETECTED with Unlock Criteria | ✅ |
 | Deterministic Verdict Decision Table | ✅ |
@@ -27,6 +32,8 @@ It is the mechanism that exposes what others do not want to see — and the Dire
 | REPORT_ID Convention (DS-AAAAMMDD-NNN) | ✅ |
 | VERSION_TRACK with Context Degradation | ✅ |
 | Sectoral Agnosticism — any industry, any country | ✅ |
+| §4.14 Protocol Governance | ✅ NEW |
+| §4.15 Deprecation Clause | ✅ NEW |
 
 ---
 
@@ -46,7 +53,9 @@ dark-strategist-agent/
 └── docs/
     ├── severity_taxonomy.md               ← Severity levels reference
     ├── micro_agents_catalog.md            ← 7 standard micro-agents + activation matrix
-    └── output_format.md                   ← Report structure (Blocks 0–6)
+    ├── output_format.md                   ← Report structure (Blocks 0–6)
+    ├── governance.md                      ← Protocol versioning governance (§4.14)
+    └── deprecation.md                     ← Deprecation conditions (§4.15)
 ```
 
 ---
@@ -75,9 +84,6 @@ response = client.messages.create(
 print(response.content[0].text)
 ```
 
-### Claude Code (registered agent)
-Add the entry to your `AGENTS.md` in `everything-claude-code` or `superpowers`.
-
 ---
 
 ## Core Capabilities
@@ -104,48 +110,47 @@ Add the entry to your `AGENTS.md` in `everything-claude-code` or `superpowers`.
 **Rule 09 — Transversal Escalation:** A LATENT or MODERATE finding that triggers catastrophic Level 7 consequences automatically escalates to FATAL or SERIOUS.
 
 ### War Room Orchestration
-When complexity exceeds linear analysis, the Director deploys isolated micro-agents:
+
+Activation threshold — at least ONE criterion must be met:
+- **(A)** Phase 0 declares ≥ 2 distinct domains
+- **(B)** Activation matrix assigns ≥ 3 micro-agents
+- **(C)** Scale = Production + specialized domain
+- **(D)** Declared constraints contradict declared objective
 
 | Unit | Role | Targets |
 |---|---|---|
 | UNIT-QUANT | Quantitative Auditor | Overfitting, margin calls, Sharpe ratio |
 | UNIT-INQUISITOR | Legal & Tax Enforcer | Compliance, permits, labor violations |
 | UNIT-TECH | Systems Auditor | Vulnerabilities, data leakage, SPOF |
-| UNIT-BIO | Field & Livestock Auditor | Biomass, cold chain, biosecurity |
+| UNIT-BIO | Field & Livestock Auditor | Biomass, cold chain, biosecurity, livestock |
 | UNIT-MARKET | Commercial Strategist | Demand assumptions, CAC, competition |
 | UNIT-GEO | Geopolitical Analyst | Country risk, exchange volatility |
 | UNIT-COMPLIANCE | Governance Auditor | SoD violations, ghost controls |
 
-### Report Format (Blocks 0–6)
+### Verdict Decision Table
+| Condition | Verdict |
+|---|---|
+| ≥ 1 🔴 FATAL (unresolved) | 🔴 INVIABLE |
+| 0 FATALs + ≥ 1 🟠 SERIOUS | 🟠 VIABLE WITH CRITICAL CORRECTIONS |
+| 0 FATALs + 0 SERIOUS + ≥ 1 🟡 MODERATE | 🟡 VIABLE WITH ADJUSTMENTS |
+| Only 🔵 LATENTs or no findings | 🟢 SOLID UNDER PRESSURE |
+
+---
+
+## Protocol Status
+
 ```
-[BLOCK 0] RED LINE ALERT          — conditional, only if FATAL exists
-[BLOCK 1] FORENSIC HEADER         — domain, geofence, scale, version
-[BLOCK 2] RISK MATRIX             — stress test summary by severity
-[BLOCK 3] FORENSIC BREAKDOWN      — findings ordered major → minor
-[BLOCK 4] DEFERRED STRENGTHS      — optional, only after full destruction
-[BLOCK 5] CATASTROPHIC RISK       — worst case scenario (no fabricated %)
-[BLOCK 6] FORENSIC VERDICT        — deterministic decision table
+[PROTOCOL_STATUS: ACTIVE — v2.4.0]
+[SELF_AUDIT_REPORT: DS-20260423-001]
+[DEPRECATION_CONDITIONS: A | B | C | D — see docs/deprecation.md]
+[REPLACEMENT_PROTOCOL: NONE — current version is latest]
 ```
 
 ---
 
-## When to Use It
+## License
 
-✅ Before executing a business plan  
-✅ Before presenting to investors or stakeholders  
-✅ Before launching an architecture to production  
-✅ Before defending a strategy in a high-level meeting  
-✅ Before signing a significant contract or agreement  
-✅ Before entering a new market or geography  
-
-❌ For friendly feedback  
-❌ For validating something that cannot be changed  
-
----
-
-## Version
-
-`2.3.0` — See [CHANGELOG.md](./CHANGELOG.md) for full history.
+MIT License — Open Source. See [LICENSE](./LICENSE) for details.
 
 ---
 
