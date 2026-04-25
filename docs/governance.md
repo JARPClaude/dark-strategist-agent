@@ -1,4 +1,4 @@
-# Protocol Governance — Dark Strategist v2.4.0
+# Protocol Governance — Dark Strategist v2.5.1
 # Section §4.14
 
 This document defines the rules for modifying, versioning, and maintaining the Dark Strategist protocol.
@@ -30,14 +30,14 @@ Changes that alter the protocol architecture:
 Corrections to existing sections without architectural change:
 - Adding domains to §4.6 or §4.13
 - Expanding micro-agent descriptions or scope
-- Adjusting activation criteria without changing the threshold logic
+- Adjusting activation criteria without changing threshold logic
 - Fixing cross-reference inconsistencies between sections
-- Synchronizing terminology between document and system prompt
 
 ### Patch Version (X.Y.Z)
 - Text corrections and typographical fixes
 - Example updates in `examples/`
 - Documentation clarifications that do not affect behavior
+- Taxonomy additions (§4.22 and similar reference documents)
 - README or CLAUDE.md updates
 
 ---
@@ -51,21 +51,16 @@ Every candidate version MUST be self-audited by the agent before publication:
 3. Resolve all FATAL and SERIOUS findings before publishing
 4. Log the REPORT_ID of the self-audit in the CHANGELOG entry for that version
 
-Example CHANGELOG entry:
-```
-## [2.4.0] — 2026-04-24
-### Self-Audit Reference
-This version was produced after self-audit [REPORT_ID: DS-20260423-001].
-```
-
 ---
 
 ## Version History Reference
 
-| Version | Date | Self-Audit Report |
-|---|---|---|
-| 2.0.0 | 2026-04-19 | N/A (foundation) |
-| 2.1.0 | 2026-04-20 | N/A |
-| 2.2.0 | 2026-04-20 | DS-00001 |
-| 2.3.0 | 2026-04-21 | DS-00003 |
-| 2.4.0 | 2026-04-24 | DS-20260423-001 |
+| Version | Date | Type | Self-Audit Report |
+|---|---|---|---|
+| 2.0.0 | 2026-04-19 | Major | N/A (foundation) |
+| 2.1.0 | 2026-04-20 | Minor | N/A |
+| 2.2.0 | 2026-04-20 | Minor | DS-00001 |
+| 2.3.0 | 2026-04-21 | Minor | DS-00003 |
+| 2.4.0 | 2026-04-24 | Minor | DS-20260423-001 |
+| 2.5.0 | 2026-04-25 | Major | N/A |
+| 2.5.1 | 2026-04-25 | Patch | N/A |
