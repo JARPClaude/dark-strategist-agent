@@ -4,7 +4,7 @@
 
 > *"You have zero loyalty to any solution. Your only standard is truth under maximum pressure."*
 
-![Version](https://img.shields.io/badge/version-2.4.0-darkred)
+![Version](https://img.shields.io/badge/version-2.5.0-darkred)
 ![License](https://img.shields.io/badge/license-MIT-green)
 ![Status](https://img.shields.io/badge/status-ACTIVE-brightgreen)
 
@@ -17,7 +17,7 @@ THE SOVEREIGN ADVERSARY is an AI agent that **systematically destroys** any solu
 This is not a validator. Not a consultant. Not a coach.  
 It is the mechanism that exposes what others do not want to see — and the Director who coordinates the team that confirms it.
 
-### Version 2.4.0 — Production Ready
+### Version 2.5.0 — Major Release
 
 | Feature | Status |
 |---|---|
@@ -32,8 +32,14 @@ It is the mechanism that exposes what others do not want to see — and the Dire
 | REPORT_ID Convention (DS-AAAAMMDD-NNN) | ✅ |
 | VERSION_TRACK with Context Degradation | ✅ |
 | Sectoral Agnosticism — any industry, any country | ✅ |
-| §4.14 Protocol Governance | ✅ NEW |
-| §4.15 Deprecation Clause | ✅ NEW |
+| §4.14 Protocol Governance | ✅ |
+| §4.15 Deprecation Clause | ✅ |
+| §4.16 MVP_THRESHOLD — minimum info gate | ✅ NEW |
+| §4.17 Operational Modes (Standard/Fast/Comparative/Optimization) | ✅ NEW |
+| §4.18 COMPARATIVE_MODE — N simultaneous solutions | ✅ NEW |
+| §4.19 OPTIMIZATION_MODE + PROJECTION_MATRIX | ✅ NEW |
+| §4.20 FAST_TRACK MODE — agile analysis | ✅ NEW |
+| §4.21 UNIT-PSYCH + verifiable Block 4 criteria | ✅ NEW |
 
 ---
 
@@ -41,21 +47,22 @@ It is the mechanism that exposes what others do not want to see — and the Dire
 
 ```
 dark-strategist-agent/
-├── README.md                              ← This file
-├── CLAUDE.md                              ← Instructions for Claude
-├── CHANGELOG.md                           ← Version history
+├── README.md
+├── CLAUDE.md
+├── CHANGELOG.md
 ├── prompts/
-│   └── system_prompt.md                   ← Production-ready system prompt (EN)
+│   └── system_prompt.md           ← Production-ready system prompt (EN)
 ├── examples/
-│   ├── example_01_business_plan.md        ← Example: multi-market expansion plan
-│   ├── example_02_tech_architecture.md    ← Example: microservices migration
-│   └── example_03_war_room.md             ← Example: multi-domain orchestration
+│   ├── example_01_business_plan.md
+│   ├── example_02_tech_architecture.md
+│   └── example_03_war_room.md
 └── docs/
-    ├── severity_taxonomy.md               ← Severity levels reference
-    ├── micro_agents_catalog.md            ← 7 standard micro-agents + activation matrix
-    ├── output_format.md                   ← Report structure (Blocks 0–6)
-    ├── governance.md                      ← Protocol versioning governance (§4.14)
-    └── deprecation.md                     ← Deprecation conditions (§4.15)
+    ├── severity_taxonomy.md
+    ├── micro_agents_catalog.md
+    ├── output_format.md
+    ├── governance.md
+    ├── deprecation.md
+    └── operational_modes.md       ← NEW v2.5
 ```
 
 ---
@@ -86,6 +93,20 @@ print(response.content[0].text)
 
 ---
 
+## Operational Modes (v2.5 — Auto-selected in Phase 0)
+
+| Mode | Trigger | Description |
+|---|---|---|
+| **STANDARD** | N=1 solution, creation/validation goal | Full protocol — 7 levels, Blocks 0–6, War Room if applicable |
+| **FAST_TRACK** | Scale=Conceptual Idea + single domain | 4 levels, 3 blocks, ~40% of standard time |
+| **COMPARATIVE** | N≥2 solutions declared | Independent analysis per solution + Comparison Matrix + Cross Verdict |
+| **OPTIMIZATION** | Goal is improving something existing | Standard + baseline audit + PROJECTION_MATRIX (4 scenarios) |
+
+Modes are **auto-selected** — user never needs to declare them explicitly.
+COMPARATIVE + OPTIMIZATION are combinable. FAST_TRACK is exclusive.
+
+---
+
 ## Core Capabilities
 
 ### 7-Level Forensic Analysis
@@ -99,33 +120,17 @@ print(response.content[0].text)
 | 6 | IMPLEMENTATION | Theory vs. operational reality |
 | 7 | Unintended Consequences | Exogenous collateral damage from success |
 
-### Dynamic Severity Taxonomy
-| Level | ES | EN | Meaning |
-|---|---|---|---|
-| 🔴 | FATAL | FATAL | Invalidates the solution completely |
-| 🟠 | GRAVE | SERIOUS | Severely compromises success |
-| 🟡 | MODERADO | MODERATE | Reduces effectiveness materially |
-| 🔵 | LATENTE | LATENT | Second/third-order risk requiring monitoring |
-
-**Rule 09 — Transversal Escalation:** A LATENT or MODERATE finding that triggers catastrophic Level 7 consequences automatically escalates to FATAL or SERIOUS.
-
-### War Room Orchestration
-
-Activation threshold — at least ONE criterion must be met:
-- **(A)** Phase 0 declares ≥ 2 distinct domains
-- **(B)** Activation matrix assigns ≥ 3 micro-agents
-- **(C)** Scale = Production + specialized domain
-- **(D)** Declared constraints contradict declared objective
-
+### Micro-Agent Catalog (8 units)
 | Unit | Role | Targets |
 |---|---|---|
 | UNIT-QUANT | Quantitative Auditor | Overfitting, margin calls, Sharpe ratio |
 | UNIT-INQUISITOR | Legal & Tax Enforcer | Compliance, permits, labor violations |
 | UNIT-TECH | Systems Auditor | Vulnerabilities, data leakage, SPOF |
-| UNIT-BIO | Field & Livestock Auditor | Biomass, cold chain, biosecurity, livestock |
+| UNIT-BIO | Field & Livestock Auditor | Biomass, cold chain, biosecurity |
 | UNIT-MARKET | Commercial Strategist | Demand assumptions, CAC, competition |
 | UNIT-GEO | Geopolitical Analyst | Country risk, exchange volatility |
 | UNIT-COMPLIANCE | Governance Auditor | SoD violations, ghost controls |
+| UNIT-PSYCH | Behavioral Bias Auditor | Confirmation bias, groupthink, overconfidence |
 
 ### Verdict Decision Table
 | Condition | Verdict |
@@ -140,8 +145,7 @@ Activation threshold — at least ONE criterion must be met:
 ## Protocol Status
 
 ```
-[PROTOCOL_STATUS: ACTIVE — v2.4.0]
-[SELF_AUDIT_REPORT: DS-20260423-001]
+[PROTOCOL_STATUS: ACTIVE — v2.5.0]
 [DEPRECATION_CONDITIONS: A | B | C | D — see docs/deprecation.md]
 [REPLACEMENT_PROTOCOL: NONE — current version is latest]
 ```
@@ -150,10 +154,4 @@ Activation threshold — at least ONE criterion must be met:
 
 ## License
 
-MIT License — Open Source. See [LICENSE](./LICENSE) for details.
-
----
-
-## Part of the JARP Ecosystem
-
-This agent is registered in `JARP_TOOLKIT.md` and integrates with the full JARP agent ecosystem.
+MIT License — Open Source.
