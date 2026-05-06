@@ -5,6 +5,46 @@ Format: [VERSION] — DATE — Description
 
 ---
 
+## [2.6.1] — 2026-05-06
+
+### Patch Release — Trading & Legal Domain Variants
+
+#### New Files
+
+1. **`prompts/system_prompt_trading.md`** — Trading strategy domain variant (v2.6.0-TRADING)
+   - UNIT-QUANT as primary agent — all analysis leads from quantitative audit
+   - Document taxonomy: BACKTEST, LIVE_SYSTEM, STRATEGY_SPEC, FUND_PROPOSAL, RISK_MODEL, PERFORMANCE_REPORT, BOT_AUDIT
+   - Trading-specific failure catalog: 15 modes with auto-severity (look-ahead bias, overfitting, zero-slippage scalping, tick-vs-bar gap, survivorship bias, etc.)
+   - 3 domain-exclusive rules: RULE T1 (Backtest ≠ Proof), RULE T2 (Live Gap mandatory), RULE T3 (Sharpe insufficient alone)
+   - PROJECTION_MATRIX by market regime: Bull/Trend, Range/Chop, Crisis/Crash, Breaking point
+   - DEPLOYMENT_STATUS in verdict: APPROVED_FOR_DEMO / APPROVED_FOR_LIVE / NOT_APPROVED
+   - Calibrated for MQL5, Pine Script v6, MetaTrader 5, TradingView, EURUSD, XAUUSD
+
+2. **`prompts/system_prompt_legal.md`** — Legal/compliance domain variant (v2.6.0-LEGAL)
+   - UNIT-INQUISITOR as primary agent — all analysis leads from legal enforcement audit
+   - Document taxonomy: CONTRACT, REGULATORY_FILING, COMPLIANCE_FRAMEWORK, DUE_DILIGENCE, CORPORATE_GOVERNANCE, EMPLOYMENT_DOC, IP_DOC, REGULATORY_POLICY
+   - Legal-specific failure catalog: 15 modes with auto-severity (missing IP assignment, unenforceable non-compete, missing DPA, unlimited liability, no governing law clause, etc.)
+   - 3 domain-exclusive rules: RULE L1 (Jurisdiction First), RULE L2 (Hostile Interpretation Standard), RULE L3 (AI Disclaimer Mandatory — cannot be overridden)
+   - Geofence Legal calibration: automatic severity escalation by corruption index, judicial independence, multi-jurisdictional conflict
+   - REMEDIATION_MATRIX in OPTIMIZATION mode: current gap → minimum fix → recommended fix → residual risk
+   - AI disclaimer embedded in every report — mandatory, non-removable
+
+#### Architecture Impact
+
+- `prompts/` folder now contains 3 system prompts: base (agnostic) + trading + legal
+- Domain variants are self-contained — no dependency on base file to operate
+- Both variants inherit all 10 base behavioral rules and add domain-exclusive rules (T1/T2/T3 and L1/L2/L3)
+
+#### Pending — v2.6 Roadmap (updated)
+
+- [x] `prompts/system_prompt_legal.md` — ✅ delivered
+- [x] `prompts/system_prompt_trading.md` — ✅ delivered
+- [ ] COMPARATIVE MODE worked example (example_04)
+- [ ] OPTIMIZATION MODE worked example (example_05)
+- [ ] UNIT-PSYCH extended bias catalog
+
+---
+
 ## [2.6.0] — 2026-05-05
 
 ### Major Release — SAT Intelligence Doctrine + 4 New Audit Skills
@@ -64,29 +104,15 @@ Format: [VERSION] — DATE — Description
 
 ---
 
-#### Pending — v2.6 Roadmap (unchanged)
-
-- [ ] `prompts/system_prompt_legal.md` — legal/compliance domain variant
-- [ ] `prompts/system_prompt_trading.md` — trading strategy domain variant
-- [ ] COMPARATIVE MODE worked example (example_04)
-- [ ] OPTIMIZATION MODE worked example (example_05)
-- [ ] UNIT-PSYCH extended bias catalog
-
----
-
 ## [2.5.1] — 2026-04-25
 
 ### Patch Release — §4.22 Industry & Business Taxonomy
 
-1. **docs/industry_taxonomy.md** — NEW document. Complete unified taxonomy for domain classification in Phase 0:
-   - §4.22.A: 22 industries across 4 groups (Energía y Recursos Naturales, Manufactura y Construcción, Servicios y Conocimiento) — including E-commerce, Content Creators, R&D, and Public Sector
-   - §4.22.B: 23 business lines (giros) across 5 categories (Comercial, Industrial, Servicios, Tecnológico y Digital, Gubernamental y Público)
-   - §4.22.C: Giro → micro-agent supplementary mapping (complements §4.13)
-   - §4.22.D: 7 Phase 0 classification examples with industry + giro + micro-agent notes
-2. **prompts/system_prompt.md** — Phase 0 updated: DOMAIN field split into INDUSTRY (§4.22.A) + GIRO DE NEGOCIO (§4.22.B). Domain Classification Note added. Block 1 header updated to include Industry and Giro fields.
-3. **prompts/system_prompt.md** — §4.6 Domain Calibration expanded: added Media/Content Creators, Real Estate, Telecommunications, Education, SaaS/Digital Business calibration rows. Added reference to full §4.22 taxonomy.
-4. **prompts/system_prompt.md** — §4.12 Sectoral Agnosticism updated: explicitly references 22 industries and 23 giros de negocio.
-5. **prompts/system_prompt.md** — §4.13 micro-agent matrix: added reference to §4.22.C for giro-based supplementary activation.
+1. **docs/industry_taxonomy.md** — NEW document. Complete unified taxonomy for domain classification in Phase 0.
+2. **prompts/system_prompt.md** — Phase 0 updated: DOMAIN field split into INDUSTRY + GIRO DE NEGOCIO.
+3. **prompts/system_prompt.md** — §4.6 Domain Calibration expanded.
+4. **prompts/system_prompt.md** — §4.12 Sectoral Agnosticism updated.
+5. **prompts/system_prompt.md** — §4.13 micro-agent matrix: added reference to §4.22.C.
 
 ---
 
@@ -150,13 +176,3 @@ Added: War Room (§4.11), Sectoral Agnosticism (§4.12), Micro-Agent Catalog (§
 ## [2.0.0] — 2026-04-19
 
 Foundation: complete system prompt, Phase 0 intake, 4-level severity taxonomy, 8 behavioral rules, Blocks 0–6, Dual-Language Protocol, THE SOVEREIGN ADVERSARY identifier.
-
----
-
-## [Pending — v2.6.0 Roadmap]
-
-- [ ] `prompts/system_prompt_legal.md` — legal/compliance domain variant
-- [ ] `prompts/system_prompt_trading.md` — trading strategy domain variant
-- [ ] COMPARATIVE MODE worked example (example_04)
-- [ ] OPTIMIZATION MODE worked example (example_05)
-- [ ] UNIT-PSYCH extended bias catalog

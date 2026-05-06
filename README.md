@@ -4,7 +4,7 @@
 
 > *"You have zero loyalty to any solution. Your only standard is truth under maximum pressure."*
 
-![Version](https://img.shields.io/badge/version-2.6.0-darkred)
+![Version](https://img.shields.io/badge/version-2.6.1-darkred)
 ![License](https://img.shields.io/badge/license-MIT-green)
 ![Status](https://img.shields.io/badge/status-ACTIVE-brightgreen)
 
@@ -14,10 +14,10 @@
 
 THE SOVEREIGN ADVERSARY is an AI agent that **systematically destroys** any solution, proposal, plan, or argument — exposing every weakness, contradiction, invalid assumption, logical gap, hidden risk, and potential failure before reality does it for you.
 
-This is not a validator. Not a consultant. Not a coach.  
+This is not a validator. Not a consultant. Not a coach.
 It is the mechanism that exposes what others do not want to see — and the Director who coordinates the team that confirms it.
 
-### Version 2.6.0 — Major Release
+### Version 2.6.1 — Patch Release
 
 | Feature | Status |
 |---|---|
@@ -40,11 +40,23 @@ It is the mechanism that exposes what others do not want to see — and the Dire
 | §4.19 OPTIMIZATION_MODE + PROJECTION_MATRIX | ✅ |
 | §4.20 FAST_TRACK MODE — agile analysis | ✅ |
 | §4.21 UNIT-PSYCH + verifiable Block 4 criteria | ✅ |
-| SAT Intelligence Doctrine (CIA Tradecraft adapted) | ✅ NEW |
-| KAC — Key Assumptions Check skill | ✅ NEW |
-| ACH — Analysis of Competing Explanations skill | ✅ NEW |
-| Deception Detection skill | ✅ NEW |
-| Verdict Verification gate (mandatory pre-flight) | ✅ NEW |
+| SAT Intelligence Doctrine (CIA Tradecraft adapted) | ✅ v2.6.0 |
+| KAC — Key Assumptions Check skill | ✅ v2.6.0 |
+| ACH — Analysis of Competing Explanations skill | ✅ v2.6.0 |
+| Deception Detection skill | ✅ v2.6.0 |
+| Verdict Verification gate (mandatory pre-flight) | ✅ v2.6.0 |
+| Domain Variant — Trading (MQL5, Pine Script, EURUSD, XAUUSD) | ✅ v2.6.1 |
+| Domain Variant — Legal (Contracts, Compliance, Due Diligence) | ✅ v2.6.1 |
+
+---
+
+## Which System Prompt to Use
+
+| Use Case | File |
+|----------|------|
+| General document audit — any industry | `prompts/system_prompt.md` |
+| Trading strategy, backtest, bot, fund proposal | `prompts/system_prompt_trading.md` |
+| Contract, compliance, legal due diligence | `prompts/system_prompt_legal.md` |
 
 ---
 
@@ -56,7 +68,9 @@ dark-strategist-agent/
 ├── CLAUDE.md
 ├── CHANGELOG.md
 ├── prompts/
-│   └── system_prompt.md           ← Production-ready system prompt (EN)
+│   ├── system_prompt.md                   ← Base — sectoral agnostic
+│   ├── system_prompt_trading.md           ← Domain variant — Trading
+│   └── system_prompt_legal.md             ← Domain variant — Legal
 ├── examples/
 │   ├── example_01_business_plan.md
 │   ├── example_02_tech_architecture.md
@@ -68,16 +82,12 @@ dark-strategist-agent/
 │   ├── governance.md
 │   ├── deprecation.md
 │   ├── operational_modes.md
-│   └── sat_intelligence_doctrine.md   ← NEW v2.6
-└── skills/                            ← NEW v2.6
-    ├── kac-assumption-audit/
-    │   └── SKILL.md
-    ├── ach-competing-explanations/
-    │   └── SKILL.md
-    ├── deception-detection/
-    │   └── SKILL.md
-    └── verdict-verification/
-        └── SKILL.md
+│   └── sat_intelligence_doctrine.md
+└── skills/
+    ├── kac-assumption-audit/SKILL.md
+    ├── ach-competing-explanations/SKILL.md
+    ├── deception-detection/SKILL.md
+    └── verdict-verification/SKILL.md
 ```
 
 ---
@@ -85,15 +95,19 @@ dark-strategist-agent/
 ## Quick Start
 
 ### Claude.ai Projects
-1. Copy the contents of `prompts/system_prompt.md`
+1. Copy the contents of the relevant `prompts/system_prompt*.md`
 2. Paste into **Project Instructions**
-3. Start conversation — present your proposal
+3. Start conversation — present your document
 
 ### Claude API (Python)
 ```python
 import anthropic
 
-with open("prompts/system_prompt.md", "r", encoding="utf-8") as f:
+prompt_file = "prompts/system_prompt.md"           # general
+# prompt_file = "prompts/system_prompt_trading.md" # trading
+# prompt_file = "prompts/system_prompt_legal.md"   # legal
+
+with open(prompt_file, "r", encoding="utf-8") as f:
     system = f.read()
 
 client = anthropic.Anthropic()
@@ -108,7 +122,7 @@ print(response.content[0].text)
 
 ---
 
-## Operational Modes (v2.5 — Auto-selected in Phase 0)
+## Operational Modes (Auto-selected in Phase 0)
 
 | Mode | Trigger | Description |
 |---|---|---|
@@ -116,9 +130,6 @@ print(response.content[0].text)
 | **FAST_TRACK** | Scale=Conceptual Idea + single domain | 4 levels, 3 blocks, ~40% of standard time |
 | **COMPARATIVE** | N≥2 solutions declared | Independent analysis per solution + Comparison Matrix + Cross Verdict |
 | **OPTIMIZATION** | Goal is improving something existing | Standard + baseline audit + PROJECTION_MATRIX (4 scenarios) |
-
-Modes are **auto-selected** — user never needs to declare them explicitly.
-COMPARATIVE + OPTIMIZATION are combinable. FAST_TRACK is exclusive.
 
 ---
 
@@ -135,7 +146,7 @@ COMPARATIVE + OPTIMIZATION are combinable. FAST_TRACK is exclusive.
 | 6 | IMPLEMENTATION | Theory vs. operational reality |
 | 7 | Unintended Consequences | Exogenous collateral damage from success |
 
-### SAT Audit Skills (v2.6)
+### SAT Audit Skills (v2.6.0)
 | Skill | Activation |
 |---|---|
 | **KAC — Key Assumptions Check** | Mandatory before any FATAL or SERIOUS rating |
@@ -144,15 +155,15 @@ COMPARATIVE + OPTIMIZATION are combinable. FAST_TRACK is exclusive.
 | **Verdict Verification** | Mandatory gate before any VERDICT block |
 
 ### Micro-Agent Catalog (8 units)
-| Unit | Role | Targets |
+| Unit | Role | Primary Domain |
 |---|---|---|
-| UNIT-QUANT | Quantitative Auditor | Overfitting, margin calls, Sharpe ratio |
-| UNIT-INQUISITOR | Legal & Tax Enforcer | Compliance, permits, labor violations |
-| UNIT-TECH | Systems Auditor | Vulnerabilities, data leakage, SPOF |
-| UNIT-BIO | Field & Livestock Auditor | Biomass, cold chain, biosecurity |
-| UNIT-MARKET | Commercial Strategist | Demand assumptions, CAC, competition |
-| UNIT-GEO | Geopolitical Analyst | Country risk, exchange volatility |
-| UNIT-COMPLIANCE | Governance Auditor | SoD violations, ghost controls |
+| UNIT-QUANT | Quantitative Auditor | Trading variants — PRIMARY |
+| UNIT-INQUISITOR | Legal & Tax Enforcer | Legal variants — PRIMARY |
+| UNIT-TECH | Systems Auditor | Tech architecture, bots, data |
+| UNIT-BIO | Field & Livestock Auditor | Agriculture, biomass, cold chain |
+| UNIT-MARKET | Commercial Strategist | Demand, CAC, competition |
+| UNIT-GEO | Geopolitical Analyst | Country risk, FX, regulatory instability |
+| UNIT-COMPLIANCE | Governance Auditor | SoD, audit trail, policy enforceability |
 | UNIT-PSYCH | Behavioral Bias Auditor | Confirmation bias, groupthink, overconfidence |
 
 ### Verdict Decision Table
@@ -168,7 +179,7 @@ COMPARATIVE + OPTIMIZATION are combinable. FAST_TRACK is exclusive.
 ## Protocol Status
 
 ```
-[PROTOCOL_STATUS: ACTIVE — v2.6.0]
+[PROTOCOL_STATUS: ACTIVE — v2.6.1]
 [DEPRECATION_CONDITIONS: A | B | C | D — see docs/deprecation.md]
 [REPLACEMENT_PROTOCOL: NONE — current version is latest]
 ```
