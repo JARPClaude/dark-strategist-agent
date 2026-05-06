@@ -4,7 +4,7 @@
 
 > *"You have zero loyalty to any solution. Your only standard is truth under maximum pressure."*
 
-![Version](https://img.shields.io/badge/version-2.5.0-darkred)
+![Version](https://img.shields.io/badge/version-2.6.0-darkred)
 ![License](https://img.shields.io/badge/license-MIT-green)
 ![Status](https://img.shields.io/badge/status-ACTIVE-brightgreen)
 
@@ -17,7 +17,7 @@ THE SOVEREIGN ADVERSARY is an AI agent that **systematically destroys** any solu
 This is not a validator. Not a consultant. Not a coach.  
 It is the mechanism that exposes what others do not want to see — and the Director who coordinates the team that confirms it.
 
-### Version 2.5.0 — Major Release
+### Version 2.6.0 — Major Release
 
 | Feature | Status |
 |---|---|
@@ -34,12 +34,17 @@ It is the mechanism that exposes what others do not want to see — and the Dire
 | Sectoral Agnosticism — any industry, any country | ✅ |
 | §4.14 Protocol Governance | ✅ |
 | §4.15 Deprecation Clause | ✅ |
-| §4.16 MVP_THRESHOLD — minimum info gate | ✅ NEW |
-| §4.17 Operational Modes (Standard/Fast/Comparative/Optimization) | ✅ NEW |
-| §4.18 COMPARATIVE_MODE — N simultaneous solutions | ✅ NEW |
-| §4.19 OPTIMIZATION_MODE + PROJECTION_MATRIX | ✅ NEW |
-| §4.20 FAST_TRACK MODE — agile analysis | ✅ NEW |
-| §4.21 UNIT-PSYCH + verifiable Block 4 criteria | ✅ NEW |
+| §4.16 MVP_THRESHOLD — minimum info gate | ✅ |
+| §4.17 Operational Modes (Standard/Fast/Comparative/Optimization) | ✅ |
+| §4.18 COMPARATIVE_MODE — N simultaneous solutions | ✅ |
+| §4.19 OPTIMIZATION_MODE + PROJECTION_MATRIX | ✅ |
+| §4.20 FAST_TRACK MODE — agile analysis | ✅ |
+| §4.21 UNIT-PSYCH + verifiable Block 4 criteria | ✅ |
+| SAT Intelligence Doctrine (CIA Tradecraft adapted) | ✅ NEW |
+| KAC — Key Assumptions Check skill | ✅ NEW |
+| ACH — Analysis of Competing Explanations skill | ✅ NEW |
+| Deception Detection skill | ✅ NEW |
+| Verdict Verification gate (mandatory pre-flight) | ✅ NEW |
 
 ---
 
@@ -56,13 +61,23 @@ dark-strategist-agent/
 │   ├── example_01_business_plan.md
 │   ├── example_02_tech_architecture.md
 │   └── example_03_war_room.md
-└── docs/
-    ├── severity_taxonomy.md
-    ├── micro_agents_catalog.md
-    ├── output_format.md
-    ├── governance.md
-    ├── deprecation.md
-    └── operational_modes.md       ← NEW v2.5
+├── docs/
+│   ├── severity_taxonomy.md
+│   ├── micro_agents_catalog.md
+│   ├── output_format.md
+│   ├── governance.md
+│   ├── deprecation.md
+│   ├── operational_modes.md
+│   └── sat_intelligence_doctrine.md   ← NEW v2.6
+└── skills/                            ← NEW v2.6
+    ├── kac-assumption-audit/
+    │   └── SKILL.md
+    ├── ach-competing-explanations/
+    │   └── SKILL.md
+    ├── deception-detection/
+    │   └── SKILL.md
+    └── verdict-verification/
+        └── SKILL.md
 ```
 
 ---
@@ -120,6 +135,14 @@ COMPARATIVE + OPTIMIZATION are combinable. FAST_TRACK is exclusive.
 | 6 | IMPLEMENTATION | Theory vs. operational reality |
 | 7 | Unintended Consequences | Exogenous collateral damage from success |
 
+### SAT Audit Skills (v2.6)
+| Skill | Activation |
+|---|---|
+| **KAC — Key Assumptions Check** | Mandatory before any FATAL or SERIOUS rating |
+| **ACH — Competing Explanations** | When 2+ contradictory conclusions are possible |
+| **Deception Detection** | When author has high stakes in the verdict |
+| **Verdict Verification** | Mandatory gate before any VERDICT block |
+
 ### Micro-Agent Catalog (8 units)
 | Unit | Role | Targets |
 |---|---|---|
@@ -145,7 +168,7 @@ COMPARATIVE + OPTIMIZATION are combinable. FAST_TRACK is exclusive.
 ## Protocol Status
 
 ```
-[PROTOCOL_STATUS: ACTIVE — v2.5.0]
+[PROTOCOL_STATUS: ACTIVE — v2.6.0]
 [DEPRECATION_CONDITIONS: A | B | C | D — see docs/deprecation.md]
 [REPLACEMENT_PROTOCOL: NONE — current version is latest]
 ```
