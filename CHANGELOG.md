@@ -5,6 +5,75 @@ Format: [VERSION] — DATE — Description
 
 ---
 
+## [2.6.0] — 2026-05-05
+
+### Major Release — SAT Intelligence Doctrine + 4 New Audit Skills
+
+**Source repos synthesized:**
+- `Blevene/structured-analysis-skill` (Apache 2.0) — CIA Tradecraft Primer 2009 + Pherson & Heuer 3rd Ed. 2020
+- `obra/superpowers` (MIT) — verification-before-completion methodology
+- `affaan-m/everything-claude-code` — Agent-First orchestration philosophy (referenced in architecture)
+
+---
+
+#### New Files
+
+1. **`docs/sat_intelligence_doctrine.md`** — Structured Analytic Techniques (SATs) adapted for forensic document auditing.
+   - The Axioms: Externalization, Metacognition, Mindset Persistence, Satisficing, Decomposition, Simultaneous Hypotheses, Diagnostic Dominance, Proportional Effort
+   - Cognitive Bias Map: 9 biases with specific corrections mapped to existing DS protocol elements
+   - SAT Technique Map: 12 techniques cross-referenced to DS Agent levels and modes
+   - Evidence Quality Framework: 3-dimension rating system (Source Reliability, Claim Credibility, Diagnostic Value)
+   - Selection Logic: audit situation → technique routing table
+   - The Meta-Law: proportional effort doctrine
+
+2. **`skills/kac-assumption-audit/SKILL.md`** — Key Assumptions Check for document auditing.
+   - Formalizes Level 3 (Assumptions) of the 7-level forensic protocol
+   - 6-step protocol: Core Claim → Extract Premises → Challenge → Classify → Isolate Linchpins → Map to Findings
+   - Assumption Classification Table output format
+   - Linchpin assumption identification (load-bearing premises)
+   - Iron Law: no FATAL or SERIOUS rating without completing KAC first
+
+3. **`skills/ach-competing-explanations/SKILL.md`** — Analysis of Competing Explanations for document auditing.
+   - ACH from the CIA tradition adapted to verdict competition
+   - 5 mandatory hypotheses: H-VIABLE, H-INVIABLE, H-CONDITIONAL, H-NULL, H-DECEPTION
+   - 8-step protocol including negative evidence, matrix construction, sensitivity analysis
+   - Law of Diagnostic Dominance applied to finding quality
+   - Iron Law: rank by inconsistency count — not confirmation count
+
+4. **`skills/deception-detection/SKILL.md`** — Structured deception analysis for document auditing.
+   - 5 checks: Mirror-Imaging, Selective Evidence, Framing Analysis, Adversarial Consistency, Counterfactual Integrity
+   - Deception Severity Classification table with audit impact
+   - Distinction between random weakness (incompetence) and structured concealment (deception)
+   - Direct integration with UNIT-INQUISITOR and UNIT-PSYCH activation
+
+5. **`skills/verdict-verification/SKILL.md`** — The final gate before any VERDICT block.
+   - Adapted from obra/superpowers verification doctrine
+   - Full checklist: Evidence Integrity, Root Cause vs. Symptom, Severity Consistency, Completeness, Premortem Gate, Output Format
+   - 6-step gate function with Premortem stress-test mandatory
+   - Iron Law: no VERDICT block without completing the checklist
+
+---
+
+#### Architecture Impact
+
+- UNIT-PSYCH is now backed by a 9-bias cognitive map with specific technique corrections
+- Level 3 (Assumptions) gains a formal protocol (KAC)
+- War Room gains structured triggering conditions from ACH H-DECEPTION hypothesis
+- Verdict issuance now has a mandatory pre-flight gate
+- All new skills reference each other and the existing 7-level protocol — no orphaned documents
+
+---
+
+#### Pending — v2.6 Roadmap (unchanged)
+
+- [ ] `prompts/system_prompt_legal.md` — legal/compliance domain variant
+- [ ] `prompts/system_prompt_trading.md` — trading strategy domain variant
+- [ ] COMPARATIVE MODE worked example (example_04)
+- [ ] OPTIMIZATION MODE worked example (example_05)
+- [ ] UNIT-PSYCH extended bias catalog
+
+---
+
 ## [2.5.1] — 2026-04-25
 
 ### Patch Release — §4.22 Industry & Business Taxonomy
