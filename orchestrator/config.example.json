@@ -1,0 +1,29 @@
+{
+  "anthropic": {
+    "api_key": "YOUR_ANTHROPIC_API_KEY",
+    "model": "claude-opus-4-6",
+    "max_tokens": 8192
+  },
+  "prompts_dir": "./prompts",
+  "notifications": {
+    "slack": {
+      "enabled": true,
+      "webhook_url": "https://hooks.slack.com/services/YOUR/WEBHOOK/URL",
+      "channel": "#dark-strategist-alerts"
+    },
+    "github": {
+      "enabled": true,
+      "token": "YOUR_GITHUB_TOKEN",
+      "owner": "JARPClaude",
+      "repo": "dark-strategist-agent"
+    }
+  },
+  "logging": {
+    "google_sheets": {
+      "enabled": true,
+      "credentials_file": "credentials.json",
+      "spreadsheet_id": "YOUR_GOOGLE_SHEET_ID",
+      "sheet_name": "DomainExpansionLog"
+    }
+  }
+}
