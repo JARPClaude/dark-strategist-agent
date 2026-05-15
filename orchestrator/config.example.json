@@ -11,6 +11,12 @@
     "max_n2_per_n1": 3,
     "alert_at_percent": 80
   },
+  "ssm": {
+    "max_personas": 20,
+    "max_rounds": 4,
+    "max_parallel_personas": 5,
+    "alert_at_percent": 80
+  },
   "notifications": {
     "slack": {
       "enabled": true,

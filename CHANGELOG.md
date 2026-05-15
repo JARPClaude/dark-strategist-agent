@@ -5,137 +5,129 @@ Format: [VERSION] — DATE — Description
 
 ---
 
-## [2.8.0] — 2026-05-13
+## [2.9.0] — 2026-05-13
 
-### Major Release — Agente Forense Orquestador + Tribunal Adversarial
+### Major Release — Simulación Social Masiva (SSM) + Transparency Report
 
-This release introduces the **Agente Forense Orquestador (AFO)** and the full **Tribunal Adversarial** architecture — transforming Dark Strategist from a single-agent auditor into a hierarchical multi-agent forensic system.
+#### New: Simulación Social Masiva (SSM) — Phase 3
 
-#### Architecture — 3-Level Hierarchy
+The SSM is the predictive arm of Dark Strategist. While the Tribunal Adversarial destroys the proposal internally, the SSM predicts how the real world would destroy it if executed.
 
-```
-N0 — Agente Forense Orquestador (AFO)
-      Directs, consolidates, emits unified verdict
+**SSM Activation Logic:**
+| Tribunal Verdict | SSM |
+|-----------------|-----|
+| 🔴 INVIABLE | ❌ Blocked — always |
+| 🟠 VIABLE WITH CRITICAL CORRECTIONS | ✅ Auto-activated |
+| 🟡 VIABLE WITH ADJUSTMENTS | ✅ Auto-activated |
+| 🟢 SOLID UNDER PRESSURE | ⚙️ Optional — requires --ssm flag |
 
-N1 — Agentes Forenses (parallel, blind to each other)
-      1 / 3 / 5 / 7 depending on Swarm Activation Score
+**SSM Scales:**
+| Scale | Personas | Use Case |
+|-------|----------|----------|
+| MICRO | 5-10 | Simple proposals, internal projects |
+| MESO | 20 | Business plans, market products |
+| MACRO | 50 | National campaigns, enterprise scale |
 
-N2 — Sub-agentes Forenses
-      Permanent: UNIT-QUANT, UNIT-INQUISITOR, UNIT-TECH,
-                 UNIT-PSYCH, UNIT-GEO, UNIT-MARKET,
-                 UNIT-COMPLIANCE, UNIT-BIO
-      Temporary: created dynamically for unknown domains
-                 → triggers SUB_AGENT_EXPANSION_RECOMMENDED
-```
-
-#### Swarm Activation Score (auto-sizing)
-
-| Initial Verdict | Tribunal Mode | Agents |
-|----------------|--------------|--------|
-| SOLID / VIABLE WITH ADJUSTMENTS | SINGLE | 1 |
-| VIABLE WITH CRITICAL CORRECTIONS | TRIBUNAL_LIGHT | 3 |
-| INVIABLE | TRIBUNAL_FULL | 5 |
-| INVIABLE + War Room | TRIBUNAL_MAX | 7 |
+**4 Interaction Rounds:**
+- Round 1: Each persona reads the plan → forms individual opinion (blind to others)
+- Round 2: Personas exchange opinions → some change stance
+- Round 3: Coalitions form (BLOCKING / SUPPORT / WAIT_AND_SEE)
+- Round 4: Dominant coalition executes action
 
 #### New Files
 
-1. **`orchestrator/tribunal.py`** — AgenteForenseOrquestador class. Full pipeline: routing → swarm score → parallel N1 execution → N2 spawning → synthesis → notifications → logging.
+1. **`orchestrator/ssm/__init__.py`** — SimulacionSocialMasiva main entry point. Activation logic, should_activate() method, full pipeline orchestration.
 
-2. **`orchestrator/budget_controller.py`** — BudgetController class. Controls max_agents (7), max_calls_total (30), max_n2_per_n1 (3). Alerts at 80% budget. Blocks excess calls gracefully.
+2. **`orchestrator/ssm/persona_factory.py`** — PersonaFactory. Generates domain-specific personas with role, profile, bias, objective, question. 7 domain sets: Trading, Legal, Financial, Cloud, E-Commerce, Agriculture, Public Sector + General fallback.
 
-3. **`orchestrator/sub_agent_spawner.py`** — SubAgentSpawner class. Auto-detects N2 needs via signal words. Spawns permanent UNITs or temporary sub-agents. Temporary sub-agents trigger SUB_AGENT_EXPANSION_RECOMMENDED via Slack + GitHub + Sheets.
+3. **`orchestrator/ssm/interaction_engine.py`** — InteractionEngine. Orchestrates 4 rounds via parallel Claude API calls (ThreadPoolExecutor). Personas blind to each other within each round.
 
-4. **`orchestrator/verdict_synthesizer.py`** — VerdictSynthesizer class. Consolidates all N1 reports (+ N2 findings) into VEREDICTO FORENSE UNIFICADO. Resolves conflicts toward highest severity. Applies Verdict Decision Table mechanically.
+4. **`orchestrator/ssm/social_report.py`** — SocialReport. Consolidates swarm behavior into REPORTE DE IMPACTO SOCIAL: stance distribution, coalition formation, adoption projection, friction points, scenario analysis, social viability verdict.
+
+5. **`orchestrator/ssm/budget_ssm.py`** — SSMBudgetController. Independent budget control for SSM (separate from Tribunal budget).
+
+#### New: Transparency Report
+
+Every Dark Strategist session now ends with a full Transparency Report showing:
+- AFO: domain detected, prompt selected, confidence, swarm score, verdict synthesis status
+- Tribunal Adversarial: mode, all agents deployed, status, N2 sub-agents per agent
+- Sub-agentes Forenses Permanentes: UNITs activated
+- Sub-agentes Forenses Temporales: dynamic agents created + notification status
+- SSM: activation status, scale, personas, rounds, social verdict
+- Budget consumed: total calls, agents deployed, breakdown
+- Notifications: Slack / GitHub / Sheets dispatch status
 
 #### Updated Files
 
-- **`orchestrator/main.py`** — New flags: `--tribunal` (activate tribunal mode), `--agents 1|3|5|7` (force size). Tribunal mode auto-sizes via Swarm Activation Score if `--agents` not specified.
-- **`orchestrator/config.example.json`** — New `tribunal` section: max_agents, max_calls_total, max_n2_per_n1, alert_at_percent.
+- **`orchestrator/tribunal.py`** — Integrated SSM + Transparency Report generation
+- **`orchestrator/main.py`** — New flags: `--ssm`, `--ssm-scale MICRO|MESO|MACRO`
+- **`orchestrator/config.example.json`** — New `ssm` section
 
-#### Usage
+#### Full CLI Reference
 
 ```bash
-# Single mode (default)
+# Single mode
 python main.py --document doc.txt
 
-# Tribunal auto-size (Swarm Activation Score decides)
+# Tribunal auto-size
 python main.py --document doc.txt --tribunal
 
-# Tribunal forced size
-python main.py --document doc.txt --tribunal --agents 5
+# Tribunal + SSM (MESO scale, default)
+python main.py --document doc.txt --tribunal --ssm
 
-# Budget + routing summary
-python main.py --document doc.txt --tribunal --verbose
+# Tribunal + SSM forced scale
+python main.py --document doc.txt --tribunal --ssm --ssm-scale MACRO
+
+# SOLID verdict + SSM forced
+python main.py --document doc.txt --tribunal --ssm --ssm-scale MICRO
+
+# Full verbose (budget summary)
+python main.py --document doc.txt --tribunal --ssm --verbose
 ```
 
-#### Pending — v2.8 Roadmap
+#### Pending — v2.9 Roadmap
 
 - [ ] example_04 — COMPARATIVE MODE worked example
 - [ ] example_05 — OPTIMIZATION MODE worked example
 - [ ] UNIT-PSYCH extended bias catalog
-- [ ] Looker Studio dashboard template
-- [ ] Phase 3 — Simulación Social Masiva (SSM) — roadmap planned
+- [ ] Looker Studio dashboard template (including SSM metrics)
+- [ ] Cloud Function update with SSM support
+
+---
+
+## [2.8.0] — 2026-05-13
+
+### Major Release — Agente Forense Orquestador + Tribunal Adversarial
+
+AFO (N0) + N1 Agentes Forenses paralelos (1/3/5/7) + N2 Sub-agentes Forenses.
+Swarm Activation Score. Budget Controller. Sub-Agent Spawner. Verdict Synthesizer.
 
 ---
 
 ## [2.7.0] — 2026-05-12
 
-### Major Release — Autonomous Router + 11 Domain Prompts + Python Infrastructure
+### Major Release — Autonomous Router + 11 Domain Prompts + Infrastructure
 
-12 new prompts (router + 11 domains). orchestrator/ and infrastructure/ folders.
-UNKNOWN_DOMAIN protocol with Slack + GitHub + Sheets auto-notification.
+12 new prompts. orchestrator/ and infrastructure/ folders.
+UNKNOWN_DOMAIN protocol with auto-notification.
 
 ---
 
 ## [2.6.1] — 2026-05-06
 
-### Patch — Trading & Legal Domain Variants
-
-system_prompt_trading.md + system_prompt_legal.md.
+Trading + Legal domain variants.
 
 ---
 
 ## [2.6.0] — 2026-05-05
 
-### Major — SAT Intelligence Doctrine + 4 Audit Skills
-
-sat_intelligence_doctrine.md + KAC + ACH + Deception Detection + Verdict Verification.
+SAT Intelligence Doctrine + KAC + ACH + Deception Detection + Verdict Verification.
 
 ---
 
-## [2.5.1] — 2026-04-25
-
-§4.22 Industry & Business Taxonomy.
-
----
-
-## [2.5.0] — 2026-04-25
+## [2.5.x] — 2026-04-25
 
 MVP_THRESHOLD | Operational Modes | COMPARATIVE | OPTIMIZATION | FAST_TRACK | UNIT-PSYCH.
-
----
-
-## [2.4.0] — 2026-04-24
-
-MIT License. §4.14 Governance. §4.15 Deprecation.
-
----
-
-## [2.3.0] — 2026-04-21
-
-ES/EN Map. War Room threshold. Geofence. VERSION_TRACK. UNIT-BIO. REPORT_ID.
-
----
-
-## [2.2.0] — 2026-04-20
-
-Deterministic verdict. NEGLECT_DETECTED. §4.13 Activation Matrix.
-
----
-
-## [2.1.0] — 2026-04-20
-
-War Room. Sectoral Agnosticism. Micro-Agent Catalog. Geofence. Rules 09/10.
 
 ---
 

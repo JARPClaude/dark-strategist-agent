@@ -4,11 +4,12 @@
 
 > *"You have zero loyalty to any solution. Your only standard is truth under maximum pressure."*
 
-![Version](https://img.shields.io/badge/version-2.8.0-darkred)
+![Version](https://img.shields.io/badge/version-2.9.0-darkred)
 ![License](https://img.shields.io/badge/license-MIT-green)
 ![Status](https://img.shields.io/badge/status-ACTIVE-brightgreen)
 ![Domains](https://img.shields.io/badge/domains-14-blue)
 ![Tribunal](https://img.shields.io/badge/tribunal-adversarial-black)
+![SSM](https://img.shields.io/badge/SSM-active-purple)
 
 ---
 
@@ -16,58 +17,69 @@
 
 THE SOVEREIGN ADVERSARY is an AI agent that **systematically destroys** any solution, proposal, plan, or argument — exposing every weakness, contradiction, invalid assumption, logical gap, hidden risk, and potential failure before reality does it for you.
 
-**v2.8.0 introduces the Tribunal Adversarial:** multiple Agentes Forenses auditing the same document in parallel, blind to each other, coordinated by the Agente Forense Orquestador (AFO) that synthesizes all findings into a single unified verdict.
+**v2.9.0 completes the full pipeline:**
+1. **Tribunal Adversarial** — destroys the proposal internally (multiple agents, blind to each other)
+2. **Simulación Social Masiva** — predicts how the real world destroys it if executed
+3. **Transparency Report** — shows the user exactly what work was done and by whom
 
 ---
 
-### Version 2.8.0 — Major Release
+### Version 2.9.0 — Full Pipeline
 
 | Feature | Status |
 |---|---|
 | 7-Level Forensic Analysis | ✅ |
-| SAT Intelligence Doctrine (CIA Tradecraft) | ✅ v2.6.0 |
-| KAC / ACH / Deception Detection / Verdict Verification | ✅ v2.6.0 |
-| Domain Variant — Trading / Legal | ✅ v2.6.1 |
-| Router Agent — Autonomous Domain Detection | ✅ v2.7.0 |
-| 11 Domain Variants | ✅ v2.7.0 |
-| UNKNOWN_DOMAIN → Slack + GitHub + Sheets | ✅ v2.7.0 |
-| Google Cloud Function | ✅ v2.7.0 |
-| **Agente Forense Orquestador (AFO)** | ✅ **v2.8.0** |
-| **Tribunal Adversarial (1/3/5/7 agents parallel)** | ✅ **v2.8.0** |
-| **Swarm Activation Score (auto-sizing)** | ✅ **v2.8.0** |
-| **Sub-agentes Forenses Permanentes (8 UNITs)** | ✅ **v2.8.0** |
-| **Sub-agentes Forenses Temporales + notification** | ✅ **v2.8.0** |
-| **Budget Controller** | ✅ **v2.8.0** |
-| **Verdict Synthesizer — unified verdict** | ✅ **v2.8.0** |
+| SAT Intelligence Doctrine + 4 Audit Skills | ✅ v2.6.0 |
+| 14 Domain Variants + Router | ✅ v2.7.0 |
+| Agente Forense Orquestador (AFO) | ✅ v2.8.0 |
+| Tribunal Adversarial (1/3/5/7 parallel agents) | ✅ v2.8.0 |
+| Sub-agentes Forenses (permanent + temporary) | ✅ v2.8.0 |
+| Budget Controller | ✅ v2.8.0 |
+| **Simulación Social Masiva (SSM)** | ✅ **v2.9.0** |
+| **PersonaFactory — domain-specific personas** | ✅ **v2.9.0** |
+| **4-round interaction engine** | ✅ **v2.9.0** |
+| **Coalition formation + action simulation** | ✅ **v2.9.0** |
+| **REPORTE DE IMPACTO SOCIAL** | ✅ **v2.9.0** |
+| **Transparency Report** | ✅ **v2.9.0** |
 
 ---
 
-## Agent Hierarchy
+## The Full Pipeline
 
 ```
-N0 — Agente Forense Orquestador (AFO)
-      Directs, consolidates, emits VEREDICTO FORENSE UNIFICADO
-              │
-    ┌─────────┼─────────┐
-    │         │         │
-  AF-01     AF-02     AF-03     ← N1: Agentes Forenses
-(parallel) (parallel) (parallel)    (blind to each other)
-    │         │         │
-  ┌─┴─┐     ┌─┴─┐     ┌─┴─┐
-  N2  N2    N2  N2    N2  N2   ← N2: Sub-agentes Forenses
- Perm/Temp Perm/Temp Perm/Temp     (on demand)
+Document presented
+       ↓
+FASE 1 — TRIBUNAL ADVERSARIAL
+  AFO routes document → detects domain
+  Swarm Activation Score → 1/3/5/7 agents
+  Agentes Forenses audit in parallel (blind)
+  Sub-agentes Forenses deployed on demand
+  Verdict Synthesizer → VEREDICTO FORENSE UNIFICADO
+       ↓ (if VIABLE)
+
+FASE 2 — SIMULACIÓN SOCIAL MASIVA
+  PersonaFactory generates N personas by domain
+  Round 1: Individual opinions (blind)
+  Round 2: Exchange → stance shifts
+  Round 3: Coalition formation
+  Round 4: Dominant coalition acts
+  → REPORTE DE IMPACTO SOCIAL
+
+FASE 3 — TRANSPARENCY REPORT
+  Full operational metadata emitted
+  AFO + Tribunal + Sub-agents + SSM + Budget + Notifications
 ```
 
 ---
 
-## Swarm Activation Score
+## SSM Activation Logic
 
-| Initial Verdict | Mode | Agents |
-|----------------|------|--------|
-| SOLID / VIABLE WITH ADJUSTMENTS | SINGLE | 1 |
-| VIABLE WITH CRITICAL CORRECTIONS | TRIBUNAL_LIGHT | 3 |
-| INVIABLE | TRIBUNAL_FULL | 5 |
-| INVIABLE + War Room | TRIBUNAL_MAX | 7 |
+| Tribunal Verdict | SSM |
+|----------------|-----|
+| 🔴 INVIABLE | ❌ Blocked — always |
+| 🟠 VIABLE WITH CRITICAL CORRECTIONS | ✅ Auto-activated |
+| 🟡 VIABLE WITH ADJUSTMENTS | ✅ Auto-activated |
+| 🟢 SOLID UNDER PRESSURE | ⚙️ Optional — `--ssm` flag |
 
 ---
 
@@ -78,17 +90,17 @@ cd orchestrator
 pip install -r requirements.txt
 cp config.example.json config.json
 
-# Single mode
+# Single audit
 python main.py --document doc.txt
 
 # Tribunal auto-size
 python main.py --document doc.txt --tribunal
 
-# Tribunal forced (5 agents)
-python main.py --document doc.txt --tribunal --agents 5
+# Tribunal + SSM
+python main.py --document doc.txt --tribunal --ssm
 
-# Full verbose
-python main.py --document doc.txt --tribunal --verbose
+# Full pipeline, MACRO scale
+python main.py --document doc.txt --tribunal --ssm --ssm-scale MACRO --verbose
 ```
 
 ---
@@ -115,19 +127,17 @@ python main.py --document doc.txt --tribunal --verbose
 
 ---
 
-## Sub-agent Catalog (N2)
+## SSM Persona Sets by Domain
 
-| Unit | Specialization |
-|------|---------------|
-| UNIT-QUANT | Statistical, financial, quantitative |
-| UNIT-INQUISITOR | Legal, regulatory, compliance |
-| UNIT-TECH | Technical, security, systems |
-| UNIT-PSYCH | Cognitive bias, behavioral |
-| UNIT-GEO | Geopolitical, jurisdictional |
-| UNIT-MARKET | Commercial, competitive |
-| UNIT-COMPLIANCE | Governance, SoD, audit |
-| UNIT-BIO | Agricultural, biological |
-| **TEMP-[domain]** | Dynamic — unknown domains → notifies owner |
+| Domain | Personas Simulated |
+|--------|------------------|
+| Trading | Institutional investor, retail trader, regulator, competing fund, risk manager |
+| Legal | Opposing counsel, judge, regulator, affected party, in-house counsel |
+| Financial | VC, credit analyst, acquiring CFO, minority shareholder, financial press |
+| Cloud | CTO, security lead, enterprise customer, data regulator, competing SaaS CEO |
+| E-Commerce | Marketplace platform, end consumer, logistics provider, algorithm, competitor |
+| Agriculture | Community leader, environmental regulator, commodity buyer, worker, NGO |
+| Public Sector | Political opposition, taxpayer, state auditor, monitoring body, journalist |
 
 ---
 
@@ -142,27 +152,16 @@ python main.py --document doc.txt --tribunal --verbose
 
 ---
 
-## Roadmap
-
-| Phase | Version | Status |
-|-------|---------|--------|
-| SAT Intelligence Doctrine | v2.6.0 | ✅ |
-| Domain Variants + Infrastructure | v2.7.0 | ✅ |
-| AFO + Tribunal Adversarial | v2.8.0 | ✅ |
-| Simulación Social Masiva (SSM) | v2.9.0 | 🔲 Planned |
-
----
-
 ## Protocol Status
 
 ```
-[PROTOCOL_STATUS: ACTIVE — v2.8.0]
+[PROTOCOL_STATUS: ACTIVE — v2.9.0]
 [TRIBUNAL: ACTIVE — 1/3/5/7 agents]
+[SSM: ACTIVE — MICRO/MESO/MACRO scales]
+[TRANSPARENCY_REPORT: ACTIVE — every session]
 [DOMAIN_CATALOG: 14 prompts + 1 base + 1 router]
 [SUB_AGENTS: 8 permanent + dynamic temporary]
-[UNKNOWN_DOMAIN_HANDLER: ACTIVE]
 [NOTIFICATION_CHANNELS: SLACK + GITHUB + SHEETS]
-[SSM: ROADMAP v2.9.0]
 ```
 
 ---

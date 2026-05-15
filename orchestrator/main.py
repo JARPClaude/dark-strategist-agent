@@ -1,16 +1,22 @@
 """
 Dark Strategist Agent — Main Orchestrator
-Version: 2.8.0
+Version: 2.9.0
 
 Usage:
-    # Single mode (default)
-    python main.py --document path/to/doc.txt
+    # Single mode
+    python main.py --document doc.txt
 
-    # Tribunal mode (auto-size via Swarm Activation Score)
-    python main.py --document path/to/doc.txt --tribunal
+    # Tribunal auto-size
+    python main.py --document doc.txt --tribunal
 
-    # Tribunal mode (forced size)
-    python main.py --document path/to/doc.txt --tribunal --agents 5
+    # Tribunal forced size
+    python main.py --document doc.txt --tribunal --agents 5
+
+    # Tribunal + SSM auto-scale
+    python main.py --document doc.txt --tribunal --ssm
+
+    # Tribunal + SSM forced scale
+    python main.py --document doc.txt --tribunal --ssm --ssm-scale MACRO
 
     # Domain expansion report
     python main.py --report
@@ -19,8 +25,6 @@ Usage:
 import os
 import sys
 import json
-import time
-import uuid
 import argparse
 from pathlib import Path
 
@@ -48,6 +52,12 @@ def load_config(config_path: str = "config.json") -> dict:
             "max_n2_per_n1": 3,
             "alert_at_percent": 80
         },
+        "ssm": {
+            "max_personas": 20,
+            "max_rounds": 4,
+            "max_parallel_personas": 5,
+            "alert_at_percent": 80
+        },
         "notifications": {
             "slack": {
                 "enabled": os.getenv("SLACK_ENABLED", "false").lower() == "true",
@@ -73,7 +83,6 @@ def load_config(config_path: str = "config.json") -> dict:
 
 
 def print_report_mode(config: dict):
-    """Prints domain expansion report from Google Sheets."""
     from sheets_logger import SheetsLogger
     sheets_cfg = config["logging"]["google_sheets"]
     if sheets_cfg.get("enabled") and sheets_cfg.get("spreadsheet_id"):
@@ -88,17 +97,23 @@ def print_report_mode(config: dict):
 
 def main():
     parser = argparse.ArgumentParser(
-        description="Dark Strategist Agent v2.8.0 — Agente Forense Orquestador"
+        description="Dark Strategist Agent v2.9.0 — Agente Forense Orquestador"
     )
     parser.add_argument("--document", type=str, help="Path to document to audit")
     parser.add_argument("--config", type=str, default="config.json")
     parser.add_argument("--tribunal", action="store_true",
                         help="Activate Tribunal Adversarial mode")
     parser.add_argument("--agents", type=int, choices=[1, 3, 5, 7],
-                        help="Force tribunal size (1/3/5/7). Auto-calculated if omitted.")
-    parser.add_argument("--verbose", action="store_true")
+                        help="Force tribunal size (1/3/5/7). Auto if omitted.")
+    parser.add_argument("--ssm", action="store_true",
+                        help="Activate Simulación Social Masiva")
+    parser.add_argument("--ssm-scale", type=str,
+                        choices=["MICRO", "MESO", "MACRO"], default="MESO",
+                        help="SSM scale: MICRO(5-10) / MESO(20) / MACRO(50)")
+    parser.add_argument("--verbose", action="store_true",
+                        help="Show full transparency report")
     parser.add_argument("--report", action="store_true",
-                        help="Print domain expansion report")
+                        help="Print domain expansion report from Sheets")
     args = parser.parse_args()
 
     config = load_config(args.config)
@@ -113,36 +128,50 @@ def main():
 
     document = Path(args.document).read_text(encoding="utf-8")
 
-    # Forced size: only in tribunal mode
+    # Determine forced size
     forced_size = None
-    if args.tribunal and args.agents:
-        forced_size = args.agents
-    elif not args.tribunal:
+    if not args.tribunal:
         forced_size = 1  # Single mode
+    elif args.agents:
+        forced_size = args.agents  # Forced tribunal size
 
+    # Print header
+    mode_label = "SINGLE" if forced_size == 1 else "TRIBUNAL"
+    ssm_label = f" + SSM ({args.ssm_scale})" if args.ssm else ""
     print(f"\n{'='*60}")
-    print(f"DARK STRATEGIST AGENT v2.8.0")
-    mode_label = "TRIBUNAL" if args.tribunal else "SINGLE"
-    print(f"Mode: {mode_label} | Agents: {forced_size or 'AUTO'}")
+    print(f"DARK STRATEGIST AGENT v2.9.0")
+    print(f"Mode: {mode_label}{ssm_label} | Agents: {forced_size or 'AUTO'}")
     print(f"{'='*60}\n")
 
+    # Run AFO
     afo = AgenteForenseOrquestador(config, config["prompts_dir"])
-    result = afo.run(document, forced_tribunal_size=forced_size)
+    result = afo.run(
+        document=document,
+        forced_tribunal_size=forced_size,
+        run_ssm=args.ssm,
+        ssm_scale=args.ssm_scale
+    )
 
+    # Print outputs
     print(f"\n{'='*60}")
     print("VEREDICTO FORENSE UNIFICADO")
     print(f"{'='*60}\n")
     print(result["final_verdict"])
 
+    if result.get("ssm_report"):
+        print(result["ssm_report"])
+
+    print(result["transparency_report"])
+
     if args.verbose:
         afo.budget.print_summary()
 
     print(f"\n{'='*60}")
-    print(f"Session: {result['session_id']}")
-    print(f"Domain:  {result['domain']}")
-    print(f"Mode:    {result['tribunal_mode']}")
-    print(f"Agents:  {result['agents_deployed']}")
-    print(f"Time:    {result['duration_seconds']}s")
+    print(f"Session:  {result['session_id']}")
+    print(f"Domain:   {result['domain']}")
+    print(f"Tribunal: {result['tribunal_mode']}")
+    print(f"Agents:   {result['agents_deployed']}")
+    print(f"Duration: {result['duration_seconds']}s")
     print(f"{'='*60}\n")
 
 
