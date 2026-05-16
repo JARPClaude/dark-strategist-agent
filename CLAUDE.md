@@ -1,46 +1,61 @@
 # CLAUDE.md — Dark Strategist Agent
-# Version: 2.9.0
+# Version: 3.0.0
 
 ## What is this repo
 
 `dark-strategist-agent` is THE SOVEREIGN ADVERSARY — a forensic audit agent and adversarial orchestrator.
 
-**Version:** 2.9.0 — Major Release
+**Version:** 3.0.0 — Major Release
 **License:** MIT — Open Source
 **Repository:** https://github.com/JARPClaude/dark-strategist-agent
 **Name:** dark-strategist-agent — immutable, does not change under any circumstance.
 
 ---
 
-## Full Pipeline
+## Full Pipeline v3.0.0
 
 ```
-FASE 1 — AUDITORÍA FORENSE (Tribunal Adversarial)
-  N0: Agente Forense Orquestador (AFO)
-      ↓ routes document, calculates Swarm Score
-  N1: Agentes Forenses (1/3/5/7 — parallel, blind)
-      ↓ each spawns N2 sub-agents as needed
-  N2: Sub-agentes Forenses
-      Permanent: 8 UNITs | Temporary: dynamic → notify owner
-      ↓ Verdict Synthesizer consolidates
-  VEREDICTO FORENSE UNIFICADO emitted
-      ↓ (if VIABLE)
-
-FASE 2 — SIMULACIÓN SOCIAL MASIVA (SSM)
-  PersonaFactory generates domain-specific personas
-      ↓ 4 rounds of interaction
-  Round 1: Individual opinion (blind)
-  Round 2: Exchange → stance changes
-  Round 3: Coalition formation
-  Round 4: Dominant coalition acts
-      ↓
-  REPORTE DE IMPACTO SOCIAL emitted
-      ↓
-
-FASE 3 — TRANSPARENCY REPORT
-  Full operational metadata:
-  AFO + Tribunal + Sub-agents + SSM + Budget + Notifications
+INPUT: case dict OR document file
+       ↓
+ContextBuilder → RuntimeContext
+  domain, regime, rol_agents, forense_agents,
+  ssm_personas, tools, tribunal_size
+       ↓
+TRIBUNAL TRANSVERSAL
+  Layer 1: Agentes de Rol (parallel, blind)
+    → simulate the domain environment
+    → each adopts a stakeholder perspective
+       ↓
+  Layer 2: Agentes Forenses (parallel, blind)
+    → audit the Rol simulation + document
+    → detect inconsistencies, contrast hypotheses
+    → spawn N2 Sub-agentes if needed
+       ↓
+  AFO Synthesis → UnifiedVerdictOutput (Pydantic)
+    → programmatic conflict resolution
+    → deterministic verdict table
+       ↓ (if VIABLE)
+SIMULACIÓN SOCIAL MASIVA (SSM)
+  → N personas × 4 rounds
+  → REPORTE DE IMPACTO SOCIAL
+       ↓
+TRANSPARENCY REPORT
+  → Full operational metadata
 ```
+
+---
+
+## Key Architectural Changes v3.0.0 vs v2.x
+
+| Aspect | v2.x | v3.0.0 |
+|--------|------|---------|
+| Prompts | 15 static .md files | 1 master template + catalogs |
+| Tribunal | Forenses read document | Rol simulate → Forenses audit simulation |
+| Output | Free text | Pydantic structured JSON |
+| Domain knowledge | Per-file | catalogs.py (single source) |
+| CLI | --document | --type --subscenario --objective --regime |
+| New field | N/A | --regime (6 regimes) |
+| New domain | N/A | Medical/Clinical |
 
 ---
 
@@ -52,24 +67,33 @@ dark-strategist-agent/
 ├── CLAUDE.md
 ├── CHANGELOG.md
 ├── DEPLOY.md
-├── prompts/                         ← 15 system prompts
+├── prompts/
+│   ├── system_prompt.md              ← Base fallback
+│   ├── system_prompt_router.md
+│   ├── system_prompt_medical.md      ← NEW v3.0.0
+│   └── system_prompt_[domain].md     ← 14 existing domains
 ├── orchestrator/
-│   ├── main.py                      ← Entry point (v2.9.0)
-│   ├── tribunal.py                  ← AFO + Tribunal + SSM integration
-│   ├── budget_controller.py         ← Tribunal budget
-│   ├── sub_agent_spawner.py         ← N2 permanent + temporary
-│   ├── verdict_synthesizer.py       ← Multi-verdict consolidation
+│   ├── main.py                       ← v3.0 entry point
+│   ├── catalogs.py                   ← NEW v3.0.0
+│   ├── schema.py                     ← NEW v3.0.0
+│   ├── prompt_engine.py              ← NEW v3.0.0
+│   ├── context_builder.py            ← NEW v3.0.0
+│   ├── tribunal_transversal.py       ← NEW v3.0.0
+│   ├── tribunal.py                   ← v2.x preserved
+│   ├── budget_controller.py
+│   ├── sub_agent_spawner.py
+│   ├── verdict_synthesizer.py
 │   ├── router.py
 │   ├── notifier.py
 │   ├── sheets_logger.py
 │   ├── requirements.txt
 │   ├── config.example.json
-│   └── ssm/                         ← NEW v2.9.0
-│       ├── __init__.py              ← SimulacionSocialMasiva entry
-│       ├── persona_factory.py       ← Domain persona generation
-│       ├── interaction_engine.py    ← 4 rounds orchestration
-│       ├── social_report.py         ← REPORTE DE IMPACTO SOCIAL
-│       └── budget_ssm.py            ← SSM budget control
+│   └── ssm/
+│       ├── __init__.py
+│       ├── persona_factory.py
+│       ├── interaction_engine.py
+│       ├── social_report.py
+│       └── budget_ssm.py
 ├── infrastructure/
 │   └── cloud_function/
 ├── docs/
@@ -78,26 +102,26 @@ dark-strategist-agent/
 
 ---
 
-## CLI Reference
+## CLI Reference v3.0.0
 
 ```bash
-# Single mode
-python main.py --document doc.txt
+# Case-based (recommended)
+python main.py --type contract --subscenario alquiler --objective "identify risks"
+python main.py --type trading --subscenario XAUUSD --objective "buy sell wait" --regime breakout
+python main.py --type medical --subscenario clinical_review --objective "protocol risks"
 
-# Tribunal (auto-size via Swarm Activation Score)
-python main.py --document doc.txt --tribunal
+# With Tribunal Transversal
+python main.py --type finance --subscenario investment_review --objective "evaluate viability" --tribunal
 
-# Tribunal forced size
-python main.py --document doc.txt --tribunal --agents 5
+# With SSM
+python main.py --type contract --subscenario alquiler --objective "risks" --tribunal --ssm
 
-# Tribunal + SSM (MESO = 20 personas, default)
+# Full pipeline
+python main.py --type trading --subscenario XAUUSD --objective "direction" \
+  --regime breakout --tribunal --agents 5 --ssm --ssm-scale MACRO --verbose
+
+# v2.x document compatibility
 python main.py --document doc.txt --tribunal --ssm
-
-# Tribunal + SSM forced scale
-python main.py --document doc.txt --tribunal --ssm --ssm-scale MACRO
-
-# Full verbose
-python main.py --document doc.txt --tribunal --ssm --verbose
 
 # Domain expansion report
 python main.py --report
@@ -105,55 +129,62 @@ python main.py --report
 
 ---
 
+## Regime Options
+
+| Regime | Description |
+|--------|-------------|
+| standard | Balanced — default |
+| adversarial | Maximum pressure — worst case |
+| breakout | High volatility / trend |
+| crisis | Capital preservation priority |
+| regulatory | Compliance-first |
+| fast_track | Rapid — 4 levels |
+| comparative | N≥2 solutions |
+
+---
+
+## Domain Catalog (16 domains)
+
+| Domain | Type values |
+|--------|------------|
+| Trading | chart, trading, xauusd, eurusd, backtest |
+| Legal | contract, alquiler, legal, compliance |
+| Financial | finance, investment, valuation, ma |
+| Cloud | cloud, saas, paas, iaas |
+| Code | code, architecture, abap |
+| Cybersecurity | cyber, security, pentest |
+| Agriculture | agro, livestock, harvest |
+| Real Estate | real_estate, property |
+| Science | science, research |
+| Medical | medical, clinical, health |
+| Media | media, content |
+| E-Commerce | ecommerce, marketplace |
+| Telecom | telecom, spectrum |
+| Public Sector | public, government, procurement |
+| General | (fallback) |
+
+---
+
 ## SSM Activation Logic
 
 | Tribunal Verdict | SSM |
-|-----------------|-----|
+|----------------|-----|
 | 🔴 INVIABLE | ❌ Blocked |
 | 🟠 VIABLE WITH CRITICAL CORRECTIONS | ✅ Auto |
 | 🟡 VIABLE WITH ADJUSTMENTS | ✅ Auto |
-| 🟢 SOLID UNDER PRESSURE | ⚙️ Optional (--ssm flag) |
-
----
-
-## Swarm Activation Score
-
-| Verdict | Tribunal Mode | Agents |
-|---------|--------------|--------|
-| SOLID / VIABLE WITH ADJUSTMENTS | SINGLE | 1 |
-| VIABLE WITH CRITICAL CORRECTIONS | TRIBUNAL_LIGHT | 3 |
-| INVIABLE | TRIBUNAL_FULL | 5 |
-| INVIABLE + War Room | TRIBUNAL_MAX | 7 |
-
----
-
-## Budget Configuration
-
-```json
-"tribunal": {
-    "max_agents": 7,
-    "max_calls_total": 30,
-    "max_n2_per_n1": 3,
-    "alert_at_percent": 80
-},
-"ssm": {
-    "max_personas": 20,
-    "max_rounds": 4,
-    "max_parallel_personas": 5,
-    "alert_at_percent": 80
-}
-```
+| 🟢 SOLID UNDER PRESSURE | ⚙️ Optional (--ssm) |
 
 ---
 
 ## Roadmap
 
-| Phase | Version | Status |
-|-------|---------|--------|
-| SAT Intelligence Doctrine + Skills | v2.6.0 | ✅ |
-| Domain Variants + Infrastructure | v2.7.0 | ✅ |
-| AFO + Tribunal Adversarial | v2.8.0 | ✅ |
-| SSM + Transparency Report | v2.9.0 | ✅ |
+| Version | Status |
+|---------|--------|
+| v2.6.0 SAT Skills | ✅ |
+| v2.7.0 Router + 11 Domains | ✅ |
+| v2.8.0 AFO + Tribunal Adversarial | ✅ |
+| v2.9.0 SSM + Transparency Report | ✅ |
+| v3.0.0 Tribunal Transversal + Dynamic Prompts | ✅ |
 
 ---
 
@@ -162,10 +193,10 @@ python main.py --report
 1. Increment version in CHANGELOG.md
 2. Self-audit every candidate version
 3. Do not soften the critical tone
-4. Domain variants → `prompts/system_prompt_[domain].md`
-5. New prompts must be registered in `system_prompt_router.md`
-6. New skills → `skills/[skill-name]/SKILL.md`
-7. SSM persona sets → `orchestrator/ssm/persona_factory.py`
+4. New domain → entry in `catalogs.py` (ROLE_CATALOG + SSM_CATALOG + DOMAIN_MAP + DOMAIN_TOOLS)
+5. New static prompt (optional) → `prompts/system_prompt_[domain].md`
+6. New prompt registered in `system_prompt_router.md`
+7. New skills → `skills/[skill-name]/SKILL.md`
 8. The name `dark-strategist-agent` does not change under any circumstance
 
-**ACTIVE — v2.9.0**
+**ACTIVE — v3.0.0**

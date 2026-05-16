@@ -5,111 +5,134 @@ Format: [VERSION] — DATE — Description
 
 ---
 
-## [2.9.0] — 2026-05-13
+## [3.0.0] — 2026-05-14
 
-### Major Release — Simulación Social Masiva (SSM) + Transparency Report
+### Major Release — Tribunal Transversal + Dynamic Prompts + Structured Output
 
-#### New: Simulación Social Masiva (SSM) — Phase 3
+This release is the most significant architectural evolution of Dark Strategist. It introduces the Tribunal Transversal (two-layer agent architecture), dynamic prompt generation (replacing 15 static files), Pydantic structured output (replacing free-text parsing), the `regime` field for environment calibration, and the Medical domain.
 
-The SSM is the predictive arm of Dark Strategist. While the Tribunal Adversarial destroys the proposal internally, the SSM predicts how the real world would destroy it if executed.
+---
 
-**SSM Activation Logic:**
-| Tribunal Verdict | SSM |
-|-----------------|-----|
-| 🔴 INVIABLE | ❌ Blocked — always |
-| 🟠 VIABLE WITH CRITICAL CORRECTIONS | ✅ Auto-activated |
-| 🟡 VIABLE WITH ADJUSTMENTS | ✅ Auto-activated |
-| 🟢 SOLID UNDER PRESSURE | ⚙️ Optional — requires --ssm flag |
+#### Core Architecture Change — Tribunal Transversal
 
-**SSM Scales:**
-| Scale | Personas | Use Case |
-|-------|----------|----------|
-| MICRO | 5-10 | Simple proposals, internal projects |
-| MESO | 20 | Business plans, market products |
-| MACRO | 50 | National campaigns, enterprise scale |
+**v2.x (Tribunal Adversarial):**
+```
+Agentes Forenses → read document directly → produce findings
+```
 
-**4 Interaction Rounds:**
-- Round 1: Each persona reads the plan → forms individual opinion (blind to others)
-- Round 2: Personas exchange opinions → some change stance
-- Round 3: Coalitions form (BLOCKING / SUPPORT / WAIT_AND_SEE)
-- Round 4: Dominant coalition executes action
+**v3.0 (Tribunal Transversal):**
+```
+Layer 1: Agentes de Rol    → simulate the domain environment
+Layer 2: Agentes Forenses  → audit the simulation + document
+AFO: synthesizes both layers → UnifiedVerdictOutput
+```
+
+The key distinction: in v3.0, all agents belong to the domain, but serve different functions. Rol agents simulate stakeholders; Forense agents audit the quality and veracity of what emerges from that simulation.
+
+---
 
 #### New Files
 
-1. **`orchestrator/ssm/__init__.py`** — SimulacionSocialMasiva main entry point. Activation logic, should_activate() method, full pipeline orchestration.
+1. **`orchestrator/catalogs.py`** — ROLE_CATALOG (15 domains × Rol + Forense agents), SSM_CATALOG (15 domains × personas), DOMAIN_MAP (keyword → domain), REGIME_MAP (6 regimes with calibration), DOMAIN_TOOLS (15 domains × tools). Single source of truth for all domain knowledge.
 
-2. **`orchestrator/ssm/persona_factory.py`** — PersonaFactory. Generates domain-specific personas with role, profile, bias, objective, question. 7 domain sets: Trading, Legal, Financial, Cloud, E-Commerce, Agriculture, Public Sector + General fallback.
+2. **`orchestrator/schema.py`** — Pydantic models: Finding, AgentVerdictOutput, UnifiedVerdictOutput, RuntimeContext. Structured output replaces free-text parsing. Enables programmatic comparison of tribunal agent verdicts.
 
-3. **`orchestrator/ssm/interaction_engine.py`** — InteractionEngine. Orchestrates 4 rounds via parallel Claude API calls (ThreadPoolExecutor). Personas blind to each other within each round.
+3. **`orchestrator/prompt_engine.py`** — PromptEngine with master templates: MASTER_TEMPLATE (Forense agents), ROLE_AGENT_TEMPLATE (Rol agents), SYNTHESIS_TEMPLATE (AFO synthesis). Dynamic prompt building from RuntimeContext — no static files required.
 
-4. **`orchestrator/ssm/social_report.py`** — SocialReport. Consolidates swarm behavior into REPORTE DE IMPACTO SOCIAL: stance distribution, coalition formation, adoption projection, friction points, scenario analysis, social viability verdict.
+4. **`orchestrator/context_builder.py`** — ContextBuilder. Validates case dict, resolves domain from type + subscenario keywords, assigns Rol/Forense agents, SSM personas, tools, and regime description. Single entry point for runtime context.
 
-5. **`orchestrator/ssm/budget_ssm.py`** — SSMBudgetController. Independent budget control for SSM (separate from Tribunal budget).
+5. **`orchestrator/tribunal_transversal.py`** — TribunalTransversal class (replaces tribunal.py for v3.0 cases). Two-layer execution: _run_rol_layer() (parallel, blind) → _run_forense_layer() (audits simulation) → _synthesize() → SSM → Transparency Report.
 
-#### New: Transparency Report
+6. **`prompts/system_prompt_medical.md`** — Medical / Clinical domain variant. UNIT-INQUISITOR + UNIT-QUANT co-primary. Covers clinical protocols, regulatory submissions, healthcare business plans, informed consent, clinical trial design. RULE MD1-MD4.
 
-Every Dark Strategist session now ends with a full Transparency Report showing:
-- AFO: domain detected, prompt selected, confidence, swarm score, verdict synthesis status
-- Tribunal Adversarial: mode, all agents deployed, status, N2 sub-agents per agent
-- Sub-agentes Forenses Permanentes: UNITs activated
-- Sub-agentes Forenses Temporales: dynamic agents created + notification status
-- SSM: activation status, scale, personas, rounds, social verdict
-- Budget consumed: total calls, agents deployed, breakdown
-- Notifications: Slack / GitHub / Sheets dispatch status
+---
+
+#### Key Concepts Introduced
+
+**Regime:** A new field that calibrates analysis intensity and framing before any agent runs.
+| Regime | Description |
+|--------|-------------|
+| standard | Balanced perspective — default |
+| adversarial | Maximum pressure — assume worst case |
+| breakout | High volatility / trend conditions |
+| crisis | Capital preservation priority |
+| regulatory | Compliance-first lens |
+| fast_track | Rapid assessment — 4 levels |
+| comparative | N≥2 solutions — cross-evaluation |
+
+**Dynamic Prompts:** The PromptEngine builds prompts at runtime from the master template + RuntimeContext. Adding a new domain requires only a new entry in catalogs.py — no new .md file.
+
+**VerdictOutput (Pydantic):** Every agent now returns a structured, validated JSON output. The AFO synthesizer can programmatically compare verdicts, count severities, and detect conflicts without parsing text.
+
+**Medical Domain:** New domain with 7 document types, 11-item failure catalog, 4 domain rules (RULE MD1-MD4), and domain-specific War Room orchestration.
+
+---
 
 #### Updated Files
 
-- **`orchestrator/tribunal.py`** — Integrated SSM + Transparency Report generation
-- **`orchestrator/main.py`** — New flags: `--ssm`, `--ssm-scale MICRO|MESO|MACRO`
-- **`orchestrator/config.example.json`** — New `ssm` section
+- **`orchestrator/main.py`** — New v3.0 CLI: `--type`, `--subscenario`, `--objective`, `--regime`. v2.x `--document` flag preserved for backward compatibility.
+- **`orchestrator/config.example.json`** — max_calls_total increased to 40 (two layers)
+- **`orchestrator/router.md`** — Medical domain added to catalog (P15)
 
-#### Full CLI Reference
+---
+
+#### CLI Reference v3.0.0
 
 ```bash
-# Single mode
-python main.py --document doc.txt
+# v3.0 case-based (recommended)
+python main.py --type contract --subscenario alquiler --objective "identify risks" --regime adversarial
 
-# Tribunal auto-size
-python main.py --document doc.txt --tribunal
+# With Tribunal Transversal
+python main.py --type finance --subscenario investment_review --objective "evaluate viability" --tribunal
 
-# Tribunal + SSM (MESO scale, default)
+# With SSM
+python main.py --type medical --subscenario clinical_review --objective "protocol risks" --tribunal --ssm
+
+# Full pipeline
+python main.py --type trading --subscenario XAUUSD --objective "buy sell wait" --regime breakout --tribunal --ssm --ssm-scale MACRO
+
+# v2.x compatibility
 python main.py --document doc.txt --tribunal --ssm
-
-# Tribunal + SSM forced scale
-python main.py --document doc.txt --tribunal --ssm --ssm-scale MACRO
-
-# SOLID verdict + SSM forced
-python main.py --document doc.txt --tribunal --ssm --ssm-scale MICRO
-
-# Full verbose (budget summary)
-python main.py --document doc.txt --tribunal --ssm --verbose
 ```
 
-#### Pending — v2.9 Roadmap
+---
 
-- [ ] example_04 — COMPARATIVE MODE worked example
-- [ ] example_05 — OPTIMIZATION MODE worked example
-- [ ] UNIT-PSYCH extended bias catalog
-- [ ] Looker Studio dashboard template (including SSM metrics)
-- [ ] Cloud Function update with SSM support
+#### Backward Compatibility
+
+v2.9.0 files are preserved:
+- `tribunal.py` — still functional for `--document` mode
+- All 15 `prompts/system_prompt_*.md` — still used as fallback
+- All SSM module files — unchanged
+- All notification/logging infrastructure — unchanged
+
+---
+
+#### Pending — v3.0 Roadmap
+
+- [ ] Update `system_prompt_router.md` with Medical domain (P15)
+- [ ] example_04 — COMPARATIVE MODE with Tribunal Transversal
+- [ ] example_05 — OPTIMIZATION MODE with SSM
+- [ ] Looker Studio dashboard template
+- [ ] Cloud Function update for v3.0 case-based API
+
+---
+
+## [2.9.0] — 2026-05-13
+
+SSM (Simulación Social Masiva) + Transparency Report. 4-round interaction engine.
+MICRO/MESO/MACRO scales. SSM activation logic by verdict.
 
 ---
 
 ## [2.8.0] — 2026-05-13
 
-### Major Release — Agente Forense Orquestador + Tribunal Adversarial
-
-AFO (N0) + N1 Agentes Forenses paralelos (1/3/5/7) + N2 Sub-agentes Forenses.
-Swarm Activation Score. Budget Controller. Sub-Agent Spawner. Verdict Synthesizer.
+AFO + Tribunal Adversarial. Budget Controller. Sub-Agent Spawner. Verdict Synthesizer.
 
 ---
 
 ## [2.7.0] — 2026-05-12
 
-### Major Release — Autonomous Router + 11 Domain Prompts + Infrastructure
-
-12 new prompts. orchestrator/ and infrastructure/ folders.
-UNKNOWN_DOMAIN protocol with auto-notification.
+Autonomous Router + 11 Domain Prompts + Python Infrastructure.
 
 ---
 

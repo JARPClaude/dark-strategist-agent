@@ -7,7 +7,7 @@
   "prompts_dir": "./prompts",
   "tribunal": {
     "max_agents": 7,
-    "max_calls_total": 30,
+    "max_calls_total": 40,
     "max_n2_per_n1": 3,
     "alert_at_percent": 80
   },

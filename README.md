@@ -4,11 +4,11 @@
 
 > *"You have zero loyalty to any solution. Your only standard is truth under maximum pressure."*
 
-![Version](https://img.shields.io/badge/version-2.9.0-darkred)
+![Version](https://img.shields.io/badge/version-3.0.0-darkred)
 ![License](https://img.shields.io/badge/license-MIT-green)
 ![Status](https://img.shields.io/badge/status-ACTIVE-brightgreen)
-![Domains](https://img.shields.io/badge/domains-14-blue)
-![Tribunal](https://img.shields.io/badge/tribunal-adversarial-black)
+![Domains](https://img.shields.io/badge/domains-16-blue)
+![Tribunal](https://img.shields.io/badge/tribunal-transversal-black)
 ![SSM](https://img.shields.io/badge/SSM-active-purple)
 
 ---
@@ -17,69 +17,58 @@
 
 THE SOVEREIGN ADVERSARY is an AI agent that **systematically destroys** any solution, proposal, plan, or argument — exposing every weakness, contradiction, invalid assumption, logical gap, hidden risk, and potential failure before reality does it for you.
 
-**v2.9.0 completes the full pipeline:**
-1. **Tribunal Adversarial** — destroys the proposal internally (multiple agents, blind to each other)
-2. **Simulación Social Masiva** — predicts how the real world destroys it if executed
-3. **Transparency Report** — shows the user exactly what work was done and by whom
+**v3.0.0 — The Tribunal Transversal:**
+- **Agentes de Rol** simulate the domain environment (stakeholders, market, regulatory context)
+- **Agentes Forenses** audit what the simulation produces — detecting inconsistencies, contrasting hypotheses, exposing deception
+- **Dynamic prompts** generated at runtime from catalogs — no static files required
+- **Pydantic structured output** — verdicts are comparable programmatically
+- **Regime calibration** — analysis intensity set before any agent runs
 
 ---
 
-### Version 2.9.0 — Full Pipeline
+### Version 3.0.0 — Major Release
 
 | Feature | Status |
 |---|---|
-| 7-Level Forensic Analysis | ✅ |
-| SAT Intelligence Doctrine + 4 Audit Skills | ✅ v2.6.0 |
-| 14 Domain Variants + Router | ✅ v2.7.0 |
-| Agente Forense Orquestador (AFO) | ✅ v2.8.0 |
-| Tribunal Adversarial (1/3/5/7 parallel agents) | ✅ v2.8.0 |
-| Sub-agentes Forenses (permanent + temporary) | ✅ v2.8.0 |
-| Budget Controller | ✅ v2.8.0 |
-| **Simulación Social Masiva (SSM)** | ✅ **v2.9.0** |
-| **PersonaFactory — domain-specific personas** | ✅ **v2.9.0** |
-| **4-round interaction engine** | ✅ **v2.9.0** |
-| **Coalition formation + action simulation** | ✅ **v2.9.0** |
-| **REPORTE DE IMPACTO SOCIAL** | ✅ **v2.9.0** |
-| **Transparency Report** | ✅ **v2.9.0** |
+| SAT Intelligence Doctrine + 4 Audit Skills | ✅ v2.6 |
+| 15 Domain Variants + Router | ✅ v2.7 |
+| AFO + Tribunal Adversarial | ✅ v2.8 |
+| SSM + Transparency Report | ✅ v2.9 |
+| **Tribunal Transversal (2-layer architecture)** | ✅ **v3.0** |
+| **Dynamic Prompt Engine (master template)** | ✅ **v3.0** |
+| **ROLE_CATALOG (Rol + Forense per domain)** | ✅ **v3.0** |
+| **Pydantic VerdictOutput (structured JSON)** | ✅ **v3.0** |
+| **RuntimeContext + ContextBuilder** | ✅ **v3.0** |
+| **Regime field (6 regimes)** | ✅ **v3.0** |
+| **Medical / Clinical domain** | ✅ **v3.0** |
 
 ---
 
-## The Full Pipeline
+## The Two-Layer Tribunal
 
 ```
-Document presented
-       ↓
-FASE 1 — TRIBUNAL ADVERSARIAL
-  AFO routes document → detects domain
-  Swarm Activation Score → 1/3/5/7 agents
-  Agentes Forenses audit in parallel (blind)
-  Sub-agentes Forenses deployed on demand
-  Verdict Synthesizer → VEREDICTO FORENSE UNIFICADO
-       ↓ (if VIABLE)
+LAYER 1 — Agentes de Rol (parallel, blind)
+  Each simulates a domain stakeholder:
+  Trading:     Institutional investor, market maker, retail trader...
+  Legal:       Contracting party, regulator, affected third party...
+  Medical:     Clinician, regulator, patient advocate...
+  [14 domain sets × 4-5 roles each]
+       ↓ simulation output
 
-FASE 2 — SIMULACIÓN SOCIAL MASIVA
-  PersonaFactory generates N personas by domain
-  Round 1: Individual opinions (blind)
-  Round 2: Exchange → stance shifts
-  Round 3: Coalition formation
-  Round 4: Dominant coalition acts
-  → REPORTE DE IMPACTO SOCIAL
+LAYER 2 — Agentes Forenses (parallel, blind)
+  Each audits the simulation:
+  Trading:     Quantitative forense, execution forense, regime forense
+  Legal:       Clause forense, jurisdiction forense, liability forense
+  Medical:     Clinical forense, regulatory forense, liability forense
+  [14 domain sets × 3 forensic roles each]
+       ↓ structured VerdictOutput (Pydantic)
 
-FASE 3 — TRANSPARENCY REPORT
-  Full operational metadata emitted
-  AFO + Tribunal + Sub-agents + SSM + Budget + Notifications
+AFO SYNTHESIS
+  → Consolidates all outputs
+  → Resolves conflicts (highest severity wins)
+  → Applies Verdict Decision Table
+  → VEREDICTO FORENSE UNIFICADO
 ```
-
----
-
-## SSM Activation Logic
-
-| Tribunal Verdict | SSM |
-|----------------|-----|
-| 🔴 INVIABLE | ❌ Blocked — always |
-| 🟠 VIABLE WITH CRITICAL CORRECTIONS | ✅ Auto-activated |
-| 🟡 VIABLE WITH ADJUSTMENTS | ✅ Auto-activated |
-| 🟢 SOLID UNDER PRESSURE | ⚙️ Optional — `--ssm` flag |
 
 ---
 
@@ -90,54 +79,65 @@ cd orchestrator
 pip install -r requirements.txt
 cp config.example.json config.json
 
-# Single audit
-python main.py --document doc.txt
+# Case-based (v3.0 — recommended)
+python main.py --type contract --subscenario alquiler --objective "identify risks"
+python main.py --type trading --subscenario XAUUSD --objective "direction" --regime breakout
+python main.py --type medical --subscenario clinical_review --objective "protocol risks"
 
-# Tribunal auto-size
-python main.py --document doc.txt --tribunal
+# With Tribunal Transversal + SSM
+python main.py --type finance --subscenario investment_review \
+  --objective "evaluate viability" --tribunal --ssm
 
-# Tribunal + SSM
-python main.py --document doc.txt --tribunal --ssm
-
-# Full pipeline, MACRO scale
-python main.py --document doc.txt --tribunal --ssm --ssm-scale MACRO --verbose
+# Full pipeline
+python main.py --type trading --subscenario XAUUSD --objective "buy sell wait" \
+  --regime breakout --tribunal --agents 5 --ssm --ssm-scale MACRO --verbose
 ```
 
 ---
 
-## Domain Catalog (15 prompts)
+## Regime Options
 
-| Prompt | Domain | Primary Unit |
-|--------|--------|--------------|
-| `system_prompt.md` | General | Contextual |
-| `system_prompt_router.md` | Auto-detect | Contextual |
-| `system_prompt_trading.md` | Trading / Algorithmic | UNIT-QUANT |
-| `system_prompt_legal.md` | Legal / Compliance | UNIT-INQUISITOR |
-| `system_prompt_code.md` | Code / ABAP / Architecture | UNIT-TECH |
-| `system_prompt_financial.md` | Financial / M&A / Valuation | UNIT-QUANT |
-| `system_prompt_cloud.md` | Cloud / SaaS / PaaS / IaaS | UNIT-TECH |
-| `system_prompt_cybersecurity.md` | Cybersecurity / Audit | UNIT-TECH |
-| `system_prompt_agro.md` | Agriculture / Livestock | UNIT-BIO |
-| `system_prompt_realestate.md` | Real Estate | UNIT-MARKET |
-| `system_prompt_science.md` | Science / R&D | UNIT-QUANT |
-| `system_prompt_media.md` | Media / Content | UNIT-MARKET |
-| `system_prompt_ecommerce.md` | E-Commerce | UNIT-MARKET |
-| `system_prompt_telecom.md` | Telecom | UNIT-GEO |
-| `system_prompt_publicsector.md` | Public Sector | UNIT-COMPLIANCE |
+| Regime | Description |
+|--------|-------------|
+| `standard` | Balanced — default |
+| `adversarial` | Maximum pressure — worst case |
+| `breakout` | High volatility / trend conditions |
+| `crisis` | Capital preservation priority |
+| `regulatory` | Compliance-first lens |
+| `fast_track` | Rapid — 4 levels only |
+| `comparative` | N≥2 solutions |
 
 ---
 
-## SSM Persona Sets by Domain
+## Domain Catalog (16 domains)
 
-| Domain | Personas Simulated |
-|--------|------------------|
-| Trading | Institutional investor, retail trader, regulator, competing fund, risk manager |
-| Legal | Opposing counsel, judge, regulator, affected party, in-house counsel |
-| Financial | VC, credit analyst, acquiring CFO, minority shareholder, financial press |
-| Cloud | CTO, security lead, enterprise customer, data regulator, competing SaaS CEO |
-| E-Commerce | Marketplace platform, end consumer, logistics provider, algorithm, competitor |
-| Agriculture | Community leader, environmental regulator, commodity buyer, worker, NGO |
-| Public Sector | Political opposition, taxpayer, state auditor, monitoring body, journalist |
+| Domain | --type values |
+|--------|--------------|
+| Trading | `chart` `trading` `xauusd` `backtest` |
+| Legal | `contract` `alquiler` `legal` |
+| Financial | `finance` `investment` `valuation` |
+| Cloud | `cloud` `saas` `paas` `iaas` |
+| Code | `code` `architecture` `abap` |
+| Cybersecurity | `cyber` `security` `pentest` |
+| Agriculture | `agro` `livestock` `harvest` |
+| Real Estate | `real_estate` `property` |
+| Science | `science` `research` |
+| **Medical** | `medical` `clinical` `health` |
+| Media | `media` `content` |
+| E-Commerce | `ecommerce` `marketplace` |
+| Telecom | `telecom` `spectrum` |
+| Public Sector | `public` `government` `procurement` |
+
+---
+
+## SSM Activation Logic
+
+| Verdict | SSM |
+|---------|-----|
+| 🔴 INVIABLE | ❌ Blocked |
+| 🟠 VIABLE WITH CRITICAL CORRECTIONS | ✅ Auto |
+| 🟡 VIABLE WITH ADJUSTMENTS | ✅ Auto |
+| 🟢 SOLID UNDER PRESSURE | ⚙️ Optional `--ssm` |
 
 ---
 
@@ -152,15 +152,28 @@ python main.py --document doc.txt --tribunal --ssm --ssm-scale MACRO --verbose
 
 ---
 
+## Roadmap
+
+| Version | Feature | Status |
+|---------|---------|--------|
+| v2.6.0 | SAT Skills | ✅ |
+| v2.7.0 | Router + 11 Domains | ✅ |
+| v2.8.0 | AFO + Tribunal Adversarial | ✅ |
+| v2.9.0 | SSM + Transparency Report | ✅ |
+| v3.0.0 | Tribunal Transversal + Dynamic Prompts | ✅ |
+
+---
+
 ## Protocol Status
 
 ```
-[PROTOCOL_STATUS: ACTIVE — v2.9.0]
-[TRIBUNAL: ACTIVE — 1/3/5/7 agents]
-[SSM: ACTIVE — MICRO/MESO/MACRO scales]
+[PROTOCOL_STATUS: ACTIVE — v3.0.0]
+[TRIBUNAL: TRANSVERSAL — Rol + Forense layers]
+[DOMAINS: 16 (including Medical)]
+[PROMPTS: DYNAMIC — master template + catalogs]
+[OUTPUT: STRUCTURED — Pydantic VerdictOutput]
+[SSM: ACTIVE — MICRO/MESO/MACRO]
 [TRANSPARENCY_REPORT: ACTIVE — every session]
-[DOMAIN_CATALOG: 14 prompts + 1 base + 1 router]
-[SUB_AGENTS: 8 permanent + dynamic temporary]
 [NOTIFICATION_CHANNELS: SLACK + GITHUB + SHEETS]
 ```
 

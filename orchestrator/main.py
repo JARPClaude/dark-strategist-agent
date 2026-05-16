@@ -1,22 +1,22 @@
 """
-Dark Strategist Agent — Main Orchestrator
-Version: 2.9.0
+Dark Strategist Agent v3.0.0 — Main Entry Point
+Tribunal Transversal + Dynamic Prompts + Structured Output
 
 Usage:
-    # Single mode
-    python main.py --document doc.txt
+    # Case-based (v3.0 — recommended)
+    python main.py --type contract --subscenario alquiler --objective "identify risks" --regime adversarial
 
-    # Tribunal auto-size
-    python main.py --document doc.txt --tribunal
+    # With Tribunal Transversal
+    python main.py --type finance --subscenario investment_review --objective "evaluate viability" --tribunal
 
-    # Tribunal forced size
-    python main.py --document doc.txt --tribunal --agents 5
+    # With SSM
+    python main.py --type contract --subscenario alquiler --objective "identify risks" --tribunal --ssm
 
-    # Tribunal + SSM auto-scale
+    # Full pipeline
+    python main.py --type trading --subscenario XAUUSD --objective "buy sell or wait" --regime breakout --tribunal --ssm --ssm-scale MACRO
+
+    # Document-based (v2.x compatibility)
     python main.py --document doc.txt --tribunal --ssm
-
-    # Tribunal + SSM forced scale
-    python main.py --document doc.txt --tribunal --ssm --ssm-scale MACRO
 
     # Domain expansion report
     python main.py --report
@@ -29,7 +29,8 @@ import argparse
 from pathlib import Path
 
 from dotenv import load_dotenv
-from tribunal import AgenteForenseOrquestador
+from context_builder import ContextBuilder
+from tribunal_transversal import TribunalTransversal
 
 load_dotenv()
 
@@ -48,7 +49,7 @@ def load_config(config_path: str = "config.json") -> dict:
         "prompts_dir": os.getenv("DS_PROMPTS_DIR", "./prompts"),
         "tribunal": {
             "max_agents": 7,
-            "max_calls_total": 30,
+            "max_calls_total": 40,
             "max_n2_per_n1": 3,
             "alert_at_percent": 80
         },
@@ -92,87 +93,136 @@ def print_report_mode(config: dict):
             sheets_cfg["sheet_name"]
         ).print_expansion_report()
     else:
-        print("⚠️  Google Sheets not enabled in config.")
+        print("⚠️  Google Sheets not enabled.")
+
+
+def calculate_tribunal_size(tribunal: bool, agents: int) -> tuple:
+    """Returns (tribunal_size, tribunal_label)."""
+    labels = {1: "SINGLE", 3: "TRIBUNAL_LIGHT", 5: "TRIBUNAL_FULL", 7: "TRIBUNAL_MAX"}
+    if not tribunal:
+        return 1, "SINGLE"
+    if agents:
+        return agents, labels.get(agents, "TRIBUNAL_FULL")
+    return None, "AUTO"  # Auto-sized by Swarm Activation Score
 
 
 def main():
     parser = argparse.ArgumentParser(
-        description="Dark Strategist Agent v2.9.0 — Agente Forense Orquestador"
+        description="Dark Strategist Agent v3.0.0 — Tribunal Transversal"
     )
-    parser.add_argument("--document", type=str, help="Path to document to audit")
-    parser.add_argument("--config", type=str, default="config.json")
+
+    # Case-based args (v3.0 — recommended)
+    parser.add_argument("--type", type=str,
+                        help="Case type: contract | finance | trading | code | medical | etc.")
+    parser.add_argument("--subscenario", type=str,
+                        help="Specific subscenario: XAUUSD | alquiler | investment_review | etc.")
+    parser.add_argument("--objective", type=str,
+                        help="Analysis objective: 'identify risks' | 'buy sell or wait' | etc.")
+    parser.add_argument("--regime", type=str, default="standard",
+                        choices=["standard", "adversarial", "breakout",
+                                 "crisis", "regulatory", "fast_track", "comparative"],
+                        help="Analysis regime (default: standard)")
+
+    # Document-based args (v2.x compatibility)
+    parser.add_argument("--document", type=str,
+                        help="Path to document file (v2.x compatibility mode)")
+
+    # Tribunal args
     parser.add_argument("--tribunal", action="store_true",
-                        help="Activate Tribunal Adversarial mode")
+                        help="Activate Tribunal Transversal")
     parser.add_argument("--agents", type=int, choices=[1, 3, 5, 7],
-                        help="Force tribunal size (1/3/5/7). Auto if omitted.")
+                        help="Force tribunal size (auto if omitted)")
+
+    # SSM args
     parser.add_argument("--ssm", action="store_true",
                         help="Activate Simulación Social Masiva")
     parser.add_argument("--ssm-scale", type=str,
                         choices=["MICRO", "MESO", "MACRO"], default="MESO",
                         help="SSM scale: MICRO(5-10) / MESO(20) / MACRO(50)")
-    parser.add_argument("--verbose", action="store_true",
-                        help="Show full transparency report")
-    parser.add_argument("--report", action="store_true",
-                        help="Print domain expansion report from Sheets")
-    args = parser.parse_args()
 
+    # Utility args
+    parser.add_argument("--config", type=str, default="config.json")
+    parser.add_argument("--verbose", action="store_true")
+    parser.add_argument("--report", action="store_true",
+                        help="Print domain expansion report")
+
+    args = parser.parse_args()
     config = load_config(args.config)
 
     if args.report:
         print_report_mode(config)
         return
 
-    if not args.document:
+    # Build case
+    if args.type and args.subscenario and args.objective:
+        # v3.0 case-based mode
+        case = {
+            "type": args.type,
+            "subscenario": args.subscenario,
+            "objective": args.objective,
+            "regime": args.regime,
+            "run_ssm": args.ssm,
+            "ssm_scale": args.ssm_scale,
+        }
+        document = f"[Document type: {args.type} | Subscenario: {args.subscenario}]"
+    elif args.document:
+        # v2.x document-based compatibility
+        doc_path = Path(args.document)
+        if not doc_path.exists():
+            print(f"❌ Document not found: {args.document}")
+            sys.exit(1)
+        document = doc_path.read_text(encoding="utf-8")
+        # Auto-infer case from document
+        case = {
+            "type": "general",
+            "subscenario": doc_path.stem,
+            "objective": "identify risks and failure modes",
+            "regime": args.regime,
+            "run_ssm": args.ssm,
+            "ssm_scale": args.ssm_scale,
+        }
+    else:
         parser.print_help()
         sys.exit(1)
 
-    document = Path(args.document).read_text(encoding="utf-8")
+    # Build runtime context
+    builder = ContextBuilder()
+    ctx = builder.build(case)
 
-    # Determine forced size
-    forced_size = None
-    if not args.tribunal:
-        forced_size = 1  # Single mode
-    elif args.agents:
-        forced_size = args.agents  # Forced tribunal size
+    # Set tribunal size
+    tribunal_size, tribunal_label = calculate_tribunal_size(args.tribunal, args.agents)
+    if tribunal_size:
+        ctx.tribunal_size = tribunal_size
+    ctx.tribunal_label = tribunal_label
+
+    if args.verbose:
+        print(builder.describe(ctx))
 
     # Print header
-    mode_label = "SINGLE" if forced_size == 1 else "TRIBUNAL"
+    mode_label = tribunal_label if args.tribunal else "SINGLE"
     ssm_label = f" + SSM ({args.ssm_scale})" if args.ssm else ""
     print(f"\n{'='*60}")
-    print(f"DARK STRATEGIST AGENT v2.9.0")
-    print(f"Mode: {mode_label}{ssm_label} | Agents: {forced_size or 'AUTO'}")
+    print(f"DARK STRATEGIST v3.0.0 — Tribunal Transversal")
+    print(f"Domain: {ctx.domain} | Regime: {ctx.regime}")
+    print(f"Mode: {mode_label}{ssm_label}")
     print(f"{'='*60}\n")
 
-    # Run AFO
-    afo = AgenteForenseOrquestador(config, config["prompts_dir"])
-    result = afo.run(
-        document=document,
-        forced_tribunal_size=forced_size,
-        run_ssm=args.ssm,
-        ssm_scale=args.ssm_scale
-    )
+    # Run Tribunal Transversal
+    tt = TribunalTransversal(config)
+    result = tt.run(document=document, ctx=ctx)
 
-    # Print outputs
-    print(f"\n{'='*60}")
-    print("VEREDICTO FORENSE UNIFICADO")
-    print(f"{'='*60}\n")
-    print(result["final_verdict"])
-
+    # Output
+    print(result["final_verdict_text"])
     if result.get("ssm_report"):
         print(result["ssm_report"])
-
     print(result["transparency_report"])
 
     if args.verbose:
-        afo.budget.print_summary()
+        tt.budget.print_summary()
 
-    print(f"\n{'='*60}")
-    print(f"Session:  {result['session_id']}")
-    print(f"Domain:   {result['domain']}")
-    print(f"Tribunal: {result['tribunal_mode']}")
-    print(f"Agents:   {result['agents_deployed']}")
-    print(f"Duration: {result['duration_seconds']}s")
-    print(f"{'='*60}\n")
+    print(f"\n[Session: {result['session_id']} | "
+          f"Duration: {result['duration_seconds']}s | "
+          f"Domain: {result['domain']}]\n")
 
 
 if __name__ == "__main__":
