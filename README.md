@@ -4,12 +4,13 @@
 
 > *"You have zero loyalty to any solution. Your only standard is truth under maximum pressure."*
 
-![Version](https://img.shields.io/badge/version-3.0.0-darkred)
+![Version](https://img.shields.io/badge/version-3.1.0-darkred)
 ![License](https://img.shields.io/badge/license-MIT-green)
 ![Status](https://img.shields.io/badge/status-ACTIVE-brightgreen)
 ![Domains](https://img.shields.io/badge/domains-16-blue)
 ![Tribunal](https://img.shields.io/badge/tribunal-transversal-black)
 ![SSM](https://img.shields.io/badge/SSM-active-purple)
+![GOAP](https://img.shields.io/badge/GOAP-A*_planner-orange)
 
 ---
 
@@ -17,58 +18,129 @@
 
 THE SOVEREIGN ADVERSARY is an AI agent that **systematically destroys** any solution, proposal, plan, or argument — exposing every weakness, contradiction, invalid assumption, logical gap, hidden risk, and potential failure before reality does it for you.
 
-**v3.0.0 — The Tribunal Transversal:**
-- **Agentes de Rol** simulate the domain environment (stakeholders, market, regulatory context)
-- **Agentes Forenses** audit what the simulation produces — detecting inconsistencies, contrasting hypotheses, exposing deception
-- **Dynamic prompts** generated at runtime from catalogs — no static files required
-- **Pydantic structured output** — verdicts are comparable programmatically
-- **Regime calibration** — analysis intensity set before any agent runs
+**v3.1.0 introduces:**
+- **GOAP A\* Planner** — dynamic planning replaces fixed rules. Given domain, regime, and budget, A\* finds the optimal sequence of agents to deploy.
+- **Legal Taxonomy (12 sub-areas)** — Commercial, Corporate/M&A, Employment, Privacy, Product, Regulatory, AI Governance, IP, Litigation, Real Estate, Finance, Public Regulatory.
 
 ---
 
-### Version 3.0.0 — Major Release
+### Version 3.1.0 — Major Release
 
 | Feature | Status |
 |---|---|
-| SAT Intelligence Doctrine + 4 Audit Skills | ✅ v2.6 |
-| 15 Domain Variants + Router | ✅ v2.7 |
-| AFO + Tribunal Adversarial | ✅ v2.8 |
-| SSM + Transparency Report | ✅ v2.9 |
-| **Tribunal Transversal (2-layer architecture)** | ✅ **v3.0** |
-| **Dynamic Prompt Engine (master template)** | ✅ **v3.0** |
-| **ROLE_CATALOG (Rol + Forense per domain)** | ✅ **v3.0** |
-| **Pydantic VerdictOutput (structured JSON)** | ✅ **v3.0** |
-| **RuntimeContext + ContextBuilder** | ✅ **v3.0** |
-| **Regime field (6 regimes)** | ✅ **v3.0** |
-| **Medical / Clinical domain** | ✅ **v3.0** |
+| Tribunal Transversal (2-layer) | ✅ v3.0 |
+| Dynamic Prompt Engine | ✅ v3.0 |
+| Pydantic VerdictOutput | ✅ v3.0 |
+| Medical domain | ✅ v3.0 |
+| **GOAP A\* Planner** | ✅ **v3.1** |
+| **Legal 12 Sub-area Taxonomy** | ✅ **v3.1** |
+| **AI Governance Legal (L07)** | ✅ **v3.1** |
+| **LEGAL_SUBAREA_MAP auto-detection** | ✅ **v3.1** |
 
 ---
 
-## The Two-Layer Tribunal
+## GOAP A\* Planner
+
+The AFO no longer uses fixed rules to decide how many agents to deploy. It plans dynamically.
 
 ```
-LAYER 1 — Agentes de Rol (parallel, blind)
-  Each simulates a domain stakeholder:
-  Trading:     Institutional investor, market maker, retail trader...
-  Legal:       Contracting party, regulator, affected third party...
-  Medical:     Clinician, regulator, patient advocate...
-  [14 domain sets × 4-5 roles each]
-       ↓ simulation output
+FIXED (v2.x):
+  IF verdict=INVIABLE → always 5 agents
+  (ignores budget, domain, regime)
 
-LAYER 2 — Agentes Forenses (parallel, blind)
-  Each audits the simulation:
-  Trading:     Quantitative forense, execution forense, regime forense
-  Legal:       Clause forense, jurisdiction forense, liability forense
-  Medical:     Clinical forense, regulatory forense, liability forense
-  [14 domain sets × 3 forensic roles each]
-       ↓ structured VerdictOutput (Pydantic)
+GOAP A* (v3.1):
+  Given budget=15, domain=Legal, regime=adversarial:
+  → optimal plan: ROL:3 + FORENSE:3 + N2:2 + SYNTHESIZE = 12 calls
 
-AFO SYNTHESIS
-  → Consolidates all outputs
-  → Resolves conflicts (highest severity wins)
-  → Applies Verdict Decision Table
-  → VEREDICTO FORENSE UNIFICADO
+  Given budget=8, domain=General, regime=standard:
+  → optimal plan: ROL:2 + FORENSE:2 + SYNTHESIZE = 6 calls
 ```
+
+### How A\* works in the AFO
+
+```
+WorldState (current):           GoalState:
+  domain = Legal                  synthesis_done = True
+  regime = adversarial            ssm_required = True
+  budget_remaining = 20
+  initial_audit_done = False
+         ↓
+  A* searches action space
+  (12 possible actions × budget constraints)
+         ↓
+  Optimal plan found:
+  1. INITIAL_AUDIT (cost=1)
+  2. ROL_LAYER_STANDARD (cost=3)
+  3. FORENSE_LAYER_FULL (cost=5)
+  4. SPAWN_N2_TARGETED (cost=2)
+  5. SYNTHESIZE (cost=1)
+  6. SSM_MESO (cost=10)
+  Total: 22 calls — within budget ✅
+```
+
+---
+
+## Legal Domain — 12 Practice Sub-areas
+
+| ID | Sub-area | Key Risk |
+|----|----------|---------|
+| L01 | Commercial Legal | Unlimited liability, IP gaps |
+| L02 | Corporate / M&A | Undisclosed liabilities, synergy claims |
+| L03 | Employment | Misclassification, non-compete |
+| L04 | Privacy (GDPR/CCPA) | Consent, residency, transfer |
+| L05 | Product Legal | False advertising, warranty |
+| L06 | Regulatory | Reporting gaps, jurisdictional conflict |
+| **L07** | **AI Governance** | AI output IP, bias monitoring, vendor liability |
+| L08 | IP Legal | Chain of title, OSS contamination |
+| L09 | Litigation | Jurisdictional defects, damages |
+| L10 | Real Estate Legal | Title gaps, zoning violations |
+| L11 | Finance Legal | Covenant breach, cross-default |
+| L12 | Public Regulatory | Procurement irregularities, integrity |
+
+Sub-areas are **auto-detected** from document keywords (nda, gdpr, trademark, employment, ai governance, etc.) or declared explicitly.
+
+---
+
+## Full Pipeline
+
+```
+INPUT: --type contract --subscenario nda --regime adversarial
+       ↓
+ContextBuilder → RuntimeContext (domain=Legal, sub_area=L01)
+       ↓
+GOAPPlanner A* → Execution Plan (optimal for budget + domain)
+       ↓
+TRIBUNAL TRANSVERSAL
+  Layer 1: Agentes de Rol (simulate domain)
+  Layer 2: Agentes Forenses (audit simulation)
+  N2 Sub-agentes on demand
+  AFO → UnifiedVerdictOutput (Pydantic)
+       ↓ (if VIABLE)
+SSM → N personas × 4 rounds → Social Report
+       ↓
+TRANSPARENCY REPORT (full operational metadata)
+```
+
+---
+
+## Domain Catalog (16 domains)
+
+| Domain | --type values |
+|--------|--------------|
+| Trading | `chart` `trading` `xauusd` `backtest` |
+| Legal | `contract` `nda` `gdpr` `employment` `trademark` `litigation` |
+| Financial | `finance` `investment` `valuation` `ma` |
+| Cloud | `cloud` `saas` `paas` `iaas` |
+| Code | `code` `architecture` `abap` |
+| Cybersecurity | `cyber` `security` `pentest` |
+| Agriculture | `agro` `livestock` `harvest` |
+| Real Estate | `real_estate` `property` |
+| Science | `science` `research` |
+| Medical | `medical` `clinical` `health` |
+| Media | `media` `content` |
+| E-Commerce | `ecommerce` `marketplace` |
+| Telecom | `telecom` `spectrum` |
+| Public Sector | `public` `government` `procurement` |
 
 ---
 
@@ -79,54 +151,20 @@ cd orchestrator
 pip install -r requirements.txt
 cp config.example.json config.json
 
-# Case-based (v3.0 — recommended)
-python main.py --type contract --subscenario alquiler --objective "identify risks"
-python main.py --type trading --subscenario XAUUSD --objective "direction" --regime breakout
-python main.py --type medical --subscenario clinical_review --objective "protocol risks"
+# Legal contract — auto-detects sub-area
+python main.py --type contract --subscenario nda --objective "identify risks" --regime adversarial
 
-# With Tribunal Transversal + SSM
-python main.py --type finance --subscenario investment_review \
-  --objective "evaluate viability" --tribunal --ssm
+# Legal AI Governance
+python main.py --type legal --subscenario "ai governance" --objective "ai vendor risks" --tribunal
 
-# Full pipeline
-python main.py --type trading --subscenario XAUUSD --objective "buy sell wait" \
-  --regime breakout --tribunal --agents 5 --ssm --ssm-scale MACRO --verbose
+# Trading with full pipeline
+python main.py --type trading --subscenario XAUUSD --objective "direction" \
+  --regime breakout --tribunal --ssm --ssm-scale MESO --verbose
+
+# Medical
+python main.py --type medical --subscenario clinical_review \
+  --objective "protocol risks" --tribunal --agents 5
 ```
-
----
-
-## Regime Options
-
-| Regime | Description |
-|--------|-------------|
-| `standard` | Balanced — default |
-| `adversarial` | Maximum pressure — worst case |
-| `breakout` | High volatility / trend conditions |
-| `crisis` | Capital preservation priority |
-| `regulatory` | Compliance-first lens |
-| `fast_track` | Rapid — 4 levels only |
-| `comparative` | N≥2 solutions |
-
----
-
-## Domain Catalog (16 domains)
-
-| Domain | --type values |
-|--------|--------------|
-| Trading | `chart` `trading` `xauusd` `backtest` |
-| Legal | `contract` `alquiler` `legal` |
-| Financial | `finance` `investment` `valuation` |
-| Cloud | `cloud` `saas` `paas` `iaas` |
-| Code | `code` `architecture` `abap` |
-| Cybersecurity | `cyber` `security` `pentest` |
-| Agriculture | `agro` `livestock` `harvest` |
-| Real Estate | `real_estate` `property` |
-| Science | `science` `research` |
-| **Medical** | `medical` `clinical` `health` |
-| Media | `media` `content` |
-| E-Commerce | `ecommerce` `marketplace` |
-| Telecom | `telecom` `spectrum` |
-| Public Sector | `public` `government` `procurement` |
 
 ---
 
@@ -156,24 +194,22 @@ python main.py --type trading --subscenario XAUUSD --objective "buy sell wait" \
 
 | Version | Feature | Status |
 |---------|---------|--------|
-| v2.6.0 | SAT Skills | ✅ |
-| v2.7.0 | Router + 11 Domains | ✅ |
-| v2.8.0 | AFO + Tribunal Adversarial | ✅ |
-| v2.9.0 | SSM + Transparency Report | ✅ |
+| v2.6-v2.9 | SAT Skills, Domains, AFO, SSM | ✅ |
 | v3.0.0 | Tribunal Transversal + Dynamic Prompts | ✅ |
+| v3.1.0 | GOAP A\* Planner + Legal 12 Sub-areas | ✅ |
 
 ---
 
 ## Protocol Status
 
 ```
-[PROTOCOL_STATUS: ACTIVE — v3.0.0]
+[PROTOCOL_STATUS: ACTIVE — v3.1.0]
+[PLANNER: GOAP A* — dynamic optimal planning]
 [TRIBUNAL: TRANSVERSAL — Rol + Forense layers]
-[DOMAINS: 16 (including Medical)]
-[PROMPTS: DYNAMIC — master template + catalogs]
-[OUTPUT: STRUCTURED — Pydantic VerdictOutput]
+[LEGAL: 12 sub-areas — L01 to L12]
+[DOMAINS: 16 total]
 [SSM: ACTIVE — MICRO/MESO/MACRO]
-[TRANSPARENCY_REPORT: ACTIVE — every session]
+[TRANSPARENCY_REPORT: ACTIVE]
 [NOTIFICATION_CHANNELS: SLACK + GITHUB + SHEETS]
 ```
 

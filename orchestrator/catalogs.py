@@ -1,16 +1,15 @@
 """
-Dark Strategist v3.0.0 — Catalogs
-ROLE_CATALOG:  domain → agentes de rol (simulan el entorno)
-               domain → agentes forenses (auditan la simulación)
-SSM_CATALOG:   domain → personas para Simulación Social Masiva
-DOMAIN_MAP:    keywords → domain name (for runtime detection)
-REGIME_MAP:    regime name → calibration adjustments
+Dark Strategist v3.1.0 — Catalogs
+ROLE_CATALOG:      domain → agentes de rol + agentes forenses
+SSM_CATALOG:       domain → personas para SSM
+DOMAIN_MAP:        keywords → domain name
+LEGAL_SUBAREA_MAP: keywords → legal sub-area (L01-L12)
+LEGAL_SUBAREA_ROLES: legal sub-area → specialized rol + forense agents
+REGIME_MAP:        regime → calibration
+DOMAIN_TOOLS:      domain → available tools
 """
 
 # ─── ROLE CATALOG ─────────────────────────────────────────────────────────────
-# Each domain has two lists:
-#   "rol":    Agentes de Rol — simulate the domain environment
-#   "forense": Agentes Forenses — audit what the rol agents produce
 
 ROLE_CATALOG = {
 
@@ -35,11 +34,14 @@ ROLE_CATALOG = {
             "Contracting Party B — seeks protection and clarity",
             "Regulatory Observer — monitors compliance with applicable law",
             "Third Party Affected — not a signatory but impacted by the document",
+            "Opposing Counsel — reads document adversarially seeking exploitable gaps",
         ],
         "forense": [
             "Clause Forense — identifies unenforceable, ambiguous, or missing clauses",
             "Jurisdiction Forense — challenges choice of law and enforceability by jurisdiction",
             "Liability Forense — maps unlimited exposure and missing limitation clauses",
+            "IP Forense — identifies ownership gaps, chain of title, and licensing risks",
+            "Compliance Forense — audits regulatory framework adherence and reporting gaps",
         ]
     },
 
@@ -227,8 +229,116 @@ ROLE_CATALOG = {
 }
 
 
+# ─── LEGAL SUB-AREA MAP ───────────────────────────────────────────────────────
+# Auto-detects legal sub-area from document keywords
+# Source: anthropics/claude-for-legal taxonomy (adapted)
+
+LEGAL_SUBAREA_MAP = {
+    # L01 Commercial
+    "vendor":       "L01", "nda":        "L01", "msa":         "L01",
+    "sow":          "L01", "saas":       "L01", "subscription": "L01",
+    # L02 Corporate
+    "merger":       "L02", "acquisition":"L02", "due diligence":"L02",
+    "board":        "L02", "shareholder":"L02", "cap table":    "L02",
+    # L03 Employment
+    "employment":   "L03", "termination":"L03", "severance":    "L03",
+    "non-compete":  "L03", "worker":     "L03", "classification":"L03",
+    # L04 Privacy
+    "gdpr":         "L04", "dsar":       "L04", "dpa":          "L04",
+    "pia":          "L04", "ccpa":       "L04", "data processing":"L04",
+    # L05 Product
+    "product launch":"L05","marketing claim":"L05","terms of service":"L05",
+    "eula":         "L05", "warranty":   "L05",
+    # L06 Regulatory
+    "regulatory filing":"L06","gap analysis":"L06","compliance framework":"L06",
+    # L07 AI Governance
+    "ai governance":"L07","ai assessment":"L07","algorithmic":"L07",
+    "ai vendor":    "L07",
+    # L08 IP
+    "trademark":    "L08", "patent":     "L08", "fto":          "L08",
+    "dmca":         "L08", "copyright":  "L08", "oss":          "L08",
+    # L09 Litigation
+    "demand letter":"L09","claim chart": "L09","deposition":    "L09",
+    "settlement":   "L09", "litigation": "L09",
+    # L10 Real Estate Legal
+    "lease":        "L10", "purchase agreement":"L10","title":   "L10",
+    "zoning":       "L10",
+    # L11 Finance Legal
+    "loan agreement":"L11","covenant":   "L11","security instrument":"L11",
+    "intercreditor":"L11",
+    # L12 Public Regulatory
+    "government contract":"L12","public tender":"L12","rfp":     "L12",
+}
+
+LEGAL_SUBAREA_LABELS = {
+    "L01": "Commercial Legal",
+    "L02": "Corporate / M&A Legal",
+    "L03": "Employment Legal",
+    "L04": "Privacy Legal",
+    "L05": "Product Legal",
+    "L06": "Regulatory Legal",
+    "L07": "AI Governance Legal",
+    "L08": "IP Legal",
+    "L09": "Litigation Legal",
+    "L10": "Real Estate Legal",
+    "L11": "Finance Legal",
+    "L12": "Public Regulatory Legal",
+}
+
+# Specialized roles per legal sub-area
+LEGAL_SUBAREA_ROLES = {
+    "L01": {
+        "rol": ["Vendor Party", "Buyer Party", "Procurement Officer"],
+        "forense": ["Clause Forense", "Liability Forense", "IP Forense"]
+    },
+    "L02": {
+        "rol": ["Acquiring Party", "Target Company", "Investment Banker"],
+        "forense": ["Diligence Forense", "Liability Forense", "Valuation Forense"]
+    },
+    "L03": {
+        "rol": ["Employer", "Employee / Worker", "Labor Regulator"],
+        "forense": ["Classification Forense", "IP Forense", "Clause Forense"]
+    },
+    "L04": {
+        "rol": ["Data Controller", "Data Subject", "Data Protection Authority"],
+        "forense": ["Consent Forense", "Residency Forense", "Compliance Forense"]
+    },
+    "L05": {
+        "rol": ["Product Team", "Consumer", "Regulatory Body"],
+        "forense": ["Claims Forense", "Liability Forense", "ToS Forense"]
+    },
+    "L06": {
+        "rol": ["Regulated Entity", "Regulator", "Compliance Officer"],
+        "forense": ["Gap Forense", "Reporting Forense", "Jurisdiction Forense"]
+    },
+    "L07": {
+        "rol": ["AI Developer", "AI User", "AI Regulator"],
+        "forense": ["Bias Forense", "IP Forense", "Liability Forense"]
+    },
+    "L08": {
+        "rol": ["IP Owner", "Licensee", "Competitor"],
+        "forense": ["Title Forense", "Scope Forense", "Territory Forense"]
+    },
+    "L09": {
+        "rol": ["Claimant", "Defendant", "Judge"],
+        "forense": ["Jurisdiction Forense", "Evidence Forense", "Damages Forense"]
+    },
+    "L10": {
+        "rol": ["Buyer", "Seller", "Regulatory Authority"],
+        "forense": ["Title Forense", "Zoning Forense", "Liability Forense"]
+    },
+    "L11": {
+        "rol": ["Lender", "Borrower", "Intercreditor Party"],
+        "forense": ["Covenant Forense", "Priority Forense", "Default Forense"]
+    },
+    "L12": {
+        "rol": ["Government Entity", "Bidder", "Oversight Body"],
+        "forense": ["Procurement Forense", "Compliance Forense", "Integrity Forense"]
+    },
+}
+
+
 # ─── SSM CATALOG ──────────────────────────────────────────────────────────────
-# Personas for Simulación Social Masiva — indexed by domain
 
 SSM_CATALOG = {
     "Trading":      ["institutional_investor", "retail_trader", "financial_regulator",
@@ -265,72 +375,84 @@ SSM_CATALOG = {
 
 
 # ─── DOMAIN MAP ───────────────────────────────────────────────────────────────
-# Maps document type / subscenario keywords to canonical domain name
 
 DOMAIN_MAP = {
-    "chart":        "Trading",
-    "trading":      "Trading",
-    "xauusd":       "Trading",
-    "eurusd":       "Trading",
-    "backtest":     "Trading",
-    "contract":     "Legal",
-    "alquiler":     "Legal",
-    "legal":        "Legal",
-    "compliance":   "Legal",
-    "finance":      "Financial",
-    "investment":   "Financial",
-    "valuation":    "Financial",
-    "ma":           "Financial",
-    "cloud":        "Cloud",
-    "saas":         "Cloud",
-    "paas":         "Cloud",
-    "iaas":         "Cloud",
-    "code":         "Code",
-    "architecture": "Code",
-    "abap":         "Code",
-    "cyber":        "Cybersecurity",
-    "security":     "Cybersecurity",
-    "pentest":      "Cybersecurity",
-    "agro":         "Agriculture",
-    "livestock":    "Agriculture",
-    "harvest":      "Agriculture",
-    "real_estate":  "Real Estate",
-    "property":     "Real Estate",
-    "science":      "Science",
-    "research":     "Science",
-    "medical":      "Medical",
-    "clinical":     "Medical",
-    "health":       "Medical",
-    "media":        "Media",
-    "content":      "Media",
-    "ecommerce":    "E-Commerce",
-    "marketplace":  "E-Commerce",
-    "telecom":      "Telecom",
-    "spectrum":     "Telecom",
-    "public":       "Public Sector",
-    "government":   "Public Sector",
-    "procurement":  "Public Sector",
+    "chart": "Trading", "trading": "Trading", "xauusd": "Trading",
+    "eurusd": "Trading", "backtest": "Trading",
+    "contract": "Legal", "alquiler": "Legal", "legal": "Legal",
+    "compliance": "Legal", "nda": "Legal", "msa": "Legal",
+    "gdpr": "Legal", "dsar": "Legal", "trademark": "Legal",
+    "employment": "Legal", "litigation": "Legal", "ai governance": "Legal",
+    "finance": "Financial", "investment": "Financial",
+    "valuation": "Financial", "ma": "Financial",
+    "cloud": "Cloud", "saas": "Cloud", "paas": "Cloud", "iaas": "Cloud",
+    "code": "Code", "architecture": "Code", "abap": "Code",
+    "cyber": "Cybersecurity", "security": "Cybersecurity", "pentest": "Cybersecurity",
+    "agro": "Agriculture", "livestock": "Agriculture", "harvest": "Agriculture",
+    "real_estate": "Real Estate", "property": "Real Estate",
+    "science": "Science", "research": "Science",
+    "medical": "Medical", "clinical": "Medical", "health": "Medical",
+    "media": "Media", "content": "Media",
+    "ecommerce": "E-Commerce", "marketplace": "E-Commerce",
+    "telecom": "Telecom", "spectrum": "Telecom",
+    "public": "Public Sector", "government": "Public Sector",
+    "procurement": "Public Sector",
 }
 
 
 # ─── REGIME MAP ───────────────────────────────────────────────────────────────
-# Regime calibrates analysis intensity and framing
 
 REGIME_MAP = {
-    "standard":     {"depth": "full", "bias": "neutral",
-                     "description": "Standard analysis — balanced perspective"},
-    "adversarial":  {"depth": "full", "bias": "hostile",
-                     "description": "Maximum adversarial pressure — assume worst case"},
-    "breakout":     {"depth": "full", "bias": "momentum",
-                     "description": "High volatility / trend breakout — fast conditions"},
-    "crisis":       {"depth": "full", "bias": "defensive",
-                     "description": "Crisis conditions — capital preservation priority"},
-    "regulatory":   {"depth": "full", "bias": "compliance",
-                     "description": "Regulatory scrutiny — compliance-first lens"},
-    "fast_track":   {"depth": "light", "bias": "neutral",
-                     "description": "Rapid assessment — 4 levels, reduced scope"},
-    "comparative":  {"depth": "full", "bias": "comparative",
-                     "description": "N≥2 solutions — cross-evaluation mode"},
+    "standard":    {"depth": "full", "bias": "neutral",
+                    "description": "Standard analysis — balanced perspective"},
+    "adversarial": {"depth": "full", "bias": "hostile",
+                    "description": "Maximum adversarial pressure — assume worst case"},
+    "breakout":    {"depth": "full", "bias": "momentum",
+                    "description": "High volatility / trend breakout — fast conditions"},
+    "crisis":      {"depth": "full", "bias": "defensive",
+                    "description": "Crisis conditions — capital preservation priority"},
+    "regulatory":  {"depth": "full", "bias": "compliance",
+                    "description": "Regulatory scrutiny — compliance-first lens"},
+    "fast_track":  {"depth": "light", "bias": "neutral",
+                    "description": "Rapid assessment — 4 levels, reduced scope"},
+    "comparative": {"depth": "full", "bias": "comparative",
+                    "description": "N≥2 solutions — cross-evaluation mode"},
 }
 
 DEFAULT_REGIME = REGIME_MAP["standard"]
+
+
+# ─── DOMAIN TOOLS ─────────────────────────────────────────────────────────────
+
+DOMAIN_TOOLS = {
+    "Trading":      ["price_action", "volume_profile", "order_flow",
+                     "sharpe_ratio", "drawdown_analysis", "regime_detection"],
+    "Legal":        ["clause_extraction", "jurisdiction_check", "sub_area_detection",
+                     "liability_mapping", "enforceability_analysis", "ip_chain_audit"],
+    "Financial":    ["dcf_analysis", "sensitivity_testing", "cac_ltv_ratio",
+                     "burn_rate_analysis", "comparable_selection"],
+    "Cloud":        ["architecture_review", "sla_analysis", "cac_ltv_ratio",
+                     "vendor_lock_in_assessment", "dr_plan_check"],
+    "Code":         ["static_analysis", "security_scanning", "complexity_check",
+                     "test_coverage_review", "dependency_audit"],
+    "Cybersecurity":["threat_modeling", "privilege_mapping", "sod_analysis",
+                     "owasp_check", "audit_trail_review"],
+    "Agriculture":  ["yield_benchmarking", "biosecurity_audit", "climate_modeling",
+                     "cold_chain_review", "environmental_impact"],
+    "Real Estate":  ["cap_rate_analysis", "dcf_real_estate", "zoning_verification",
+                     "construction_cost_benchmark", "rate_sensitivity"],
+    "Science":      ["power_analysis", "statistical_validity", "reproducibility_check",
+                     "conflict_of_interest_audit", "methodology_review"],
+    "Medical":      ["protocol_compliance", "adverse_event_review",
+                     "regulatory_compliance", "consent_analysis", "liability_mapping"],
+    "Media":        ["platform_dependency_analysis", "ip_ownership_check",
+                     "cpm_modeling", "audience_ownership_review"],
+    "E-Commerce":   ["unit_economics", "cac_ltv_ratio", "return_rate_modeling",
+                     "marketplace_risk", "ad_spend_analysis"],
+    "Telecom":      ["spectrum_verification", "capex_benchmarking",
+                     "churn_modeling", "arpu_analysis", "vendor_concentration"],
+    "Public Sector":["procurement_compliance", "budget_benchmarking",
+                     "enforcement_mechanism_check", "stakeholder_mapping"],
+    "General":      ["logic_validation", "evidence_mapping",
+                     "assumption_audit", "risk_identification"],
+}

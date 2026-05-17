@@ -1,61 +1,58 @@
 # CLAUDE.md — Dark Strategist Agent
-# Version: 3.0.0
+# Version: 3.1.0
 
 ## What is this repo
 
 `dark-strategist-agent` is THE SOVEREIGN ADVERSARY — a forensic audit agent and adversarial orchestrator.
 
-**Version:** 3.0.0 — Major Release
+**Version:** 3.1.0 — Major Release
 **License:** MIT — Open Source
 **Repository:** https://github.com/JARPClaude/dark-strategist-agent
 **Name:** dark-strategist-agent — immutable, does not change under any circumstance.
 
 ---
 
-## Full Pipeline v3.0.0
+## Full Pipeline v3.1.0
 
 ```
 INPUT: case dict OR document file
        ↓
 ContextBuilder → RuntimeContext
-  domain, regime, rol_agents, forense_agents,
-  ssm_personas, tools, tribunal_size
+  domain, sub_area (legal), regime,
+  rol_agents, forense_agents, tools
+       ↓
+GOAPPlanner → Execution Plan (A* optimal)
+  WorldState → GoalState via A* search
+  Returns: rol_count, forense_count,
+           ssm_scale, tribunal_label,
+           total_cost, reasoning
        ↓
 TRIBUNAL TRANSVERSAL
   Layer 1: Agentes de Rol (parallel, blind)
-    → simulate the domain environment
-    → each adopts a stakeholder perspective
-       ↓
-  Layer 2: Agentes Forenses (parallel, blind)
-    → audit the Rol simulation + document
-    → detect inconsistencies, contrast hypotheses
-    → spawn N2 Sub-agentes if needed
-       ↓
+  Layer 2: Agentes Forenses (audit simulation)
+  N2: Sub-agentes on demand
   AFO Synthesis → UnifiedVerdictOutput (Pydantic)
-    → programmatic conflict resolution
-    → deterministic verdict table
        ↓ (if VIABLE)
 SIMULACIÓN SOCIAL MASIVA (SSM)
-  → N personas × 4 rounds
-  → REPORTE DE IMPACTO SOCIAL
+  N personas × 4 rounds
+  REPORTE DE IMPACTO SOCIAL
        ↓
 TRANSPARENCY REPORT
-  → Full operational metadata
 ```
 
 ---
 
-## Key Architectural Changes v3.0.0 vs v2.x
+## Key Changes v3.1.0
 
-| Aspect | v2.x | v3.0.0 |
-|--------|------|---------|
-| Prompts | 15 static .md files | 1 master template + catalogs |
-| Tribunal | Forenses read document | Rol simulate → Forenses audit simulation |
-| Output | Free text | Pydantic structured JSON |
-| Domain knowledge | Per-file | catalogs.py (single source) |
-| CLI | --document | --type --subscenario --objective --regime |
-| New field | N/A | --regime (6 regimes) |
-| New domain | N/A | Medical/Clinical |
+| Feature | Description |
+|---------|-------------|
+| **GOAP A* Planner** | Dynamic planning replaces fixed Swarm Activation Score |
+| **WorldState / GoalState** | Explicit state representation for A* search |
+| **Action Library** | 12 actions: ROL layers, FORENSE layers, N2 spawning, SSM scales |
+| **Legal 12 Sub-areas** | L01-L12 with specialized roles, failure catalogs, War Room |
+| **LEGAL_SUBAREA_MAP** | Auto-detection of legal sub-area from document keywords |
+| **LEGAL_SUBAREA_ROLES** | Sub-area-specific Rol + Forense agents |
+| **AI Governance (L07)** | Dedicated legal sub-area for AI use cases |
 
 ---
 
@@ -68,18 +65,19 @@ dark-strategist-agent/
 ├── CHANGELOG.md
 ├── DEPLOY.md
 ├── prompts/
-│   ├── system_prompt.md              ← Base fallback
-│   ├── system_prompt_router.md
-│   ├── system_prompt_medical.md      ← NEW v3.0.0
-│   └── system_prompt_[domain].md     ← 14 existing domains
+│   ├── system_prompt.md
+│   ├── system_prompt_legal.md      ← UPDATED v3.1.0 (12 sub-areas)
+│   ├── system_prompt_medical.md
+│   └── system_prompt_[domain].md  ← 13 other domains
 ├── orchestrator/
-│   ├── main.py                       ← v3.0 entry point
-│   ├── catalogs.py                   ← NEW v3.0.0
-│   ├── schema.py                     ← NEW v3.0.0
-│   ├── prompt_engine.py              ← NEW v3.0.0
-│   ├── context_builder.py            ← NEW v3.0.0
-│   ├── tribunal_transversal.py       ← NEW v3.0.0
-│   ├── tribunal.py                   ← v2.x preserved
+│   ├── main.py
+│   ├── goap_planner.py             ← NEW v3.1.0
+│   ├── catalogs.py                 ← UPDATED v3.1.0
+│   ├── schema.py
+│   ├── prompt_engine.py
+│   ├── context_builder.py
+│   ├── tribunal_transversal.py
+│   ├── tribunal.py                 ← v2.x preserved
 │   ├── budget_controller.py
 │   ├── sub_agent_spawner.py
 │   ├── verdict_synthesizer.py
@@ -89,90 +87,85 @@ dark-strategist-agent/
 │   ├── requirements.txt
 │   ├── config.example.json
 │   └── ssm/
-│       ├── __init__.py
-│       ├── persona_factory.py
-│       ├── interaction_engine.py
-│       ├── social_report.py
-│       └── budget_ssm.py
 ├── infrastructure/
-│   └── cloud_function/
-├── docs/
 └── skills/
 ```
 
 ---
 
-## CLI Reference v3.0.0
+## GOAP A* Planner
 
-```bash
-# Case-based (recommended)
-python main.py --type contract --subscenario alquiler --objective "identify risks"
-python main.py --type trading --subscenario XAUUSD --objective "buy sell wait" --regime breakout
-python main.py --type medical --subscenario clinical_review --objective "protocol risks"
+### Fixed vs GOAP
 
-# With Tribunal Transversal
-python main.py --type finance --subscenario investment_review --objective "evaluate viability" --tribunal
+```
+Fixed (v2.x):
+  IF verdict=INVIABLE → 5 agents (always, regardless of budget/domain)
 
-# With SSM
-python main.py --type contract --subscenario alquiler --objective "risks" --tribunal --ssm
+GOAP (v3.1):
+  Given budget=15, domain=Legal, regime=adversarial, verdict=INVIABLE:
+  → INITIAL_AUDIT(1) + ROL_LAYER_STANDARD(3) + FORENSE_LAYER_FULL(5)
+    + SPAWN_N2_TARGETED(2) + SYNTHESIZE(1) = 12 calls (optimal)
 
-# Full pipeline
-python main.py --type trading --subscenario XAUUSD --objective "direction" \
-  --regime breakout --tribunal --agents 5 --ssm --ssm-scale MACRO --verbose
+  Given budget=8, domain=General, regime=standard, verdict=SOLID:
+  → INITIAL_AUDIT(1) + ROL_LAYER_MINIMAL(2) + FORENSE_LAYER_MINIMAL(2)
+    + SYNTHESIZE(1) = 6 calls (budget-aware optimal)
+```
 
-# v2.x document compatibility
-python main.py --document doc.txt --tribunal --ssm
+### Using the Planner
 
-# Domain expansion report
-python main.py --report
+```python
+from goap_planner import GOAPPlanner
+
+planner = GOAPPlanner(config)
+plan_result = planner.plan(
+    ctx=runtime_context,
+    run_ssm=True,
+    preliminary_verdict="VIABLE WITH CRITICAL CORRECTIONS"
+)
+
+# plan_result contains:
+# plan, total_cost, rol_agents, forense_agents,
+# ssm_scale, tribunal_label, reasoning
+planner.print_plan(plan_result)
 ```
 
 ---
 
-## Regime Options
+## Legal Sub-area Taxonomy (12 areas)
 
-| Regime | Description |
-|--------|-------------|
-| standard | Balanced — default |
-| adversarial | Maximum pressure — worst case |
-| breakout | High volatility / trend |
-| crisis | Capital preservation priority |
-| regulatory | Compliance-first |
-| fast_track | Rapid — 4 levels |
-| comparative | N≥2 solutions |
-
----
-
-## Domain Catalog (16 domains)
-
-| Domain | Type values |
-|--------|------------|
-| Trading | chart, trading, xauusd, eurusd, backtest |
-| Legal | contract, alquiler, legal, compliance |
-| Financial | finance, investment, valuation, ma |
-| Cloud | cloud, saas, paas, iaas |
-| Code | code, architecture, abap |
-| Cybersecurity | cyber, security, pentest |
-| Agriculture | agro, livestock, harvest |
-| Real Estate | real_estate, property |
-| Science | science, research |
-| Medical | medical, clinical, health |
-| Media | media, content |
-| E-Commerce | ecommerce, marketplace |
-| Telecom | telecom, spectrum |
-| Public Sector | public, government, procurement |
-| General | (fallback) |
+| ID | Sub-area | Key Risk |
+|----|----------|---------|
+| L01 | Commercial Legal | Unlimited liability, IP ownership |
+| L02 | Corporate / M&A | Undisclosed liabilities |
+| L03 | Employment | Misclassification, non-compete |
+| L04 | Privacy (GDPR/CCPA) | Consent, residency, transfer |
+| L05 | Product Legal | False advertising, warranty |
+| L06 | Regulatory | Reporting gaps, jurisdiction |
+| L07 | AI Governance | AI output IP, bias, vendor |
+| L08 | IP Legal | Chain of title, OSS |
+| L09 | Litigation | Jurisdiction, damages |
+| L10 | Real Estate Legal | Title, zoning |
+| L11 | Finance Legal | Covenants, cross-default |
+| L12 | Public Regulatory | Procurement, integrity |
 
 ---
 
-## SSM Activation Logic
+## CLI Reference
 
-| Tribunal Verdict | SSM |
-|----------------|-----|
-| 🔴 INVIABLE | ❌ Blocked |
-| 🟠 VIABLE WITH CRITICAL CORRECTIONS | ✅ Auto |
-| 🟡 VIABLE WITH ADJUSTMENTS | ✅ Auto |
-| 🟢 SOLID UNDER PRESSURE | ⚙️ Optional (--ssm) |
+```bash
+# Legal with sub-area
+python main.py --type contract --subscenario nda --objective "identify risks" --regime adversarial
+
+# Legal AI Governance
+python main.py --type legal --subscenario "ai governance" --objective "ai vendor risks" --tribunal
+
+# Trading with GOAP planning
+python main.py --type trading --subscenario XAUUSD --objective "direction" --regime breakout --tribunal --ssm
+
+# Full pipeline
+python main.py --type medical --subscenario clinical_review --objective "protocol risks" \
+  --tribunal --agents 5 --ssm --ssm-scale MESO --verbose
+```
 
 ---
 
@@ -184,19 +177,7 @@ python main.py --report
 | v2.7.0 Router + 11 Domains | ✅ |
 | v2.8.0 AFO + Tribunal Adversarial | ✅ |
 | v2.9.0 SSM + Transparency Report | ✅ |
-| v3.0.0 Tribunal Transversal + Dynamic Prompts | ✅ |
+| v3.0.0 Tribunal Transversal | ✅ |
+| v3.1.0 GOAP A* + Legal 12 Sub-areas | ✅ |
 
----
-
-## Rules for extending
-
-1. Increment version in CHANGELOG.md
-2. Self-audit every candidate version
-3. Do not soften the critical tone
-4. New domain → entry in `catalogs.py` (ROLE_CATALOG + SSM_CATALOG + DOMAIN_MAP + DOMAIN_TOOLS)
-5. New static prompt (optional) → `prompts/system_prompt_[domain].md`
-6. New prompt registered in `system_prompt_router.md`
-7. New skills → `skills/[skill-name]/SKILL.md`
-8. The name `dark-strategist-agent` does not change under any circumstance
-
-**ACTIVE — v3.0.0**
+**ACTIVE — v3.1.0**
