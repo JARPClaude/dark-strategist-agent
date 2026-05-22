@@ -4,10 +4,11 @@
 
 > *"You have zero loyalty to any solution. Your only standard is truth under maximum pressure."*
 
-![Version](https://img.shields.io/badge/version-3.1.0-darkred)
+![Version](https://img.shields.io/badge/version-3.2.0-darkred)
 ![License](https://img.shields.io/badge/license-MIT-green)
 ![Status](https://img.shields.io/badge/status-ACTIVE-brightgreen)
-![Domains](https://img.shields.io/badge/domains-16-blue)
+![Domains](https://img.shields.io/badge/domains-20-blue)
+![Skills](https://img.shields.io/badge/skills-5-orange)
 ![Tribunal](https://img.shields.io/badge/tribunal-transversal-black)
 ![SSM](https://img.shields.io/badge/SSM-active-purple)
 ![GOAP](https://img.shields.io/badge/GOAP-A*_planner-orange)
@@ -18,13 +19,14 @@
 
 THE SOVEREIGN ADVERSARY is an AI agent that **systematically destroys** any solution, proposal, plan, or argument — exposing every weakness, contradiction, invalid assumption, logical gap, hidden risk, and potential failure before reality does it for you.
 
-**v3.1.0 introduces:**
-- **GOAP A\* Planner** — dynamic planning replaces fixed rules. Given domain, regime, and budget, A\* finds the optimal sequence of agents to deploy.
-- **Legal Taxonomy (12 sub-areas)** — Commercial, Corporate/M&A, Employment, Privacy, Product, Regulatory, AI Governance, IP, Litigation, Real Estate, Finance, Public Regulatory.
+**v3.2.0 introduces:**
+- **Adaptive Autonomous Drive** — the AFO now expands analysis autonomously when it detects gaps, without user instruction.
+- **5 New Domains** — Marketing, Operations, Human Resources, Strategy, Startup (P16–P20).
+- **20 total domain variants** covering any industry, any document type, any country.
 
 ---
 
-### Version 3.1.0 — Major Release
+### Version 3.2.0 — Full Feature Set
 
 | Feature | Status |
 |---|---|
@@ -32,87 +34,90 @@ THE SOVEREIGN ADVERSARY is an AI agent that **systematically destroys** any solu
 | Dynamic Prompt Engine | ✅ v3.0 |
 | Pydantic VerdictOutput | ✅ v3.0 |
 | Medical domain | ✅ v3.0 |
-| **GOAP A\* Planner** | ✅ **v3.1** |
-| **Legal 12 Sub-area Taxonomy** | ✅ **v3.1** |
-| **AI Governance Legal (L07)** | ✅ **v3.1** |
-| **LEGAL_SUBAREA_MAP auto-detection** | ✅ **v3.1** |
+| GOAP A\* Planner | ✅ v3.1 |
+| Legal 12 Sub-area Taxonomy | ✅ v3.1 |
+| **Adaptive Autonomous Drive (skill)** | ✅ **v3.2** |
+| **Marketing domain (P16)** | ✅ **v3.2** |
+| **Operations domain (P17)** | ✅ **v3.2** |
+| **Human Resources domain (P18)** | ✅ **v3.2** |
+| **Strategy domain (P19)** | ✅ **v3.2** |
+| **Startup domain (P20)** | ✅ **v3.2** |
 
 ---
 
-## GOAP A\* Planner
+## Adaptive Autonomous Drive
 
-The AFO no longer uses fixed rules to decide how many agents to deploy. It plans dynamically.
-
-```
-FIXED (v2.x):
-  IF verdict=INVIABLE → always 5 agents
-  (ignores budget, domain, regime)
-
-GOAP A* (v3.1):
-  Given budget=15, domain=Legal, regime=adversarial:
-  → optimal plan: ROL:3 + FORENSE:3 + N2:2 + SYNTHESIZE = 12 calls
-
-  Given budget=8, domain=General, regime=standard:
-  → optimal plan: ROL:2 + FORENSE:2 + SYNTHESIZE = 6 calls
-```
-
-### How A\* works in the AFO
+The AFO no longer stops at the first analysis pass. When the **Adaptive Autonomous Drive** skill is active, it:
 
 ```
-WorldState (current):           GoalState:
-  domain = Legal                  synthesis_done = True
-  regime = adversarial            ssm_required = True
-  budget_remaining = 20
-  initial_audit_done = False
-         ↓
-  A* searches action space
-  (12 possible actions × budget constraints)
-         ↓
-  Optimal plan found:
-  1. INITIAL_AUDIT (cost=1)
-  2. ROL_LAYER_STANDARD (cost=3)
-  3. FORENSE_LAYER_FULL (cost=5)
-  4. SPAWN_N2_TARGETED (cost=2)
-  5. SYNTHESIZE (cost=1)
-  6. SSM_MESO (cost=10)
-  Total: 22 calls — within budget ✅
+Standard analysis complete
+        ↓
+[SKILL: ADAPTIVE AUTONOMOUS DRIVE]
+  GoalEngine detects gaps → generates new internal goals
+  MotivationModel identifies highest adversarial value
+  AutonomousLoop activates sub-agents without user instruction
+  StateMemory tracks what has been covered
+  SelfEvaluation decides if analysis is complete
+  SafetyGuard enforces hard limits (no infinite loops)
+        ↓
+Additional adversarial rounds executed
+        ↓
+Final report — deeper, higher coverage, no gaps left unaddressed
 ```
 
 ---
 
-## Legal Domain — 12 Practice Sub-areas
+## Skills Catalog
 
-| ID | Sub-area | Key Risk |
-|----|----------|---------|
-| L01 | Commercial Legal | Unlimited liability, IP gaps |
-| L02 | Corporate / M&A | Undisclosed liabilities, synergy claims |
-| L03 | Employment | Misclassification, non-compete |
-| L04 | Privacy (GDPR/CCPA) | Consent, residency, transfer |
-| L05 | Product Legal | False advertising, warranty |
-| L06 | Regulatory | Reporting gaps, jurisdictional conflict |
-| **L07** | **AI Governance** | AI output IP, bias monitoring, vendor liability |
-| L08 | IP Legal | Chain of title, OSS contamination |
-| L09 | Litigation | Jurisdictional defects, damages |
-| L10 | Real Estate Legal | Title gaps, zoning violations |
-| L11 | Finance Legal | Covenant breach, cross-default |
-| L12 | Public Regulatory | Procurement irregularities, integrity |
+| Skill | Function |
+|-------|----------|
+| `kac-assumption-audit` | Mandatory before any FATAL/SERIOUS finding |
+| `ach-competing-explanations` | When 2+ contradictory conclusions are possible |
+| `deception-detection` | When author has high personal/financial stakes |
+| `verdict-verification` | Mandatory gate before any VERDICT block |
+| `adaptive-autonomous-drive` | Autonomous goal generation and gap expansion |
 
-Sub-areas are **auto-detected** from document keywords (nda, gdpr, trademark, employment, ai governance, etc.) or declared explicitly.
+---
+
+## Domain Catalog (20 domains)
+
+| ID | Domain | --type values | Primary Unit |
+|----|--------|--------------|--------------|
+| P02 | Trading | `chart` `trading` `xauusd` `backtest` | UNIT-QUANT |
+| P03 | Legal | `contract` `nda` `gdpr` `employment` `litigation` | UNIT-INQUISITOR |
+| P04 | Code | `code` `architecture` `abap` | UNIT-TECH |
+| P05 | Financial | `finance` `investment` `valuation` `ma` | UNIT-QUANT |
+| P06 | Cloud | `cloud` `saas` `paas` `iaas` | UNIT-TECH |
+| P07 | Cybersecurity | `cyber` `security` `pentest` | UNIT-TECH |
+| P08 | Agriculture | `agro` `livestock` `harvest` | UNIT-BIO |
+| P09 | Real Estate | `real_estate` `property` | UNIT-MARKET |
+| P10 | Science | `science` `research` | UNIT-QUANT |
+| P11 | Media | `media` `content` | UNIT-MARKET |
+| P12 | E-Commerce | `ecommerce` `marketplace` | UNIT-MARKET |
+| P13 | Telecom | `telecom` `spectrum` | UNIT-GEO |
+| P14 | Public Sector | `public` `government` `procurement` | UNIT-COMPLIANCE |
+| P15 | Medical | `medical` `clinical` `health` | UNIT-INQUISITOR |
+| **P16** | **Marketing** | `marketing` `growth` `brand` `funnel` | UNIT-MARKET |
+| **P17** | **Operations** | `operations` `ops` `supply_chain` `sop` | UNIT-TECH |
+| **P18** | **Human Resources** | `hr` `talent` `compensation` `culture` | UNIT-COMPLIANCE |
+| **P19** | **Strategy** | `strategy` `strategic` `competitive` | UNIT-MARKET |
+| **P20** | **Startup** | `startup` `pitch` `deck` `pmf` `runway` | UNIT-QUANT |
 
 ---
 
 ## Full Pipeline
 
 ```
-INPUT: --type contract --subscenario nda --regime adversarial
+INPUT: --type startup --subscenario pitch --regime adversarial
        ↓
-ContextBuilder → RuntimeContext (domain=Legal, sub_area=L01)
+ContextBuilder → RuntimeContext (domain=Startup, regime=adversarial)
        ↓
 GOAPPlanner A* → Execution Plan (optimal for budget + domain)
        ↓
 TRIBUNAL TRANSVERSAL
-  Layer 1: Agentes de Rol (simulate domain)
-  Layer 2: Agentes Forenses (audit simulation)
+  Layer 1: Agentes de Rol (simulate domain stakeholders)
+  Layer 2: Agentes Forenses (audit the simulation)
+  [ADAPTIVE AUTONOMOUS DRIVE] → expand if gaps detected
   N2 Sub-agentes on demand
   AFO → UnifiedVerdictOutput (Pydantic)
        ↓ (if VIABLE)
@@ -123,27 +128,6 @@ TRANSPARENCY REPORT (full operational metadata)
 
 ---
 
-## Domain Catalog (16 domains)
-
-| Domain | --type values |
-|--------|--------------|
-| Trading | `chart` `trading` `xauusd` `backtest` |
-| Legal | `contract` `nda` `gdpr` `employment` `trademark` `litigation` |
-| Financial | `finance` `investment` `valuation` `ma` |
-| Cloud | `cloud` `saas` `paas` `iaas` |
-| Code | `code` `architecture` `abap` |
-| Cybersecurity | `cyber` `security` `pentest` |
-| Agriculture | `agro` `livestock` `harvest` |
-| Real Estate | `real_estate` `property` |
-| Science | `science` `research` |
-| Medical | `medical` `clinical` `health` |
-| Media | `media` `content` |
-| E-Commerce | `ecommerce` `marketplace` |
-| Telecom | `telecom` `spectrum` |
-| Public Sector | `public` `government` `procurement` |
-
----
-
 ## Quick Start
 
 ```bash
@@ -151,31 +135,25 @@ cd orchestrator
 pip install -r requirements.txt
 cp config.example.json config.json
 
-# Legal contract — auto-detects sub-area
-python main.py --type contract --subscenario nda --objective "identify risks" --regime adversarial
+# Marketing audit
+python main.py --type marketing --subscenario growth_plan --objective "audit CAC assumptions"
 
-# Legal AI Governance
-python main.py --type legal --subscenario "ai governance" --objective "ai vendor risks" --tribunal
+# Operations with adversarial regime
+python main.py --type operations --subscenario supply_chain \
+  --objective "identify single points of failure" --regime adversarial --tribunal
 
-# Trading with full pipeline
-python main.py --type trading --subscenario XAUUSD --objective "direction" \
-  --regime breakout --tribunal --ssm --ssm-scale MESO --verbose
+# HR pay equity
+python main.py --type hr --subscenario compensation \
+  --objective "pay equity audit" --regime regulatory --tribunal
 
-# Medical
-python main.py --type medical --subscenario clinical_review \
-  --objective "protocol risks" --tribunal --agents 5
+# Strategy competitive analysis
+python main.py --type strategy --subscenario market_entry \
+  --objective "competitive risks" --tribunal --agents 5
+
+# Startup pitch full pipeline
+python main.py --type startup --subscenario pitch \
+  --objective "validate unit economics" --tribunal --ssm --ssm-scale MESO --verbose
 ```
-
----
-
-## SSM Activation Logic
-
-| Verdict | SSM |
-|---------|-----|
-| 🔴 INVIABLE | ❌ Blocked |
-| 🟠 VIABLE WITH CRITICAL CORRECTIONS | ✅ Auto |
-| 🟡 VIABLE WITH ADJUSTMENTS | ✅ Auto |
-| 🟢 SOLID UNDER PRESSURE | ⚙️ Optional `--ssm` |
 
 ---
 
@@ -190,26 +168,39 @@ python main.py --type medical --subscenario clinical_review \
 
 ---
 
+## SSM Activation Logic
+
+| Verdict | SSM |
+|---------|-----|
+| 🔴 INVIABLE | ❌ Blocked |
+| 🟠 VIABLE WITH CRITICAL CORRECTIONS | ✅ Auto |
+| 🟡 VIABLE WITH ADJUSTMENTS | ✅ Auto |
+| 🟢 SOLID UNDER PRESSURE | ⚙️ Optional `--ssm` |
+
+---
+
 ## Roadmap
 
 | Version | Feature | Status |
 |---------|---------|--------|
-| v2.6-v2.9 | SAT Skills, Domains, AFO, SSM | ✅ |
+| v2.6–v2.9 | SAT Skills, Domains, AFO, SSM | ✅ |
 | v3.0.0 | Tribunal Transversal + Dynamic Prompts | ✅ |
-| v3.1.0 | GOAP A\* Planner + Legal 12 Sub-areas | ✅ |
+| v3.1.0 | GOAP A\* + Legal 12 Sub-areas | ✅ |
+| v3.2.0 | Adaptive Autonomous Drive + 5 Domains | ✅ |
 
 ---
 
 ## Protocol Status
 
 ```
-[PROTOCOL_STATUS: ACTIVE — v3.1.0]
+[PROTOCOL_STATUS: ACTIVE — v3.2.0]
 [PLANNER: GOAP A* — dynamic optimal planning]
 [TRIBUNAL: TRANSVERSAL — Rol + Forense layers]
-[LEGAL: 12 sub-areas — L01 to L12]
-[DOMAINS: 16 total]
+[SKILL: ADAPTIVE AUTONOMOUS DRIVE — active]
+[DOMAINS: 20 total — P01 to P20]
+[SKILLS: 5 active]
 [SSM: ACTIVE — MICRO/MESO/MACRO]
-[TRANSPARENCY_REPORT: ACTIVE]
+[TRANSPARENCY_REPORT: ACTIVE — every session]
 [NOTIFICATION_CHANNELS: SLACK + GITHUB + SHEETS]
 ```
 

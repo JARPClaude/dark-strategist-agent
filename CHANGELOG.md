@@ -5,113 +5,121 @@ Format: [VERSION] — DATE — Description
 
 ---
 
+## [3.2.0] — 2026-05-15
+
+### Major Release — Adaptive Autonomous Drive + 5 New Domains
+
+#### 1. Skill: Adaptive Autonomous Drive
+
+**`skills/adaptive-autonomous-drive/SKILL.md`**
+
+Formalizes the autonomous operational layer of Dark Strategist as an official skill. The skill grants the AFO and all forensic agents the capacity to expand analysis beyond the initial prompt, generate internal goals dynamically, and activate sub-agents without user instruction.
+
+Six internal modules:
+- GoalEngine — maintains and generates internal audit goals (G1-G5)
+- MotivationModel — determines where highest adversarial value remains
+- StateMemory — registers analysis progress to avoid redundancy
+- AutonomousLoop — executes additional rounds without user intervention
+- SafetyGuard — hard rules preventing uncontrolled autonomy
+- SelfEvaluation — forces self-assessment before closing analysis
+
+System prompt integration block provided. Pseudocode provided. Fully integrated with AFO, TribunalTransversal, SubAgentSpawner, and GOAPPlanner.
+
+Naming convention: `adaptive-autonomous-drive` (kebab-case, English — consistent with existing skills).
+
+---
+
+#### 2. Five New Domain Variants
+
+| File | Domain | Primary Unit | Rules |
+|------|--------|--------------|-------|
+| `system_prompt_marketing.md` | Marketing | UNIT-MARKET | MK1–MK4 |
+| `system_prompt_operations.md` | Operations | UNIT-TECH | OP1–OP4 |
+| `system_prompt_hr.md` | Human Resources | UNIT-COMPLIANCE | HR1–HR4 |
+| `system_prompt_strategy.md` | Strategy | UNIT-MARKET | ST1–ST4 |
+| `system_prompt_startup.md` | Startup | UNIT-QUANT | SU1–SU5 |
+
+Each domain includes: document taxonomy (7 types), Phase 0 intake protocol, severity taxonomy with domain rules, 7-level forensic analysis, failure catalog with auto-severity, and War Room orchestration table.
+
+**Marketing (P16):** CAC attribution audit, ROAS validation, funnel math, claim verifiability. RULE MK1: growth >50% MoM without basis → SERIOUS. RULE MK3: >70% budget single channel → SERIOUS.
+
+**Operations (P17):** Bottleneck detection, supplier concentration, SoD compliance, SOP executability. RULE OP1: single supplier >70% critical input → FATAL. RULE OP3: linear cost assumption in scaling → SERIOUS.
+
+**Human Resources (P18):** Pay equity analysis, labor law compliance, culture claim validation, performance bias detection. RULE HR1: pay gap without documented justification → FATAL. RULE HR4: financial approval and execution in same role → FATAL (SoD).
+
+**Strategy (P19):** Assumption single-point-of-failure check, mirror imaging detection, competitive response modeling. RULE ST1: single assumption that invalidates entire plan → FATAL. RULE ST2: competitive analysis ignoring adjacent disruptors → SERIOUS.
+
+**Startup (P20):** CAC/LTV payback, PMF retention check, TAM methodology audit, runway modeling. RULE SU1: CAC payback >24 months without improvement path → FATAL. RULE SU2: PMF claim without 90-day retention data → FATAL.
+
+---
+
+#### 3. Catalogs Updated
+
+**`orchestrator/catalogs.py`** — v3.2.0:
+- ROLE_CATALOG: 5 new domains added (Marketing, Operations, Human Resources, Strategy, Startup) — each with Rol agents + Forense agents
+- SSM_CATALOG: 5 new domain persona sets added
+- DOMAIN_MAP: 30+ new keyword mappings for new domains
+- DOMAIN_TOOLS: 5 new domain tool sets added
+- SKILLS_CATALOG: new section — maps all 5 active skills including adaptive-autonomous-drive
+
+**Total domains: 21** (16 previous + Medical added in v3.0 + 5 new in v3.2)
+
+---
+
+#### Domain Catalog — Complete Reference v3.2.0
+
+| ID | Prompt | Domain | Primary Unit |
+|----|--------|--------|--------------|
+| P01 | system_prompt.md | General | Contextual |
+| P02 | system_prompt_trading.md | Trading | UNIT-QUANT |
+| P03 | system_prompt_legal.md | Legal (12 sub-areas) | UNIT-INQUISITOR |
+| P04 | system_prompt_code.md | Code | UNIT-TECH |
+| P05 | system_prompt_financial.md | Financial | UNIT-QUANT |
+| P06 | system_prompt_cloud.md | Cloud | UNIT-TECH |
+| P07 | system_prompt_cybersecurity.md | Cybersecurity | UNIT-TECH |
+| P08 | system_prompt_agro.md | Agriculture | UNIT-BIO |
+| P09 | system_prompt_realestate.md | Real Estate | UNIT-MARKET |
+| P10 | system_prompt_science.md | Science | UNIT-QUANT |
+| P11 | system_prompt_media.md | Media | UNIT-MARKET |
+| P12 | system_prompt_ecommerce.md | E-Commerce | UNIT-MARKET |
+| P13 | system_prompt_telecom.md | Telecom | UNIT-GEO |
+| P14 | system_prompt_publicsector.md | Public Sector | UNIT-COMPLIANCE |
+| P15 | system_prompt_medical.md | Medical | UNIT-INQUISITOR |
+| P16 | system_prompt_marketing.md | Marketing | UNIT-MARKET |
+| P17 | system_prompt_operations.md | Operations | UNIT-TECH |
+| P18 | system_prompt_hr.md | Human Resources | UNIT-COMPLIANCE |
+| P19 | system_prompt_strategy.md | Strategy | UNIT-MARKET |
+| P20 | system_prompt_startup.md | Startup | UNIT-QUANT |
+
+---
+
+#### Skills Catalog — Complete Reference v3.2.0
+
+| Skill | File | Version |
+|-------|------|---------|
+| kac-assumption-audit | skills/kac-assumption-audit/SKILL.md | v2.6.0 |
+| ach-competing-explanations | skills/ach-competing-explanations/SKILL.md | v2.6.0 |
+| deception-detection | skills/deception-detection/SKILL.md | v2.6.0 |
+| verdict-verification | skills/verdict-verification/SKILL.md | v2.6.0 |
+| adaptive-autonomous-drive | skills/adaptive-autonomous-drive/SKILL.md | v3.2.0 |
+
+---
+
 ## [3.1.0] — 2026-05-15
 
-### Major Release — GOAP A* Planner + Legal Taxonomy (12 Sub-areas)
-
-#### 1. GOAP A* Planner — Dynamic AFO Planning
-
-**`orchestrator/goap_planner.py`** — Replaces the fixed Swarm Activation Score with Goal-Oriented Action Planning using A* search.
-
-**Why:** The Swarm Activation Score was rigid — "IF INVIABLE → 5 agents" regardless of domain, budget, or regime. The GOAP planner evaluates the full planning space and finds the optimal action sequence given all constraints simultaneously.
-
-**How it works:**
-- `WorldState` — represents current audit state (domain, verdict, agents deployed, budget remaining)
-- `GoalState` — defines what a successful audit looks like (synthesis_done, ssm_required)
-- `Action` — each possible step (INITIAL_AUDIT, ROL_LAYER_STANDARD, FORENSE_LAYER_FULL, SSM_MESO, etc.)
-- A* search — finds minimum-cost path from current state to goal state
-- `heuristic()` — admissible estimate of remaining cost (never overestimates → optimal plan guaranteed)
-
-**Fixed vs GOAP comparison:**
-```
-Fixed (v2.x):  IF verdict=INVIABLE → 5 agents (ignores budget, domain, regime)
-GOAP (v3.1):   Given budget=15, domain=Legal, regime=adversarial →
-               ROL:3 + FORENSE:3 + UNIT-INQUISITOR:1 = 7 calls (optimal)
-```
-
-**Integration:** `GOAPPlanner.plan(ctx, run_ssm, preliminary_verdict)` returns:
-- `plan` — ordered list of Action objects
-- `total_cost` — tokens/calls required
-- `rol_agents`, `forense_agents` — counts
-- `ssm_scale` — MICRO/MESO/MACRO or None
-- `tribunal_label` — SINGLE/TRIBUNAL_LIGHT/TRIBUNAL_FULL/TRIBUNAL_MAX
-- `reasoning` — human-readable plan explanation
-
-**Fallback:** If A* fails (no plan found within max_iterations), deterministic fallback plan activates automatically.
-
----
-
-#### 2. Legal Taxonomy — 12 Practice Sub-areas
-
-Source: `anthropics/claude-for-legal` (Apache 2.0) — adapted for Dark Strategist forensic audit.
-
-**`prompts/system_prompt_legal.md`** — Updated with 12 legal practice sub-areas:
-
-| ID | Sub-area | Primary Risk |
-|----|----------|-------------|
-| L01 | Commercial Legal | Unlimited liability, IP ownership |
-| L02 | Corporate / M&A | Undisclosed liabilities, synergy claims |
-| L03 | Employment | Misclassification, non-compete enforceability |
-| L04 | Privacy | GDPR/CCPA compliance, consent validity |
-| L05 | Product Legal | False advertising, warranty gaps |
-| L06 | Regulatory | Reporting gaps, jurisdictional conflicts |
-| L07 | AI Governance | AI output IP, bias monitoring, vendor liability |
-| L08 | IP Legal | Chain of title, OSS contamination |
-| L09 | Litigation | Jurisdictional defects, damages calculation |
-| L10 | Real Estate Legal | Title gaps, zoning violations |
-| L11 | Finance Legal | Covenant breach, cross-default |
-| L12 | Public Regulatory | Procurement irregularities, political risk |
-
-New features in legal prompt:
-- Sub-area auto-detection via signal words
-- Per-sub-area War Room orchestration table
-- Per-sub-area failure catalog with auto-severity
-- L07 AI Governance as dedicated sub-area (first explicit AI legal audit protocol)
-- RULE L6: AI governance under precautionary principle when regulation absent
-
-**`orchestrator/catalogs.py`** — Updated with:
-- `LEGAL_SUBAREA_MAP` — keyword → sub-area (L01-L12) auto-detection
-- `LEGAL_SUBAREA_LABELS` — sub-area codes to human names
-- `LEGAL_SUBAREA_ROLES` — specialized Rol + Forense agents per sub-area
-- Enhanced `Legal` entry in `ROLE_CATALOG` with 5 Rol + 5 Forense agents
-- `DOMAIN_MAP` expanded with legal keywords (nda, msa, gdpr, dsar, trademark, employment, litigation, ai governance)
-- `DOMAIN_TOOLS` Legal entry updated with `sub_area_detection` + `ip_chain_audit`
-
----
-
-#### Architecture Impact
-
-- AFO now has two planning modes:
-  - `GOAP_MODE`: dynamic A* planning (default when GOAPPlanner is instantiated)
-  - `FIXED_MODE`: Swarm Activation Score fallback (preserved for backward compat)
-- Legal domain now has 3-layer specificity:
-  - Domain level: "Legal"
-  - Sub-area level: L01-L12 (auto-detected or declared)
-  - Agent level: sub-area-specific Rol + Forense from LEGAL_SUBAREA_ROLES
-
----
-
-#### Pending — v3.1 Roadmap
-
-- [ ] Integrate GOAPPlanner into TribunalTransversal.run()
-- [ ] ContextBuilder: auto-detect legal sub-area and override roles
-- [ ] Trust scoring for temporary sub-agents (Ruflo-inspired)
-- [ ] example_04 — COMPARATIVE MODE with Tribunal Transversal
-- [ ] example_05 — OPTIMIZATION MODE with SSM
-- [ ] Cloud Function update for v3.0/v3.1 case-based API
+GOAP A* Planner + Legal 12 Sub-area Taxonomy (L01-L12 including L07 AI Governance).
 
 ---
 
 ## [3.0.0] — 2026-05-14
 
-Tribunal Transversal (2-layer). Dynamic Prompt Engine. Pydantic VerdictOutput.
-RuntimeContext + ContextBuilder. GOAP foundation. Medical domain (16 total).
+Tribunal Transversal + Dynamic Prompt Engine + Pydantic VerdictOutput + Medical domain.
 
 ---
 
 ## [2.9.0] — 2026-05-13
 
-SSM + Transparency Report. 4-round interaction. MICRO/MESO/MACRO scales.
+SSM + Transparency Report. 4-round interaction. MICRO/MESO/MACRO.
 
 ---
 
