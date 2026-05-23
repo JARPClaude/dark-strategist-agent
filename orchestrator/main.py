@@ -43,7 +43,7 @@ def load_config(config_path: str = "config.json") -> dict:
     return {
         "anthropic": {
             "api_key": os.getenv("ANTHROPIC_API_KEY", ""),
-            "model": os.getenv("DS_MODEL", "claude-opus-4-6"),
+            "model": os.getenv("DS_MODEL", "claude-opus-4-7"),
             "max_tokens": int(os.getenv("DS_MAX_TOKENS", "8192"))
         },
         "prompts_dir": os.getenv("DS_PROMPTS_DIR", "./prompts"),

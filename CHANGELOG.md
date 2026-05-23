@@ -62,7 +62,7 @@ Each domain includes: document taxonomy (7 types), Phase 0 intake protocol, seve
 - DOMAIN_TOOLS: 5 new domain tool sets added
 - SKILLS_CATALOG: new section — maps all 5 active skills including adaptive-autonomous-drive
 
-**Total domains: 21** (16 previous + Medical added in v3.0 + 5 new in v3.2)
+**Total domains: 20** (P01 General + P02-P15 fourteen pre-v3.0 domains + Medical added in v3.0 + 5 new in v3.2)
 
 ---
 
@@ -102,6 +102,13 @@ Each domain includes: document taxonomy (7 types), Phase 0 intake protocol, seve
 | deception-detection | skills/deception-detection/SKILL.md | v2.6.0 |
 | verdict-verification | skills/verdict-verification/SKILL.md | v2.6.0 |
 | adaptive-autonomous-drive | skills/adaptive-autonomous-drive/SKILL.md | v3.2.0 |
+
+---
+
+#### Patch — 2026-05-23 (documental, no version bump)
+
+- Fixed inconsistent domain count claim in v3.2.0 section: previous text stated "Total domains: 21 (16 previous + Medical added in v3.0 + 5 new in v3.2)" — arithmetic incorrect and inconsistent with the 20-row Domain Catalog table. Corrected to "Total domains: 20".
+- Default LLM model in `orchestrator/main.py` and `orchestrator/config.example.json` updated from `claude-opus-4-6` to `claude-opus-4-7` (current Anthropic Opus flagship as of 23/05/2026).
 
 ---
 

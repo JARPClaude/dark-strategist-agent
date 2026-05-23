@@ -9,7 +9,7 @@ REGIME_MAP:        regime → calibration
 DOMAIN_TOOLS:      domain → available tools
 
 v3.2.0: Added 5 new domains — Marketing, Operations, Human Resources,
-        Strategy, Startup. Total: 21 domains.
+        Strategy, Startup. Total: 20 domains (P01 General + P02-P15 + Medical + 5 new).
 """
 
 # ─── ROLE CATALOG ─────────────────────────────────────────────────────────────
