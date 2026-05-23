@@ -1,5 +1,5 @@
 """
-Dark Strategist Agent v3.0.0 — Main Entry Point
+Dark Strategist Agent v3.2.0 — Main Entry Point
 Tribunal Transversal + Dynamic Prompts + Structured Output
 
 Usage:
@@ -108,7 +108,7 @@ def calculate_tribunal_size(tribunal: bool, agents: int) -> tuple:
 
 def main():
     parser = argparse.ArgumentParser(
-        description="Dark Strategist Agent v3.0.0 — Tribunal Transversal"
+        description="Dark Strategist Agent v3.2.0 — Tribunal Transversal"
     )
 
     # Case-based args (v3.0 — recommended)
@@ -202,7 +202,7 @@ def main():
     mode_label = tribunal_label if args.tribunal else "SINGLE"
     ssm_label = f" + SSM ({args.ssm_scale})" if args.ssm else ""
     print(f"\n{'='*60}")
-    print(f"DARK STRATEGIST v3.0.0 — Tribunal Transversal")
+    print(f"DARK STRATEGIST v3.2.0 — Tribunal Transversal")
     print(f"Domain: {ctx.domain} | Regime: {ctx.regime}")
     print(f"Mode: {mode_label}{ssm_label}")
     print(f"{'='*60}\n")
