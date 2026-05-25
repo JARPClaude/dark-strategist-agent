@@ -5,6 +5,58 @@ Format: [VERSION] — DATE — Description
 
 ---
 
+## [3.2.1] — 2026-05-24
+
+### Patch — B2 Sub-batch Fixes (DS-CERT-v3.2.0 batch / PA-20260524-002 / B2/B9)
+
+Triggered by the JARP DEEP Level 1 audit batch `DS-CERT-v3.2.0` executed by `prompt-architect-agent` v1.1.0 (JARP_CERTIFIED PA-20260524-001). Sub-batch B2/B9 found 1 CRITICAL + 2 SERIOUS findings affecting `prompts/system_prompt.md` and `prompts/system_prompt_router.md`. This patch resolves the bloqueantes; remaining MODERATE findings are deferred to v3.3.
+
+#### Resolved findings
+
+**🔴 CRITICAL — B2.5 (router):** PROMPT CATALOG and Step 2 keyword extraction had not been updated since v2.7.0-ROUTER (12/05/2026). 6 of 20 domain prompts (P15 medical, P16 marketing, P17 operations, P18 hr, P19 strategy, P20 startup) were physically present in `prompts/` but unreachable via routing — 30% of the catalog was operationally inaccessible. A user submitting documents with these domains' classic signals would receive zero keyword matches and fall back to UNKNOWN_DOMAIN, then receive DYNAMIC_TEMPORARY using the General prompt instead of the specialized domain audit. The final block would emit `DOMAIN_EXPANSION_RECOMMENDED` proposing the creation of a prompt file that already existed.
+
+- Extended PROMPT CATALOG with P15-P20 rows.
+- Extended Step 2 keyword catalog with domain-specific signals (clinical trial, HIPAA, FDA, EHR for medical; CAC, LTV, ROAS, funnel for marketing; supplier concentration, bottleneck, SOP, throughput for operations; pay equity, attrition, DEI for HR; competitive moat, five forces, M&A thesis for strategy; PMF, runway, CAC payback, Series A/B/C for startup).
+- Added Disambiguation Rules section for overlapping signals (MRR cloud/startup; TAM/SAM/SOM strategy/startup; CAC/LTV marketing/startup; SoD cybersecurity/operations).
+- Added new routing rule R8: catalog completeness — any prompt physically present in `prompts/` must be reachable via Step 2 keywords; new domain prompts trigger mandatory router patch in the same release.
+
+**🟠 SERIOUS — B2.1 (system_prompt.md):** The file header stamped version `2.5.1`, while the composed agent was at v3.2.0. The prompt's architecture description corresponded to v2.5.1 and did NOT mention Tribunal Transversal (v3.0), AFO/Sub-Agent Spawner (v2.8), AAD (v3.2), GOAPPlanner (v3.1), BudgetController, or VerdictSynthesizer. A reader of the prompt in isolation believed the agent was v2.5.1.
+
+- Updated version stamp from `2.5.1` to `3.2.0`.
+- Added section `ARCHITECTURAL LAYERS — v3.2.0` documenting composition: base layer (this file) + skills layer (5 skills with version) + orchestration layer (`main.py`, `catalogs.py`, `tribunal*.py`) + domain layer (P02-P20 via router) + default model `claude-opus-4-7` + hard limits (Tribunal_MAX=7, max_calls_total=40, max_n2_per_n1=3, aad_max_rounds=3) + backward compatibility statement.
+- Updated final status block to reflect v3.2.0 composed architecture and default model.
+
+**🟠 SERIOUS — B2.6 (router):** Router version stamp `2.7.0-ROUTER` would have remained out of sync with the composed agent v3.2.0 even after B2.5 fix. No protocol governance rule bound the two version labels.
+
+- Bumped router header to `Version: 3.2.0-ROUTER` and final status to `[PROTOCOL_STATUS: ACTIVE — v3.2.0-ROUTER]`.
+- Updated `CATALOG_VERSION` to `3.2.0 — 19 domain prompts + 1 base (P01 General)`.
+- Added rule in `system_prompt.md` §4.14 PROTOCOL GOVERNANCE: router version stamp must match composed agent minor version at all times; mismatch is a SERIOUS finding under self-audit.
+
+#### Findings deferred to v3.3 (non-blocking)
+
+- **🟡 B2.2** — §4.X cross-reference scheme not fully resolved internally (some §4.X items defined inline, others reference external docs, others undefined location). Resolution: build "Section 4 — Reference Index" mapping every §4.X to its location.
+- **🟡 B2.3** — Rule 09 defined in two sections (SEVERITY TAXONOMY + BEHAVIORAL RULES) with consistent but non-identical wording. Resolution: consolidate in ONE location with cross-reference.
+- **🟡 B2.4** — No long-context degradation mitigation mechanism (no anti-degradation reiteration of Rules 01/04/10 across long sessions). Resolution: add `ASEPTIC_INTEGRITY` reiteration to SESSION STATE.
+- **🟡 B2.7** — UNKNOWN_DOMAIN protocol Phase B/C boundary unmarked (no `[AUDIT_REPORT_END]` marker between audit findings and expansion recommendation). Resolution: add explicit closing marker before Phase C.
+
+#### Cascade impact recorded
+
+- `PA-20260426-002` (Dark Strategist v2.5.1 certification, issued by `prompt-architect-agent` v1.0.0 before its decertification) → remains **SUSPECT**. Will be **VOID** upon successful completion of `DS-CERT-v3.2.0` batch and emission of v3.2.1 certification.
+- Sub-batches B0/B9 (Self-Audit of auditor — completed) and B1/B9 (5 DS Skills — passed with notes) remain valid against `PA-20260524-002` master.
+- Sub-batch B2/B9 status moves from DENIED → re-audit pending against this patch.
+
+#### Files modified
+
+- `prompts/system_prompt.md` — v2.5.1 stamp → v3.2.0 + ARCHITECTURAL LAYERS section + §4.14 router-stamp consistency rule
+- `prompts/system_prompt_router.md` — v2.7.0-ROUTER → v3.2.0-ROUTER + 6 new catalog rows + extended keyword catalog + Disambiguation Rules + R8 rule
+- `CHANGELOG.md` — this entry
+
+#### Version bump rationale
+
+Patch (`3.2.0` → `3.2.1`). The changes resolve declared gaps in v3.2.0 (router missed 6 domains added in v3.0 + v3.2.0) and align version stamps. No new agent capabilities. No architectural change. Patch is the honest bump — neither minor (would imply new features) nor major (would imply architecture change).
+
+---
+
 ## [3.2.0] — 2026-05-15
 
 ### Major Release — Adaptive Autonomous Drive + 5 New Domains

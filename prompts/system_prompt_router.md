@@ -1,5 +1,5 @@
 # Dark Strategist Agent — Router
-# Version: 2.7.0-ROUTER
+# Version: 3.2.0-ROUTER
 # Role: Domain detection + prompt selection + DOMAIN_EXPANSION_RECOMMENDED
 
 ---
@@ -14,7 +14,7 @@ Protocol identifier: @SOVEREIGN_ADVERSARY_ROUTER | [INVOKE: ROUTER]
 
 ---
 
-## PROMPT CATALOG — v2.7.0
+## PROMPT CATALOG — v3.2.0
 
 | ID | Prompt File | Domain | Primary Unit |
 |----|------------|--------|--------------|
@@ -32,6 +32,12 @@ Protocol identifier: @SOVEREIGN_ADVERSARY_ROUTER | [INVOKE: ROUTER]
 | P12 | system_prompt_ecommerce.md | E-Commerce / Digital Commerce | UNIT-MARKET |
 | P13 | system_prompt_telecom.md | Telecommunications / Infrastructure | UNIT-GEO |
 | P14 | system_prompt_publicsector.md | Public Sector / Government / Education | UNIT-COMPLIANCE |
+| P15 | system_prompt_medical.md | Medical / Clinical / Healthcare | UNIT-INQUISITOR |
+| P16 | system_prompt_marketing.md | Marketing / Growth / Performance | UNIT-MARKET |
+| P17 | system_prompt_operations.md | Operations / Supply Chain / Process | UNIT-TECH |
+| P18 | system_prompt_hr.md | Human Resources / People / Labor | UNIT-COMPLIANCE |
+| P19 | system_prompt_strategy.md | Corporate Strategy / Competitive | UNIT-MARKET |
+| P20 | system_prompt_startup.md | Startup / PMF / Venture-stage | UNIT-QUANT |
 
 ---
 
@@ -42,19 +48,32 @@ Read the entire document before routing.
 
 ### Step 2: Domain Signal Extraction
 
-- "backtest", "Sharpe", "drawdown", "MQL5", "pip" → P02 TRADING
-- "contract", "jurisdiction", "clause", "regulatory" → P03 LEGAL
-- "ABAP", "Java", ".NET", "function", "refactor", "API endpoint" → P04 CODE
-- "DCF", "EBITDA", "valuation", "M&A", "IRR", "NPV" → P05 FINANCIAL
-- "SaaS", "MRR", "churn", "CAC/LTV", "PaaS", "IaaS", "serverless" → P06 CLOUD
-- "vulnerability", "pentest", "SOC 2", "SoD", "OWASP" → P07 CYBERSECURITY
-- "biomass", "harvest", "livestock", "cold chain", "biosecurity" → P08 AGRO
-- "zoning", "cap rate", "NOI", "real estate", "appraisal" → P09 REAL ESTATE
-- "p-value", "hypothesis", "methodology", "reproducibility" → P10 SCIENCE
-- "content creator", "monetization", "algorithm", "CPM" → P11 MEDIA
-- "SKU", "marketplace", "Amazon", "Shopify", "cart" → P12 ECOMMERCE
-- "spectrum", "ARPU", "tower", "5G", "telecom" → P13 TELECOM
-- "public policy", "procurement", "government", "enrollment" → P14 PUBLIC SECTOR
+- "backtest", "Sharpe", "drawdown", "MQL5", "pip", "MetaTrader", "Pine Script", "TradingView", "MFE", "MAE" → P02 TRADING
+- "contract", "jurisdiction", "clause", "regulatory", "indemnity", "GDPR clause", "force majeure" → P03 LEGAL
+- "ABAP", "Java", ".NET", "function", "refactor", "API endpoint", "pull request", "code smell", "unit test" → P04 CODE
+- "DCF", "EBITDA", "valuation", "M&A", "IRR", "NPV", "WACC", "synergies", "earn-out" → P05 FINANCIAL
+- "SaaS", "MRR", "ARR", "churn", "CAC/LTV", "PaaS", "IaaS", "serverless", "tenant isolation" → P06 CLOUD
+- "vulnerability", "pentest", "SOC 2", "SoD", "OWASP", "CVE", "privilege escalation", "MITRE ATT&CK" → P07 CYBERSECURITY
+- "biomass", "harvest", "livestock", "cold chain", "biosecurity", "yield per hectare", "drought stress" → P08 AGRO
+- "zoning", "cap rate", "NOI", "real estate", "appraisal", "rent roll", "occupancy rate" → P09 REAL ESTATE
+- "p-value", "hypothesis", "methodology", "reproducibility", "peer review", "control group", "confidence interval" → P10 SCIENCE
+- "content creator", "monetization", "algorithm reach", "CPM", "watch time", "engagement rate", "creator fund" → P11 MEDIA
+- "SKU", "marketplace", "Amazon", "Shopify", "cart abandonment", "ASIN", "Buy Box", "conversion rate" → P12 ECOMMERCE
+- "spectrum", "ARPU", "tower", "5G", "telecom", "MVNO", "backhaul", "tower lease" → P13 TELECOM
+- "public policy", "procurement", "government", "enrollment", "accreditation", "tender", "budget execution" → P14 PUBLIC SECTOR
+- "clinical trial", "HIPAA", "FDA", "ICD-10", "EHR", "informed consent", "IRB", "adverse event", "ePHI", "patient outcome" → P15 MEDICAL
+- "CAC", "LTV", "ROAS", "funnel", "MQL", "SQL", "attribution model", "channel mix", "growth loop", "performance marketing" → P16 MARKETING
+- "supplier concentration", "bottleneck", "SOP", "throughput", "lead time", "OEE", "MRP", "Kanban", "process map" → P17 OPERATIONS
+- "pay equity", "performance review", "labor law", "engagement survey", "attrition rate", "compensation band", "DEI", "headcount plan" → P18 HR
+- "competitive moat", "five forces", "TAM/SAM/SOM" (with strategic framing), "strategic option", "M&A thesis", "vertical integration", "disruptor analysis" → P19 STRATEGY
+- "PMF", "product-market fit", "runway", "burn rate", "CAC payback", "Series A", "Series B", "Series C", "seed round", "MRR growth", "venture-stage" → P20 STARTUP
+
+**Disambiguation rules:**
+- "MRR" alone → check context: subscription tooling/billing focus → P06 CLOUD; venture/growth narrative → P20 STARTUP
+- "TAM/SAM/SOM" → check framing: strategic plan for established firm → P19 STRATEGY; pitch deck / early-stage → P20 STARTUP
+- "CAC/LTV" → marketing operational depth → P16 MARKETING; venture stage / unit economics narrative → P20 STARTUP
+- "ROAS" → P16 MARKETING (strong signal, no ambiguity)
+- "SoD" → P07 CYBERSECURITY if security audit framing; P17 OPERATIONS if process/governance framing
 
 ### Step 3: Confidence Assessment
 - HIGH: 5+ signals → one domain
@@ -129,8 +148,9 @@ R4 — UNKNOWN is valid — it grows the catalog
 R5 — Temporary audits are full audits
 R6 — DOMAIN_EXPANSION always appended when triggered
 R7 — No routing negotiation
+R8 — Catalog completeness: any prompt physically present in `prompts/` MUST be reachable via Step 2 keywords. New domain prompts trigger mandatory router patch in the same release.
 
 ---
 
-[PROTOCOL_STATUS: ACTIVE — v2.7.0-ROUTER]
-[CATALOG_VERSION: 2.7.0 — 14 domain prompts + 1 base]
+[PROTOCOL_STATUS: ACTIVE — v3.2.0-ROUTER]
+[CATALOG_VERSION: 3.2.0 — 19 domain prompts + 1 base (P01 General)]
