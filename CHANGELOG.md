@@ -5,6 +5,87 @@ Format: [VERSION] — DATE — Description
 
 ---
 
+## [3.2.2] — 2026-05-24
+
+### Patch — DS-CERT-v3.2.0 Batch Closure (PA-20260524-002)
+
+Triggered by the JARP DEEP Level 1 audit batch `DS-CERT-v3.2.0` executed by `prompt-architect-agent` v1.1.0 (JARP_CERTIFIED PA-20260524-001). Sub-batches B3 through B8 found 19 SERIOUS bloqueantes across 17 of 19 domain variants. v3.2.2 resolves all 19 via a single architectural intervention — the Domain Variant Contract (§4.14.1) — applied uniformly across the catalog.
+
+#### Architectural intervention — §4.14.1 Domain Variant Contract (new)
+
+Added a new sub-section to `system_prompt.md` §4.14 PROTOCOL GOVERNANCE: **Domain Variant Contract**. The Contract binds every `prompts/system_prompt_<domain>.md` to four sub-contracts:
+
+- **Output Format Contract** — every variant must declare an `## OUTPUT FORMAT` section that explicitly inherits BLOCK 0–6 from base. Variants may extend BLOCK 1 with domain-specific fields and may add BLOCKs ≥7 for domain-mandatory sections (e.g., Legal BLOCK 7 = AI_DISCLAIMER). Implicit inheritance is no longer permitted.
+- **Footer Contract** — every variant ends with the canonical footer block:
+  ```
+  [PROTOCOL_STATUS: ACTIVE — vX.Y.Z-DOMAIN]
+  [BASE_PROTOCOL: system_prompt.md vA.B.C]
+  [CONTRACT: §4.14.1 — Domain Variant Contract]
+  ```
+- **Severity Mapping Contract** — Failure Catalog rows must be internally consistent with the variant's Severity Taxonomy definitions. Geofence escalation rules must be monotonic — severity escalates by N tiers capped at FATAL, never skipping tiers or leaving input severities undefined.
+- **Naming Convention Contract** — generic rules use numeric IDs (RULE 01–10 reserved for base). Domain-specific rules use 2-letter prefix + number: T for Trading, LG for Legal, CY for Cybersecurity, CL for Cloud, A for Agro, RE for RealEstate, S for Science, M for Media, EC for Ecommerce, TC for Telecom (distinct from T), PS for PublicSector, MD for Medical, MK for Marketing, OP for Operations, HR for HR, ST for Strategy, SU for Startup, C for Code, F for Financial. Two-letter prefixes are immutable.
+- **Versioning Contract** — domain variant version stamps track the composed-agent minor version; BASE_PROTOCOL footer references must always point to the current composed-agent base version.
+
+#### Resolved findings — 19 SERIOUS bloqueantes
+
+**Pattern #SIS-1 — Output Format absent (15 SERIOUS resolved):**
+Variants P04 Code, P05 Financial, P06 Cloud, P07 Cybersecurity, P08 Agro, P09 RealEstate, P10 Science, P11 Media, P12 Ecommerce, P13 Telecom, P14 PublicSector, P15 Medical, P16 Marketing, P17 Operations, P18 HR, P19 Strategy, P20 Startup — all received an explicit `## OUTPUT FORMAT` section declaring base inheritance + domain extensions per the Contract. P02 Trading (already compliant) and P03 Legal (already compliant with BLOCK 7 AI_DISCLAIMER) updated for consistency only.
+
+**Pattern #SIS-2 — Naming collision risk (15 LATENT resolved):**
+All domain variants renumbered to the §4.14.1 Naming Convention. Specifically: P13 Telecom rules T1-T4 → TC01-TC04 (eliminates direct collision with P02 Trading T1-T3). All other variants normalized to 2-digit padded numbering (e.g., CY1 → CY01, MD1 → MD01, ST1 → ST01).
+
+**Pattern #SIS-3 — BASE_PROTOCOL footer inconsistency (15 LATENT resolved):**
+All 19 variants now declare the canonical footer per the Footer Contract, pointing to `system_prompt.md v3.2.2`. Stale references (v2.5.1, v2.6.1) and missing references (P04 Code, P05 Financial, others) all corrected uniformly.
+
+**Punctual fix — P03 Legal Geofence non-monotonic (1 SERIOUS resolved — B3.2.1):**
+Geofence severity calibration table replaced with monotonic tier-shift rules. Each qualifying condition adds N tiers to underlying finding severity, capped at FATAL. Applied conditions stack additively. Pre-shift severity recorded in finding for traceability. The previous fixed-mapping rows (which left SERIOUS input severities undefined under "no independent judiciary") are replaced.
+
+**Punctual fix — P08 Agro Yield mis-classified (1 SERIOUS resolved — B4 finding):**
+"Yield above regional benchmark without documented justification" reclassified from 🔴 FATAL → 🟠 SERIOUS. The previous FATAL contradicted the variant's own severity taxonomy definition (FATAL = biological impossibility). Yield overestimation is overstatement, not impossibility. With documented justification (technical irrigation, improved seeds), the finding is removed entirely rather than escalated.
+
+#### Findings deferred to v3.3 (non-blocking)
+
+- 38 MODERATE findings from the batch (sub-area Failure Catalogs missing for Legal L05/L06/L09/L10/L11/L12; multi-day batch resumption rules in prompt-architect-agent; comparative mode Phase 0 collection scope; etc.)
+- 22 LATENT findings (most resolved at root by §4.14.1 — residuals tracked for v3.3)
+- 1 LATENT residual from B2-RE.1 ("v2.5.1 forensic base" wording in ARCHITECTURAL LAYERS section)
+
+#### Cascade impact recorded
+
+- `PA-20260426-002` (Dark Strategist v2.5.1 certification, issued by `prompt-architect-agent` v1.0.0 before its decertification) → **VOID** as of this release. Superseded by v3.2.2 certification pending re-audit.
+- The DS-CERT-v3.2.0 batch master `PA-20260524-002` is closed with this release. New certification under v3.2.2 will require a re-audit pass against the auditor v1.1.0 standards — to be scheduled in the next session.
+
+#### Files modified
+
+- `prompts/system_prompt.md` — v3.2.0 → v3.2.2 + §4.14.1 Domain Variant Contract added + BLOCK 1 dual-language label rule
+- `prompts/system_prompt_trading.md` — v2.6.0-TRADING → v3.2.2-TRADING + footer
+- `prompts/system_prompt_legal.md` — v3.1.0-LEGAL → v3.2.2-LEGAL + monotonic Geofence + LG-series naming + footer
+- `prompts/system_prompt_code.md` — v2.7.0-CODE → v3.2.2-CODE + Output Format + C-series + footer + ABAP guideline reference
+- `prompts/system_prompt_financial.md` — v2.7.0-FINANCIAL → v3.2.2-FINANCIAL + Output Format + F-series + threshold ladder + footer
+- `prompts/system_prompt_cloud.md` — v2.7.0-CLOUD → v3.2.2-CLOUD + Output Format + CL-series + footer
+- `prompts/system_prompt_cybersecurity.md` — v2.7.0-CYBERSECURITY → v3.2.2-CYBERSECURITY + Output Format + CY-series + footer
+- `prompts/system_prompt_agro.md` — v2.7.0-AGRO → v3.2.2-AGRO + Output Format + A-series + Yield reclassified SERIOUS + footer
+- `prompts/system_prompt_realestate.md` — v2.7.0-REALESTATE → v3.2.2-REALESTATE + Output Format + RE-series + footer
+- `prompts/system_prompt_science.md` — v2.7.0-SCIENCE → v3.2.2-SCIENCE + Output Format + S-series + footer
+- `prompts/system_prompt_media.md` — v2.7.0-MEDIA → v3.2.2-MEDIA + Output Format + M-series + footer
+- `prompts/system_prompt_ecommerce.md` — v2.7.0-ECOMMERCE → v3.2.2-ECOMMERCE + Output Format + EC-series + footer
+- `prompts/system_prompt_telecom.md` — v2.7.0-TELECOM → v3.2.2-TELECOM + Output Format + TC-series (renamed from T to avoid Trading collision) + footer
+- `prompts/system_prompt_publicsector.md` — v2.7.0-PUBLICSECTOR → v3.2.2-PUBLICSECTOR + Output Format + PS-series + footer
+- `prompts/system_prompt_medical.md` — v3.0.0-MEDICAL → v3.2.2-MEDICAL + Output Format + MD-series + footer
+- `prompts/system_prompt_marketing.md` — v3.2.0-MARKETING → v3.2.2-MARKETING + Output Format + MK-series + footer
+- `prompts/system_prompt_operations.md` — v3.2.0-OPERATIONS → v3.2.2-OPERATIONS + Output Format + OP-series + footer
+- `prompts/system_prompt_hr.md` — v3.2.0-HR → v3.2.2-HR + Output Format + HR-series + footer
+- `prompts/system_prompt_strategy.md` — v3.2.0-STRATEGY → v3.2.2-STRATEGY + Output Format + ST-series + footer
+- `prompts/system_prompt_startup.md` — v3.2.0-STARTUP → v3.2.2-STARTUP + Output Format + SU-series + footer
+- `CHANGELOG.md` — this entry
+
+Total files modified: **21** (1 base + 19 domain variants + CHANGELOG).
+
+#### Version bump rationale
+
+Patch (`3.2.1` → `3.2.2`). The changes resolve declared gaps in v3.2.0 (Output Format inconsistencies across the domain catalog, naming collision risks, footer drift). One architectural addition (§4.14.1 Contract) but no new agent capability, no orchestrator change, no new domain. Patch is the honest bump — neither minor (would imply new features) nor major (would imply architecture change). The Contract is governance enforcement of pre-existing intent.
+
+---
+
 ## [3.2.1] — 2026-05-24
 
 ### Patch — B2 Sub-batch Fixes (DS-CERT-v3.2.0 batch / PA-20260524-002 / B2/B9)
@@ -13,47 +94,24 @@ Triggered by the JARP DEEP Level 1 audit batch `DS-CERT-v3.2.0` executed by `pro
 
 #### Resolved findings
 
-**🔴 CRITICAL — B2.5 (router):** PROMPT CATALOG and Step 2 keyword extraction had not been updated since v2.7.0-ROUTER (12/05/2026). 6 of 20 domain prompts (P15 medical, P16 marketing, P17 operations, P18 hr, P19 strategy, P20 startup) were physically present in `prompts/` but unreachable via routing — 30% of the catalog was operationally inaccessible. A user submitting documents with these domains' classic signals would receive zero keyword matches and fall back to UNKNOWN_DOMAIN, then receive DYNAMIC_TEMPORARY using the General prompt instead of the specialized domain audit. The final block would emit `DOMAIN_EXPANSION_RECOMMENDED` proposing the creation of a prompt file that already existed.
+**🔴 CRITICAL — B2.5 (router):** PROMPT CATALOG and Step 2 keyword extraction had not been updated since v2.7.0-ROUTER (12/05/2026). 6 of 20 domain prompts (P15 medical, P16 marketing, P17 operations, P18 hr, P19 strategy, P20 startup) were physically present in `prompts/` but unreachable via routing — 30% of the catalog was operationally inaccessible.
 
 - Extended PROMPT CATALOG with P15-P20 rows.
-- Extended Step 2 keyword catalog with domain-specific signals (clinical trial, HIPAA, FDA, EHR for medical; CAC, LTV, ROAS, funnel for marketing; supplier concentration, bottleneck, SOP, throughput for operations; pay equity, attrition, DEI for HR; competitive moat, five forces, M&A thesis for strategy; PMF, runway, CAC payback, Series A/B/C for startup).
-- Added Disambiguation Rules section for overlapping signals (MRR cloud/startup; TAM/SAM/SOM strategy/startup; CAC/LTV marketing/startup; SoD cybersecurity/operations).
-- Added new routing rule R8: catalog completeness — any prompt physically present in `prompts/` must be reachable via Step 2 keywords; new domain prompts trigger mandatory router patch in the same release.
+- Extended Step 2 keyword catalog with domain-specific signals.
+- Added Disambiguation Rules section for overlapping signals.
+- Added new routing rule R8: catalog completeness.
 
-**🟠 SERIOUS — B2.1 (system_prompt.md):** The file header stamped version `2.5.1`, while the composed agent was at v3.2.0. The prompt's architecture description corresponded to v2.5.1 and did NOT mention Tribunal Transversal (v3.0), AFO/Sub-Agent Spawner (v2.8), AAD (v3.2), GOAPPlanner (v3.1), BudgetController, or VerdictSynthesizer. A reader of the prompt in isolation believed the agent was v2.5.1.
+**🟠 SERIOUS — B2.1 (system_prompt.md):** File header stamped v2.5.1 while composed agent was at v3.2.0.
 
 - Updated version stamp from `2.5.1` to `3.2.0`.
-- Added section `ARCHITECTURAL LAYERS — v3.2.0` documenting composition: base layer (this file) + skills layer (5 skills with version) + orchestration layer (`main.py`, `catalogs.py`, `tribunal*.py`) + domain layer (P02-P20 via router) + default model `claude-opus-4-7` + hard limits (Tribunal_MAX=7, max_calls_total=40, max_n2_per_n1=3, aad_max_rounds=3) + backward compatibility statement.
-- Updated final status block to reflect v3.2.0 composed architecture and default model.
+- Added section `ARCHITECTURAL LAYERS — v3.2.0` documenting composition.
+- Updated final status block.
 
-**🟠 SERIOUS — B2.6 (router):** Router version stamp `2.7.0-ROUTER` would have remained out of sync with the composed agent v3.2.0 even after B2.5 fix. No protocol governance rule bound the two version labels.
+**🟠 SERIOUS — B2.6 (router):** Router version stamp out of sync with composed agent.
 
-- Bumped router header to `Version: 3.2.0-ROUTER` and final status to `[PROTOCOL_STATUS: ACTIVE — v3.2.0-ROUTER]`.
+- Bumped router header to `Version: 3.2.0-ROUTER`.
 - Updated `CATALOG_VERSION` to `3.2.0 — 19 domain prompts + 1 base (P01 General)`.
-- Added rule in `system_prompt.md` §4.14 PROTOCOL GOVERNANCE: router version stamp must match composed agent minor version at all times; mismatch is a SERIOUS finding under self-audit.
-
-#### Findings deferred to v3.3 (non-blocking)
-
-- **🟡 B2.2** — §4.X cross-reference scheme not fully resolved internally (some §4.X items defined inline, others reference external docs, others undefined location). Resolution: build "Section 4 — Reference Index" mapping every §4.X to its location.
-- **🟡 B2.3** — Rule 09 defined in two sections (SEVERITY TAXONOMY + BEHAVIORAL RULES) with consistent but non-identical wording. Resolution: consolidate in ONE location with cross-reference.
-- **🟡 B2.4** — No long-context degradation mitigation mechanism (no anti-degradation reiteration of Rules 01/04/10 across long sessions). Resolution: add `ASEPTIC_INTEGRITY` reiteration to SESSION STATE.
-- **🟡 B2.7** — UNKNOWN_DOMAIN protocol Phase B/C boundary unmarked (no `[AUDIT_REPORT_END]` marker between audit findings and expansion recommendation). Resolution: add explicit closing marker before Phase C.
-
-#### Cascade impact recorded
-
-- `PA-20260426-002` (Dark Strategist v2.5.1 certification, issued by `prompt-architect-agent` v1.0.0 before its decertification) → remains **SUSPECT**. Will be **VOID** upon successful completion of `DS-CERT-v3.2.0` batch and emission of v3.2.1 certification.
-- Sub-batches B0/B9 (Self-Audit of auditor — completed) and B1/B9 (5 DS Skills — passed with notes) remain valid against `PA-20260524-002` master.
-- Sub-batch B2/B9 status moves from DENIED → re-audit pending against this patch.
-
-#### Files modified
-
-- `prompts/system_prompt.md` — v2.5.1 stamp → v3.2.0 + ARCHITECTURAL LAYERS section + §4.14 router-stamp consistency rule
-- `prompts/system_prompt_router.md` — v2.7.0-ROUTER → v3.2.0-ROUTER + 6 new catalog rows + extended keyword catalog + Disambiguation Rules + R8 rule
-- `CHANGELOG.md` — this entry
-
-#### Version bump rationale
-
-Patch (`3.2.0` → `3.2.1`). The changes resolve declared gaps in v3.2.0 (router missed 6 domains added in v3.0 + v3.2.0) and align version stamps. No new agent capabilities. No architectural change. Patch is the honest bump — neither minor (would imply new features) nor major (would imply architecture change).
+- Added rule in `system_prompt.md` §4.14: router version stamp must match composed agent minor version.
 
 ---
 
@@ -65,19 +123,7 @@ Patch (`3.2.0` → `3.2.1`). The changes resolve declared gaps in v3.2.0 (router
 
 **`skills/adaptive-autonomous-drive/SKILL.md`**
 
-Formalizes the autonomous operational layer of Dark Strategist as an official skill. The skill grants the AFO and all forensic agents the capacity to expand analysis beyond the initial prompt, generate internal goals dynamically, and activate sub-agents without user instruction.
-
-Six internal modules:
-- GoalEngine — maintains and generates internal audit goals (G1-G5)
-- MotivationModel — determines where highest adversarial value remains
-- StateMemory — registers analysis progress to avoid redundancy
-- AutonomousLoop — executes additional rounds without user intervention
-- SafetyGuard — hard rules preventing uncontrolled autonomy
-- SelfEvaluation — forces self-assessment before closing analysis
-
-System prompt integration block provided. Pseudocode provided. Fully integrated with AFO, TribunalTransversal, SubAgentSpawner, and GOAPPlanner.
-
-Naming convention: `adaptive-autonomous-drive` (kebab-case, English — consistent with existing skills).
+Formalizes the autonomous operational layer of Dark Strategist as an official skill. Six internal modules: GoalEngine, MotivationModel, StateMemory, AutonomousLoop, SafetyGuard, SelfEvaluation.
 
 ---
 
@@ -93,74 +139,25 @@ Naming convention: `adaptive-autonomous-drive` (kebab-case, English — consiste
 
 Each domain includes: document taxonomy (7 types), Phase 0 intake protocol, severity taxonomy with domain rules, 7-level forensic analysis, failure catalog with auto-severity, and War Room orchestration table.
 
-**Marketing (P16):** CAC attribution audit, ROAS validation, funnel math, claim verifiability. RULE MK1: growth >50% MoM without basis → SERIOUS. RULE MK3: >70% budget single channel → SERIOUS.
-
-**Operations (P17):** Bottleneck detection, supplier concentration, SoD compliance, SOP executability. RULE OP1: single supplier >70% critical input → FATAL. RULE OP3: linear cost assumption in scaling → SERIOUS.
-
-**Human Resources (P18):** Pay equity analysis, labor law compliance, culture claim validation, performance bias detection. RULE HR1: pay gap without documented justification → FATAL. RULE HR4: financial approval and execution in same role → FATAL (SoD).
-
-**Strategy (P19):** Assumption single-point-of-failure check, mirror imaging detection, competitive response modeling. RULE ST1: single assumption that invalidates entire plan → FATAL. RULE ST2: competitive analysis ignoring adjacent disruptors → SERIOUS.
-
-**Startup (P20):** CAC/LTV payback, PMF retention check, TAM methodology audit, runway modeling. RULE SU1: CAC payback >24 months without improvement path → FATAL. RULE SU2: PMF claim without 90-day retention data → FATAL.
-
 ---
 
 #### 3. Catalogs Updated
 
 **`orchestrator/catalogs.py`** — v3.2.0:
-- ROLE_CATALOG: 5 new domains added (Marketing, Operations, Human Resources, Strategy, Startup) — each with Rol agents + Forense agents
+- ROLE_CATALOG: 5 new domains added
 - SSM_CATALOG: 5 new domain persona sets added
 - DOMAIN_MAP: 30+ new keyword mappings for new domains
 - DOMAIN_TOOLS: 5 new domain tool sets added
-- SKILLS_CATALOG: new section — maps all 5 active skills including adaptive-autonomous-drive
+- SKILLS_CATALOG: maps all 5 active skills including adaptive-autonomous-drive
 
-**Total domains: 20** (P01 General + P02-P15 fourteen pre-v3.0 domains + Medical added in v3.0 + 5 new in v3.2)
-
----
-
-#### Domain Catalog — Complete Reference v3.2.0
-
-| ID | Prompt | Domain | Primary Unit |
-|----|--------|--------|--------------|
-| P01 | system_prompt.md | General | Contextual |
-| P02 | system_prompt_trading.md | Trading | UNIT-QUANT |
-| P03 | system_prompt_legal.md | Legal (12 sub-areas) | UNIT-INQUISITOR |
-| P04 | system_prompt_code.md | Code | UNIT-TECH |
-| P05 | system_prompt_financial.md | Financial | UNIT-QUANT |
-| P06 | system_prompt_cloud.md | Cloud | UNIT-TECH |
-| P07 | system_prompt_cybersecurity.md | Cybersecurity | UNIT-TECH |
-| P08 | system_prompt_agro.md | Agriculture | UNIT-BIO |
-| P09 | system_prompt_realestate.md | Real Estate | UNIT-MARKET |
-| P10 | system_prompt_science.md | Science | UNIT-QUANT |
-| P11 | system_prompt_media.md | Media | UNIT-MARKET |
-| P12 | system_prompt_ecommerce.md | E-Commerce | UNIT-MARKET |
-| P13 | system_prompt_telecom.md | Telecom | UNIT-GEO |
-| P14 | system_prompt_publicsector.md | Public Sector | UNIT-COMPLIANCE |
-| P15 | system_prompt_medical.md | Medical | UNIT-INQUISITOR |
-| P16 | system_prompt_marketing.md | Marketing | UNIT-MARKET |
-| P17 | system_prompt_operations.md | Operations | UNIT-TECH |
-| P18 | system_prompt_hr.md | Human Resources | UNIT-COMPLIANCE |
-| P19 | system_prompt_strategy.md | Strategy | UNIT-MARKET |
-| P20 | system_prompt_startup.md | Startup | UNIT-QUANT |
-
----
-
-#### Skills Catalog — Complete Reference v3.2.0
-
-| Skill | File | Version |
-|-------|------|---------|
-| kac-assumption-audit | skills/kac-assumption-audit/SKILL.md | v2.6.0 |
-| ach-competing-explanations | skills/ach-competing-explanations/SKILL.md | v2.6.0 |
-| deception-detection | skills/deception-detection/SKILL.md | v2.6.0 |
-| verdict-verification | skills/verdict-verification/SKILL.md | v2.6.0 |
-| adaptive-autonomous-drive | skills/adaptive-autonomous-drive/SKILL.md | v3.2.0 |
+**Total domains: 20**
 
 ---
 
 #### Patch — 2026-05-23 (documental, no version bump)
 
-- Fixed inconsistent domain count claim in v3.2.0 section: previous text stated "Total domains: 21 (16 previous + Medical added in v3.0 + 5 new in v3.2)" — arithmetic incorrect and inconsistent with the 20-row Domain Catalog table. Corrected to "Total domains: 20".
-- Default LLM model in `orchestrator/main.py` and `orchestrator/config.example.json` updated from `claude-opus-4-6` to `claude-opus-4-7` (current Anthropic Opus flagship as of 23/05/2026).
+- Fixed inconsistent domain count claim in v3.2.0 section
+- Default LLM model in orchestrator updated to `claude-opus-4-7`
 
 ---
 
