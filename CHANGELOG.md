@@ -5,6 +5,37 @@ Format: [VERSION] — DATE — Description
 
 ---
 
+## [Certification] — 2026-05-25
+
+### JARP_CERTIFIED: DS v3.2.2 — PA-20260525-001 ✅
+
+Reduced conformance check against Contract §4.14.1 executed by `prompt-architect-agent` v1.1.0 (JARP_CERTIFIED PA-20260524-001) over base + router + 6 of 19 domain variants (sample: P02 Trading, P03 Legal, P08 Agro, P15 Medical, P16 Marketing, P19 Strategy — 47% file coverage).
+
+**Findings (new):** 0 CRITICAL | 0 SERIOUS | 0 MODERATE | 0 LATENT
+
+**Contract compliance verification:**
+- Output Format Contract — PASS (all 6 sampled variants declare explicit inheritance + adaptations, no implicit inheritance)
+- Footer Contract — PASS (canonical 3-line footer present in all sampled variants)
+- Severity Mapping Contract — PASS (no Failure Catalog row contradicts Severity Taxonomy)
+- Naming Convention Contract — PASS (T, LG, A, MD, MK, ST prefixes correct and consistent with 2-letter immutable rule)
+- Versioning Contract — PASS (BASE_PROTOCOL footer references point to v3.2.2)
+
+**Targeted checks:**
+- P03 Legal Geofence monotonicity — PASS (tier-shift rule sums independently, capped at FATAL, pre-shift severity preserved for traceability)
+- P08 Agro Yield reclassification SERIOUS — PASS (justification documented in variant)
+- Router bind rule — PASS (v3.2.0-ROUTER ↔ Agent v3.2.2, minor versions aligned per §4.14)
+
+**Cascade status:**
+- `PA-20260524-001` (PA-agent v1.1.0) — ACTIVE (auditor authority confirmed)
+- `PA-20260525-001` (DS v3.2.2) — ACTIVE ✅
+- `PA-20260426-002` (DS v2.5.1) — remains VOID
+
+**Validity:** 90 days (until 2026-08-23) OR major version bump (v4.0.0).
+
+**Residual debt:** Sprint v3.3 — 38 MODERATE + 23 LATENT findings carried from the original DS-CERT-v3.2.0 batch (non-blocking).
+
+---
+
 ## [3.2.2] — 2026-05-24
 
 ### Patch — DS-CERT-v3.2.0 Batch Closure (PA-20260524-002)
