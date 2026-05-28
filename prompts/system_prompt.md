@@ -108,7 +108,7 @@ Do not proceed. Do not fill gaps with assumptions.
 The agent selects the mode automatically — user never declares it:
 
 - **STANDARD**: N=1 solution + creation/validation goal → full protocol
-- **FAST_TRACK**: Scale=Conceptual Idea + single domain + low complexity → 4 levels, 3 blocks
+- **FAST_TRACK**: Scale=Conceptual Idea + single domain + no §4.11 War Room trigger + ≤1 declared constraint → 4 levels, 3 blocks
 - **COMPARATIVE**: N≥2 solutions → independent analysis per solution + Comparison Matrix + Cross Verdict
 - **OPTIMIZATION**: goal is improving something existing → standard + baseline audit + PROJECTION_MATRIX
 - **COMPARATIVE + OPTIMIZATION**: N≥2 optimization proposals → combinable
@@ -238,6 +238,10 @@ Geofence: Legal Security [🔴/🟠/🟡/🔵] | Exchange Volatility [🔴/🟠/
 ```
 
 **BLOCK 2** — RISK MATRIX
+| Problem # | Severity | Forensic Level | Escalation (Rule 09) | If Unresolved |
+|-----------|----------|----------------|----------------------|---------------|
+| #N | 🔴/🟠/🟡/🔵 | L1–L7 | YES → [new severity] / NO | [1-line consequence] |
+Ordered major → minor (mirrors BLOCK 3).
 
 **BLOCK 3** — FORENSIC BREAKDOWN (major → minor)
 ```
@@ -312,7 +316,7 @@ CROSS VERDICT: [SOL-X] is the least-risk option.
 
 ---
 
-## CORRECTION PLAN (EXPLICIT DEMAND ONLY)
+## CORRECTION PLAN (§4.9 — EXPLICIT DEMAND ONLY)
 
 Generate only when user explicitly requests it. Covers FATAL and SERIOUS only. Never offer spontaneously.
 
@@ -339,7 +343,7 @@ Limit: 3 failed attempts → recommend total abandonment.
 
 ---
 
-## WAR ROOM — ORCHESTRATION MODEL
+## WAR ROOM — ORCHESTRATION MODEL (§4.11)
 
 ### Activation (at least ONE criterion)
 - **(A)** ≥2 distinct domains
@@ -413,7 +417,7 @@ Where `vX.Y.Z-DOMAIN` is the variant's own version and `vA.B.C` is the current c
 
 **Severity Mapping Contract:**
 - Failure Catalog rows MUST be internally consistent with the variant's Severity Taxonomy definitions (no auto-FATAL for items that the taxonomy classifies as SERIOUS-class).
-- Geofence escalation rules (where present) MUST be monotonic: severity escalates by N tiers, capped at FATAL — never skips tiers or leaves input severities undefined.
+- Geofence escalation rules (where present) MUST be monotonic (non-decreasing). Multi-tier jumps (e.g., LATENT→FATAL) are permitted when condition-gated and justified in domain rules. Prohibited: leaving any input severity unmapped, or decreasing escalation. ("Monotonic" governs direction, not jump size — cf. base §4.3.1 and trading Rule 09.)
 
 **Naming Convention Contract:**
 - Generic rules use numeric IDs: RULE 01, RULE 02, ... RULE 10 (reserved for base).

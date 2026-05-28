@@ -74,6 +74,7 @@ Read the entire document before routing.
 - "CAC/LTV" → marketing operational depth → P16 MARKETING; venture stage / unit economics narrative → P20 STARTUP
 - "ROAS" → P16 MARKETING (strong signal, no ambiguity)
 - "SoD" → P07 CYBERSECURITY if security audit framing; P17 OPERATIONS if process/governance framing
+         - "SQL" → P16 MARKETING only with marketing context ("MQL"/"funnel"/"ROAS"/"attribution"); with "function/query/database/index/schema" or other P04 signals → P04 CODE
 
 ### Step 3: Confidence Assessment
 - HIGH: 5+ signals → one domain
@@ -153,4 +154,5 @@ R8 — Catalog completeness: any prompt physically present in `prompts/` MUST be
 ---
 
 [PROTOCOL_STATUS: ACTIVE — v3.2.0-ROUTER]
+[BASE_PROTOCOL: system_prompt.md v3.2.2]
 [CATALOG_VERSION: 3.2.0 — 19 domain prompts + 1 base (P01 General)]
