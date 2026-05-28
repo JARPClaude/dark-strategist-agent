@@ -40,7 +40,7 @@ Declare the sub-area in Phase 0. Each sub-area activates domain-specific forensi
 | L11 | **Finance Legal** | Loan agreements, security instruments, covenants, intercreditor | Covenant breach triggers, cross-default, priority disputes |
 | L12 | **Public Regulatory** | Government contracts, procurement documents, regulatory submissions | Procurement irregularities, compliance gaps, political risk |
 
-**Note (v3.2.2):** Sub-area failure catalogs exist for L01, L02, L03, L04, L07, L08. Sub-areas L05, L06, L09, L10, L11, L12 apply general legal forensic principles pending dedicated catalogs in v3.3.
+**Note:** Sub-area failure catalogs exist for all 12 sub-areas (L01–L12).
 
 ---
 
@@ -169,6 +169,26 @@ Each condition adds N tiers to the underlying finding severity, capped at FATAL.
 | No data subject rights procedure | 🟠 SERIOUS |
 | Data transfer without SCCs/adequacy | 🟠 SERIOUS |
 
+### L05 Product Legal
+| Failure | Auto-Severity |
+|---------|--------------|
+| Unsubstantiated or false advertising claim (deceptive / unverifiable) | 🔴 FATAL |
+| No limitation of liability in ToS / EULA | 🟠 SERIOUS |
+| No warranty disclaimer where implied warranties attach by law | 🟠 SERIOUS |
+| Auto-renewal without clear affirmative consent (dark pattern / ROSCA) | 🟠 SERIOUS |
+| Unilateral ToS amendment without user notice | 🟠 SERIOUS |
+| Missing or ambiguous return & refund policy | 🟡 MODERATE |
+
+### L06 Regulatory Legal
+| Failure | Auto-Severity |
+|---------|--------------|
+| Active regulatory violation with enforcement exposure | 🔴 FATAL |
+| Mandatory regulatory filing missing or past statutory deadline | 🔴 FATAL |
+| No designated compliance owner / accountability gap | 🟠 SERIOUS |
+| Reporting obligation without evidence trail / audit log | 🟠 SERIOUS |
+| Unaddressed jurisdictional conflict between overlapping regulators | 🟠 SERIOUS |
+| Compliance framework not mapped to current regulation version | 🟡 MODERATE |
+
 ### L07 AI Governance
 | Failure | Auto-Severity |
 |---------|--------------|
@@ -187,7 +207,45 @@ Each condition adds N tiers to the underlying finding severity, capped at FATAL.
 | FTO opinion absent | 🟠 SERIOUS |
 | Territorial coverage incomplete | 🟡 MODERATE |
 
----
+### L09 Litigation Legal
+| Failure | Auto-Severity |
+|---------|--------------|
+| Claim time-barred (statute of limitations expired) | 🔴 FATAL |
+| Lack of subject-matter or personal jurisdiction | 🔴 FATAL |
+| Settlement agreement without defined scope of release | 🟠 SERIOUS |
+| Damages calculation speculative / unsupported by evidence | 🟠 SERIOUS |
+| No evidence preservation — spoliation exposure | 🟠 SERIOUS |
+| Demand letter overstates legal basis (overreach exposure) | 🟡 MODERATE |
+
+### L10 Real Estate Legal
+| Failure | Auto-Severity |
+|---------|--------------|
+| Break in chain of title | 🔴 FATAL |
+| Undisclosed encumbrance / lien on property | 🔴 FATAL |
+| Zoning use violation for intended purpose | 🟠 SERIOUS |
+| No title insurance / survey contingency | 🟠 SERIOUS |
+| Easement or access right not documented | 🟠 SERIOUS |
+| Lease renewal / escalation terms ambiguous | 🟡 MODERATE |
+
+### L11 Finance Legal
+| Failure | Auto-Severity |
+|---------|--------------|
+| Security interest unperfected (not filed / registered) | 🔴 FATAL |
+| Intercreditor priority undefined among secured parties | 🔴 FATAL |
+| Financial covenant without defined cure period | 🟠 SERIOUS |
+| Unbounded cross-default triggering multi-facility cascade | 🟠 SERIOUS |
+| Material adverse change (MAC) clause undefined / subjective | 🟠 SERIOUS |
+| No mandatory prepayment waterfall ordering | 🟡 MODERATE |
+
+### L12 Public Regulatory
+| Failure | Auto-Severity |
+|---------|--------------|
+| Award without mandated competitive process (procurement fraud exposure) | 🔴 FATAL |
+| Conflict of interest / undisclosed beneficial ownership | 🔴 FATAL |
+| No anti-corruption / FCPA clause in cross-border contract | 🟠 SERIOUS |
+| Missing mandatory public disclosure / transparency filing | 🟠 SERIOUS |
+| Government termination-for-convenience without compensation defined | 🟠 SERIOUS |
+| Performance bond / guarantee terms ambiguous | 🟡 MODERATE |
 
 ## WAR ROOM — LEGAL ORCHESTRATION
 
@@ -229,7 +287,7 @@ Inherits BLOCK 0–6 structure from `system_prompt.md` §"OUTPUT FORMAT" (compos
 
 **BLOCK 7 — AI_DISCLAIMER (mandatory for this variant per RULE LG03):** see AI DISCLAIMER section above. Emitted at the end of every Legal report.
 
-**Failure Catalog application:** sub-area-specific catalogs (L01, L02, L03, L04, L07, L08) drive auto-severity. Sub-areas without catalog (L05, L06, L09, L10, L11, L12) apply general legal forensic principles — to be expanded in v3.3.
+**Failure Catalog application:** sub-area-specific catalogs (L01–L12, all 12 sub-areas) drive auto-severity.
 
 **Geofence application:** monotonic tier-shift rule (see GEOFENCE LEGAL section). Pre-shift severity recorded in finding for traceability.
 
