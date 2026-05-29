@@ -14,9 +14,14 @@ class BudgetController:
     def __init__(self, config: dict):
         tribunal_cfg = config.get("tribunal", {})
         self.max_agents = tribunal_cfg.get("max_agents", 7)
-        self.max_calls_total = tribunal_cfg.get("max_calls_total", 30)
+        self.max_calls_total = tribunal_cfg.get("max_calls_total", 40)
         self.max_n2_per_n1 = tribunal_cfg.get("max_n2_per_n1", 3)
         self.alert_at_percent = tribunal_cfg.get("alert_at_percent", 80)
+        # Context-degradation onset: alert when prompt context approaches the
+        # non-linear cliff (context-degradation v2.1.0). Fires at 70% of the
+        # configured per-call context budget, well before the degradation onset.
+        self.context_budget_chars = tribunal_cfg.get("context_budget_chars", 32000)
+        self.context_alert_percent = tribunal_cfg.get("context_alert_percent", 70)
 
         self.calls_made = {"single": 0, "n1": 0, "n2": 0, "synthesis": 0}
         self.agents_deployed = 0
@@ -32,6 +37,22 @@ class BudgetController:
             return False
         if total >= int(self.max_calls_total * self.alert_at_percent / 100):
             print(f"[BUDGET_CONTROLLER] ⚠️  Budget at {self.alert_at_percent}% — {total}/{self.max_calls_total} calls used.")
+        return True
+
+    def check_context_budget(self, context_chars: int, label: str = "") -> bool:
+        """
+        Warns when an assembled prompt context approaches the degradation cliff.
+        Returns True if within safe budget, False if the alert threshold is crossed.
+        Does NOT block — surfaces the risk so callers can compact upstream
+        (context-degradation v2.1.0: trigger before onset, not at it).
+        """
+        threshold = int(self.context_budget_chars * self.context_alert_percent / 100)
+        if context_chars >= threshold:
+            print(f"[BUDGET_CONTROLLER] ⚠️  Context budget at "
+                  f"{round(context_chars / self.context_budget_chars * 100)}% "
+                  f"({context_chars}/{self.context_budget_chars} chars){f' — {label}' if label else ''}. "
+                  f"Approaching degradation onset; consider compaction.")
+            return False
         return True
 
     def record_call(self, call_type: str):

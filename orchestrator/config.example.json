@@ -12,7 +12,9 @@
     "doc_window": 4000,
     "handoff_window": 8000,
     "synthesis_window": 1500,
-    "alert_at_percent": 80
+    "alert_at_percent": 80,
+    "context_budget_chars": 32000,
+    "context_alert_percent": 70
   },
   "ssm": {
     "max_personas": 20,

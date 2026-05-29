@@ -66,6 +66,9 @@ class TribunalTransversal:
 
         # Build simulation summary for Forense layer
         rol_simulation_summary = self._summarize_rol_outputs(rol_outputs)
+        self.budget.check_context_budget(
+            len(rol_simulation_summary), label="Rol->Forense handoff"
+        )
 
         # ── Layer 2: Agentes Forenses ──────────────────────────────────────
         self._log(f"Layer 2: Launching {len(ctx.forense_agents)} Agentes Forenses...")
