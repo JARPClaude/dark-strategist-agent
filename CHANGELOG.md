@@ -5,6 +5,28 @@ Format: [VERSION] — DATE — Description
 
 ---
 
+## [Certification] — 2026-05-29
+
+### JARP_CERTIFIED: DS v3.3.0 — PA-20260529-001 ✅
+
+Full 7-axis forensic audit (Level 1 — JARP DEEP) executed by `prompt-architect-agent` v1.3.0 (JARP_CERTIFIED PA-20260527-002) over the complete v3.3.0 release: 21 prompts + 5 skills + orchestrator product-face + docs. FULL COVERAGE (19/19 domain variants) — supersedes the reduced 47% sample of PA-20260525-001.
+
+Findings: 0 CRITICAL | 0 SERIOUS | 0 MODERATE | 0 LATENT.
+
+A6 coherence verified end-to-end: 19/19 variant footers reference BASE_PROTOCOL v3.3.0; router-agent minor stamps matched (3.3.x / 3.3.x); router UNKNOWN_DOMAIN versionless placeholder confirmed non-finding; §4.14.1 Domain Variant Contract governs all variants. DSv33-06 (identity-lock) formally deferred — not a pending finding.
+
+```
+[JARP_CERTIFIED: v3.3.0 — PA-20260529-001]
+[AUDIT_DATE: 2026-05-29]
+[AUDITOR: THE PROMPT ARCHITECT — prompt-architect-agent v1.3.0]
+[SCOPE: LEVEL 1 — JARP DEEP — FULL COVERAGE]
+[FINDINGS: 0 CRITICAL | 0 SERIOUS | 0 MODERATE | 0 LATENT]
+[SUPERSEDES: PA-20260525-001 (v3.2.2, reduced conformance 47%)]
+[NEXT_REVIEW: 2026-08-27 or major version]
+```
+
+---
+
 ## [3.3.0] — 2026-05-29
 
 ### Minor — Prompt-Sweep Cycle Closure + Skills Metadata Normalization
