@@ -186,7 +186,8 @@ class PromptEngine:
 
     def build_forense_prompt(self, agent_id: str, role: str,
                              ctx: RuntimeContext,
-                             rol_simulation: str = "") -> str:
+                             rol_simulation: str = "",
+                             handoff_window: int = 8000) -> str:
         """Builds prompt for an Agente Forense."""
         function = (
             f"Audit the document AND the simulation produced by the Rol Agents. "
@@ -213,7 +214,7 @@ class PromptEngine:
         )
 
         if rol_simulation:
-            prompt += f"\n\nROL AGENT SIMULATION TO AUDIT:\n{rol_simulation[:2000]}"
+            prompt += f"\n\nROL AGENT SIMULATION TO AUDIT:\n{rol_simulation[:handoff_window]}"
 
         return prompt
 

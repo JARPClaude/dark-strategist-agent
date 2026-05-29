@@ -171,7 +171,8 @@ class TribunalTransversal:
             for i, role in enumerate(ctx.forense_agents):
                 agent_id = f"FOR-{str(i+1).zfill(2)}"
                 prompt = self.engine.build_forense_prompt(
-                    agent_id, role, ctx, rol_simulation
+                    agent_id, role, ctx, rol_simulation,
+                    handoff_window=self.config.get("tribunal", {}).get("handoff_window", 8000)
                 )
                 future = executor.submit(
                     self._call_agent, agent_id, "FORENSE", role, prompt, document
@@ -299,20 +300,38 @@ class TribunalTransversal:
                     "raw_output": text, "preliminary_verdict": "UNKNOWN"}
 
     def _summarize_rol_outputs(self, rol_outputs: list) -> str:
-        """Summarizes Rol agent outputs for the Forense layer."""
-        summaries = []
+        """
+        Builds the Rol->Forense handoff. Full-fidelity: preserves every
+        audit-relevant field with agent provenance. No truncation of structured
+        fields (telephone-game fix, v3.4 R1 FUGA#1). The Forense layer cannot
+        audit assumptions or demanded information it never receives.
+        """
+        blocks = []
         for r in rol_outputs:
             aid = r.get("agent_id", "ROL-?")
             role = r.get("role", "Unknown Role")
             stance = r.get("stance", "NEUTRAL")
+            stance_reasoning = r.get("stance_reasoning", "")
+            perspective = r.get("role_perspective", "")
             concerns = r.get("primary_concerns", [])
             action = r.get("intended_action", "Not specified")
-            summaries.append(
-                f"{aid} ({role}): stance={stance}, "
-                f"action={action}, "
-                f"concerns={'; '.join(concerns[:2])}"
-            )
-        return "\n".join(summaries)
+            assumptions = r.get("assumptions_made", [])
+            demanded = r.get("information_demanded", [])
+
+            block = [f"[{aid}] {role} — stance={stance}"]
+            if stance_reasoning:
+                block.append(f"  stance_reasoning: {stance_reasoning}")
+            if perspective:
+                block.append(f"  perspective: {perspective}")
+            if concerns:
+                block.append("  concerns: " + " | ".join(concerns))
+            block.append(f"  intended_action: {action}")
+            if assumptions:
+                block.append("  assumptions_made: " + " | ".join(assumptions))
+            if demanded:
+                block.append("  information_demanded: " + " | ".join(demanded))
+            blocks.append("\n".join(block))
+        return "\n\n".join(blocks)
 
     def _format_verdict(self, unified: UnifiedVerdictOutput) -> str:
         """Formats unified verdict as human-readable text."""
