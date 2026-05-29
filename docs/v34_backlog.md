@@ -1,6 +1,6 @@
 # DARK STRATEGIST — BACKLOG SPRINT v3.4
 
-**Abierto:** 29/05/2026 (sesión 13) | **Estado:** OPEN — scope-locked | **Última act.:** 29/05/2026 (s13, post-diseño R1)
+**Abierto:** 29/05/2026 (sesión 13) | **Estado:** OPEN — R1 CERRADO | **Última act.:** 29/05/2026 (s13, R1 done)
 **Tema:** Reliability core — fidelidad del pipeline AFO→Tribunal→N2 (fix telephone-game / context degradation)
 **Bump objetivo:** v3.3.0 → v3.4.0 (operación ATÓMICA de cierre, método s12)
 **Cert objetivo:** re-cert 7-axis Level 1 JARP DEEP full-coverage post-bump
@@ -19,44 +19,34 @@ El pipeline DS pasa contexto a través de capas: N0 (AFO) → N1 (Tribunal Trans
 
 ---
 
-## DISEÑO R1 — Puntos de fuga LOCALIZADOS (código real, s13)
+## R1 — CERRADO ✅ (3 fugas resueltas + verificadas por SHA en remoto)
 
 Sintetizador VIVO confirmado = **`TribunalTransversal._synthesize()`** (`tribunal_transversal.py`) → `prompt_engine.build_synthesis_prompt()` → JSON → `UnifiedVerdictOutput`. R3 se diseña AQUÍ, NO en `verdict_synthesizer.py` (muerto, ver DSv34-DEAD).
 
-| Fuga | Ubicación | Defecto | Patrón |
-|------|-----------|---------|--------|
-| **#1** | `tribunal_transversal._summarize_rol_outputs()` | `concerns[:2]` trunca concerns; aplana a texto libre de una línea; sin provenance. Primer handoff Rol→Forense pierde estructura. | telephone-game / compress |
-| **#2** | `_call_agent` `document[:4000]` · `verdict_synthesizer` `[:2000]` · N2 sub `[:1000]` | 3 ventanas distintas del MISMO documento. Síntesis opina sobre 2000 chars; agentes opinaron sobre 4000. Findings del fragmento 2000-4000 no re-verificables. | clash (silencioso) |
-| **#3** | `_run_forense_layer` pasa `str(result)` crudo al spawner; síntesis recibe prosa concatenada | sin schema de handoff; sintetizador re-parsea prosa en vez de claims estructurados. | compress / telephone-game |
-| **#4** | RESUELTA (lectura) | `verdict_synthesizer.py` + `tribunal.py` = código muerto. Ver DSv34-DEAD. | n/a |
+**Decisión de diseño clave:** en lugar de un `HandoffPacket` Pydantic nuevo (over-engineering para handoffs que terminan serializados a string en prompts), R1 se resolvió con **3 ventanas gobernadas por config** + **emisión estructurada con provenance**. Mismo patrón `config["tribunal"].get(...)` ya establecido. Ningún límite eliminado — todos hechos configurables.
 
-### Contrato propuesto — `HandoffPacket` (Pydantic)
-```
-HandoffPacket:
-  layer_id: str                    # "ROL-03", "FOR-02", "N2-UNIT-QUANT"
-  verified_claims: list[Claim]     # claim + severity + evidence + source_layer (provenance)
-  open_questions: list[str]        # lo no resuelto, pasa explícito a la siguiente capa
-  document_window: tuple[int,int]  # (start, end) — qué fragmento vio ESTA capa
-  truncated: bool
-```
-Cada capa consume SOLO el packet upstream, nunca re-resume el raw. Ataca los 5 patrones: provenance (poisoning), ventana explícita (clash), claims estructurados (telephone-game), open_questions (confusion).
+| Fuga | Commit | Fix | Config key |
+|------|--------|-----|------------|
+| **#2** | `fe007a7` | Ventana de documento unificada N1=N2 (antes 4000 vs 3000). SSM excluida (post-veredicto). | `doc_window` (4000) |
+| **#1** | `f808cda` | Handoff Rol→Forense full-fidelity. `concerns[:2]` eliminado; ahora pasa `assumptions_made`, `information_demanded`, `stance_reasoning`, `role_perspective` con provenance `[ROL-NN]`. | `handoff_window` (8000) |
+| **#3** | `c35b4db` | Findings ESTRUCTURADOS al sintetizador vivo (severity/title/desc/evidence/root_cause + key_risks + omissions) en vez de prosa cruda `[:1500]`. Raw como fallback gobernado. | `synthesis_window` (1500) |
+| **#4** | (lectura s13) | RESUELTA. `verdict_synthesizer.py` + `tribunal.py` = código muerto → DSv34-DEAD. | n/a |
 
-### Orden de ejecución R1 (decidido s13)
-1. **FUGA #2** — unificar las 3 ventanas de truncado a una constante única con provenance de ventana. Quirúrgico, bajo riesgo, prerequisito de `document_window`. ← **EN CURSO**
-2. **FUGA #1** — `HandoffPacket` en `_summarize_rol_outputs` (elimina `concerns[:2]`).
-3. **FUGA #3** — claims estructurados al sintetizador vivo.
+**Criterio de aceptación R1: CUMPLIDO.** Cada transición consume datos estructurados con provenance, no raw re-resumido; truncados unificados y gobernados; 0 residuos hardcoded verificados en remoto (HEAD `c35b4db`).
+
+**Regresión PENDIENTE (antes del bump):** doc end-to-end con varios Rol agents debe correr y confirmar (a) prompt del Forense no revienta `max_tokens` con handoff a 8000, (b) síntesis sigue produciendo `UnifiedVerdictOutput` válido, (c) `_deterministic_synthesis` intacto.
 
 ---
 
 ## SCOPE v3.4 — Rebanada 1 (Reliability core)
 
-| ID | Ítem | Patrón | Criterio de aceptación |
-|----|------|--------|------------------------|
-| **R1** | **Handoff fidelity contract N0→N1→N2** — `HandoffPacket`; ninguna capa re-resume el raw upstream, solo el packet. | compress / telephone-game | Schema definido y cableado; cada transición consume el packet, no el raw; truncado unificado. |
-| **R2** | **Placement curva-U en prompts** — misión/constraints al inicio, criterios de veredicto al final; anchors estructurales en el medio. | lost-in-middle | base + 19 variants colocan mission/constraints al inicio y verdict-criteria al cierre; check añadido a self-audit §4.14. |
-| **R3** | **Clash annotation en síntesis** — `TribunalTransversal._synthesize()` marca contradicciones Rol↔Forense con fuente + precedencia ANTES de sintetizar. | clash | Anotación estructurada de conflicto (qué, fuente, precedencia); prohibido silent pick. |
-| **R4** | **Circuit-breaker de poisoning en N2** — validar tool/retrieval antes de entrar a contexto; trackear provenance; recovery = truncar (no layering). | poisoning | AAD/Spawner registra provenance; recovery = truncate-to-before, no corrección encima. |
-| **R5** | **Umbrales de degradación en BudgetController** — trigger de compaction a ~70% del onset del modelo, no al límite. | non-linear cliff | Trigger documentado y cableado a límites (calls=40, n2_per_n1=3); re-benchmark trimestral anotado. |
+| ID | Ítem | Patrón | Estado |
+|----|------|--------|--------|
+| **R1** | **Handoff fidelity contract N0→N1→N2** — 3 ventanas gobernadas + emisión estructurada con provenance. | compress / telephone-game | ✅ **CERRADO** (#2+#1+#3) |
+| **R2** | **Placement curva-U en prompts** — misión/constraints al inicio, criterios de veredicto al final; anchors estructurales en el medio. | lost-in-middle | ⏳ siguiente |
+| **R3** | **Clash annotation en síntesis** — `TribunalTransversal._synthesize()` marca contradicciones Rol↔Forense con fuente + precedencia ANTES de sintetizar. | clash | pendiente |
+| **R4** | **Circuit-breaker de poisoning en N2** — validar tool/retrieval antes de entrar a contexto; trackear provenance; recovery = truncar (no layering). | poisoning | pendiente |
+| **R5** | **Umbrales de degradación en BudgetController** — trigger de compaction a ~70% del onset del modelo, no al límite. | non-linear cliff | pendiente |
 
 **Transversal:** self-audit §4.14 gana checks nuevos (A-series) para R1–R5. Versionado dual vigente: solo cara-de-producto + variants bumpean a v3.4.0; docstrings de módulo conservan su content-version salvo cambio real de contenido.
 
@@ -67,6 +57,8 @@ Cada capa consume SOLO el packet upstream, nunca re-resume el raw. Ataca los 5 p
 | ID | Severidad | Item | Decisión |
 |----|-----------|------|----------|
 | **DSv34-DEAD** | 🟡 MODERATE | `tribunal.py` (v2.9.0) + `verdict_synthesizer.py` (v2.8.0) = legacy huérfanos. `main.py` solo cablea `TribunalTransversal`. Cadena muerta: `main → ✗ → tribunal.py → verdict_synthesizer.py`. Riesgo: confunde auditorías de versionado, infla superficie de cert, un futuro Claude podría editarlos creyéndolos vivos. | **BORRAR en el bump atómico de cierre v3.4.** git conserva la historia; borrar es más limpio que `legacy/`. |
+| **DSv34-BUDGET** | 🟢 LOW | `budget_controller.py` default `max_calls_total=30` vs `config.example.json`=40 y decisiones vigentes ("calls 40"). Discrepancia de default. | Alinear default a 40 en el bump de cierre. No vale commit propio. |
+| **DSv34-HISTORY** | 🟢 LOW (registro) | El remoto tiene historial git de UN solo commit raíz (`03821d1`, bootstrap masivo con mensaje de FUGA#2 pegado). NO contiene la historia de 13 sesiones que la continuity asume. Compatible con patrón OneDrive+git re-bootstrap. | Anotar en continuity. NO investigar salvo que JARP lo pida. No bloquea trabajo (base de código correcta y verificada). |
 
 ---
 
@@ -77,16 +69,18 @@ Cada capa consume SOLO el packet upstream, nunca re-resume el raw. Ataca los 5 p
 - knowledge-work-plugins (legal+finance matrices) → Medio, posterior.
 - infinity + RAG jurisdiccional → **v4.0** (Docker + corpus, infra pesada). NO mezclar.
 
-## MÉTODO (validado s12)
+## MÉTODO (validado s12, re-validado s13)
 
-clon en sandbox del remote HEAD → diseño por ítem → implementación con asserts de unicidad → patch único `git apply` → dry-run en clon fresco → JARP commit/push vía GitHub Desktop → post-push verify por SHA. Bump = operación atómica única al cierre del sprint. Borrado DSv34-DEAD entra en ese mismo bump.
+clon en sandbox del remote HEAD → diseño por ítem → implementación con asserts de unicidad → patch único `git apply` → dry-run en clon fresco → entrega F&R a JARP → JARP commit/push vía GitHub Desktop → post-push verify por SHA en clon nuevo. Bump = operación atómica única al cierre del sprint. Borrado DSv34-DEAD + DSv34-BUDGET entran en ese mismo bump.
+
+**Lección s13:** el patch vive en el sandbox de Claude, NO en el disco de JARP. Entregar SIEMPRE como F&R explícito (no asumir que JARP puede correr `git apply` sobre un .patch que no tiene). Verificar post-push por SHA en clon nuevo es obligatorio — un commit puede subir con mensaje correcto y contenido equivocado (capturado s13).
 
 ## RIESGO / BLAST-RADIUS
 
-**ALTO.** Toca el core (`tribunal_transversal.py`, `prompt_engine.py`, `sub_agent_spawner.py`, `budget_controller.py`, `schema.py`) + base/variant prompts. Mitigación: diseño + GO por ítem, sin big-bang; sub-commits permitidos durante el sprint pero el bump de versión es atómico al cierre. R3 y R4 = mayor riesgo (síntesis y spawning). **Regresión obligatoria:** doc end-to-end debe producir el mismo veredicto determinista; `_deterministic_synthesis` no debe romperse.
+**ALTO.** Toca el core (`tribunal_transversal.py`, `prompt_engine.py`, `sub_agent_spawner.py`, `budget_controller.py`, `schema.py`) + base/variant prompts. Mitigación: diseño + GO por ítem, sin big-bang; sub-commits durante el sprint pero el bump de versión es atómico al cierre. R3 y R4 = mayor riesgo (síntesis y spawning). **Regresión obligatoria** antes del bump.
 
 ## PASOS SIGUIENTES
 
-1. ✅ Diseño R1 + FUGA #4 resuelta (s13).
-2. **EN CURSO:** FUGA #2 — unificar truncados.
-3. FUGA #1 (`HandoffPacket`) → FUGA #3 → R2 → R3 → R4 → R5, GO entre ítems.
+1. ✅ R1 CERRADO (FUGA #2 `fe007a7` + #1 `f808cda` + #3 `c35b4db`).
+2. ⏳ **R2** — placement curva-U en base + 19 variants (lost-in-middle). Mayor superficie (21 prompts), riesgo medio.
+3. R3 → R4 → R5, GO entre ítems. Bump atómico + borrado código muerto + regresión + re-cert al cierre.
