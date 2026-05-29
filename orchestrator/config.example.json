@@ -11,6 +11,7 @@
     "max_n2_per_n1": 3,
     "doc_window": 4000,
     "handoff_window": 8000,
+    "synthesis_window": 1500,
     "alert_at_percent": 80
   },
   "ssm": {

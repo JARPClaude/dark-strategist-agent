@@ -221,14 +221,37 @@ class PromptEngine:
     def build_synthesis_prompt(self, ctx: RuntimeContext,
                                all_reports: list,
                                tribunal_mode: str,
-                               session_id: str) -> str:
+                               session_id: str,
+                               synthesis_window: int = 1500) -> str:
         """Builds prompt for AFO synthesis call."""
         reports_text = ""
         for i, r in enumerate(all_reports, 1):
             agent_id = r.get("agent_id", f"AGENT-{i}")
             agent_type = r.get("agent_type", "UNKNOWN")
-            report_content = r.get("raw_output", str(r))[:1500]
-            reports_text += f"\n{'='*50}\n{agent_id} ({agent_type}):\n{report_content}\n"
+            reports_text += f"\n{'='*50}\n{agent_id} ({agent_type}):\n"
+
+            # Structured handoff: feed parsed findings with provenance, not raw prose
+            # (telephone-game fix, v3.4 R1 FUGA#3). Falls back to governed raw clip
+            # only when an agent produced no parseable findings.
+            findings = r.get("findings", [])
+            if isinstance(findings, list) and findings:
+                reports_text += f"  preliminary_verdict: {r.get('preliminary_verdict', 'N/A')}\n"
+                for f in findings:
+                    if not isinstance(f, dict):
+                        continue
+                    reports_text += (
+                        f"  - [{f.get('severity', '?')}] {f.get('title', '')}\n"
+                        f"      desc: {f.get('description', '')}\n"
+                        f"      evidence: {f.get('evidence', '')}\n"
+                        f"      root_cause: {f.get('root_cause', '')}\n"
+                    )
+                for risk in r.get("key_risks", []):
+                    reports_text += f"  key_risk: {risk}\n"
+                for omission in r.get("omissions_detected", []):
+                    reports_text += f"  omission: {omission}\n"
+            else:
+                report_content = r.get("raw_output", str(r))[:synthesis_window]
+                reports_text += f"{report_content}\n"
 
         return SYNTHESIS_TEMPLATE.format(
             domain=ctx.domain,

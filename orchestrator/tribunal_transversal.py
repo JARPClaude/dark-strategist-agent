@@ -205,7 +205,8 @@ class TribunalTransversal:
                     all_outputs: list) -> UnifiedVerdictOutput:
         """Calls AFO synthesis — produces UnifiedVerdictOutput."""
         prompt = self.engine.build_synthesis_prompt(
-            ctx, all_outputs, ctx.tribunal_label, self.session_id
+            ctx, all_outputs, ctx.tribunal_label, self.session_id,
+            synthesis_window=self.config.get("tribunal", {}).get("synthesis_window", 1500)
         )
         try:
             response = self.client.messages.create(
