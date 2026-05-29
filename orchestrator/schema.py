@@ -96,7 +96,12 @@ class UnifiedVerdictOutput(BaseModel):
     # Conflict analysis
     conflicts_detected: list[str] = Field(
         default_factory=list,
-        description="Contradictions between tribunal agents — resolved to highest severity"
+        description=(
+            "Structured clash records (factual contradictions between Rol/Forense). "
+            "Format: 'CLASH: <what> | ROL says: <x> | FORENSE says: <y> | "
+            "PRECEDENCE: <FORENSE|ROL|UNRESOLVED> | REASON: <why>'. "
+            "Severity disagreements are escalated, not recorded here."
+        )
     )
     multi_agent_confirmed: list[str] = Field(
         default_factory=list,

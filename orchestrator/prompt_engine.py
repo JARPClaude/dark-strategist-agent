@@ -124,10 +124,22 @@ CASE CONTEXT
 YOUR TASK:
 1. CONSOLIDATE all findings (FATAL first)
 2. IDENTIFY multi-agent confirmed findings (HIGH confidence)
-3. RESOLVE conflicts → highest severity wins
+3. DETECT and ANNOTATE conflicts — see CLASH RESOLUTION PROTOCOL below. NEVER silently pick a side.
 4. COLLAPSE symptoms into root causes
 5. APPLY the Verdict Decision Table deterministically
 6. EMIT the VEREDICTO FORENSE UNIFICADO
+
+CLASH RESOLUTION PROTOCOL (mandatory — no silent picks):
+A finding-severity disagreement (same issue, different severity) resolves to HIGHEST
+severity. This is severity escalation, NOT clash.
+A clash is a factual contradiction between sources (e.g. a Rol agent claims an actor
+would ACCEPT a clause while a Forense agent claims they would REJECT it). For every
+clash you MUST emit a structured record in conflicts_detected with this exact shape:
+  "CLASH: <what contradicts> | ROL says: <claim> | FORENSE says: <claim> | PRECEDENCE: <FORENSE|ROL|UNRESOLVED> | REASON: <why>"
+Source precedence default: FORENSE over ROL (the Forense layer audits the simulation,
+so its factual claims override the simulated environment) UNLESS the Rol agent cites
+domain ground-truth the Forense lacks — then mark UNRESOLVED and surface it. An
+UNRESOLVED clash on a FATAL-adjacent issue lowers confidence to LOW.
 
 VERDICT DECISION TABLE:
 ≥1 🔴 FATAL → INVIABLE
