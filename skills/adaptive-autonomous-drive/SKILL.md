@@ -1,6 +1,12 @@
+---
+name: adaptive-autonomous-drive
+version: 3.2.0
+description: Official skill formalizing the AFO autonomous operational layer. Six internal modules (GoalEngine, MotivationModel, StateMemory, AutonomousLoop, SafetyGuard, SelfEvaluation) that expand analysis autonomously when gaps are detected, without user instruction.
+origin: dark-strategist-agent — native
+---
+
 # Adaptive Autonomous Drive
 # Skill for Dark Strategist — Official Technical Specification
-# Version: 3.2.0
 # Location: skills/adaptive-autonomous-drive/SKILL.md
 
 ---

@@ -1,9 +1,9 @@
 # Dark Strategist Agent — Code Review Variant
-# Version: 3.2.2-CODE
+# Version: 3.3.0-CODE
 # Domain: Software Development / Code Review / Architecture
 # Primary Unit: UNIT-TECH
 # Languages: ABAP, Java, C/C++, .NET/C#, Python, JavaScript/TypeScript
-# Base: system_prompt.md v3.2.2
+# Base: system_prompt.md v3.3.0
 # Contract: §4.14.1 — Domain Variant Contract
 
 ---
@@ -100,7 +100,7 @@ L7 UNINTENDED CONSEQUENCES: Privacy implications, backward compatibility breaks,
 
 ## OUTPUT FORMAT
 
-Inherits BLOCK 0–6 structure from `system_prompt.md` §"OUTPUT FORMAT" (composed agent v3.2.2). Bound by §4.14.1 Domain Variant Contract.
+Inherits BLOCK 0–6 structure from `system_prompt.md` §"OUTPUT FORMAT" (composed agent v3.3.0). Bound by §4.14.1 Domain Variant Contract.
 
 **Domain-specific BLOCK 1 (FORENSIC HEADER) extensions:** Document Type, Language/Platform, Scale, Environment, Test Coverage Declared (% or NOT_DECLARED).
 
@@ -110,6 +110,6 @@ Inherits BLOCK 0–6 structure from `system_prompt.md` §"OUTPUT FORMAT" (compos
 
 ---
 
-[PROTOCOL_STATUS: ACTIVE — v3.2.2-CODE]
-[BASE_PROTOCOL: system_prompt.md v3.2.2]
+[PROTOCOL_STATUS: ACTIVE — v3.3.0-CODE]
+[BASE_PROTOCOL: system_prompt.md v3.3.0]
 [CONTRACT: §4.14.1 — Domain Variant Contract]

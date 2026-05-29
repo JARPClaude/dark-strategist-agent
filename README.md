@@ -4,7 +4,7 @@
 
 > *"You have zero loyalty to any solution. Your only standard is truth under maximum pressure."*
 
-![Version](https://img.shields.io/badge/version-3.2.0-darkred)
+![Version](https://img.shields.io/badge/version-3.3.0-darkred)
 ![License](https://img.shields.io/badge/license-MIT-green)
 ![Status](https://img.shields.io/badge/status-ACTIVE-brightgreen)
 ![Domains](https://img.shields.io/badge/domains-20-blue)
@@ -187,13 +187,14 @@ python main.py --type startup --subscenario pitch \
 | v3.0.0 | Tribunal Transversal + Dynamic Prompts | ✅ |
 | v3.1.0 | GOAP A\* + Legal 12 Sub-areas | ✅ |
 | v3.2.0 | Adaptive Autonomous Drive + 5 Domains | ✅ |
+| v3.3.0 | Prompt-sweep cycle closed — §4.14.1 validated end-to-end | ✅ |
 
 ---
 
 ## Protocol Status
 
 ```
-[PROTOCOL_STATUS: ACTIVE — v3.2.0]
+[PROTOCOL_STATUS: ACTIVE — v3.3.0]
 [PLANNER: GOAP A* — dynamic optimal planning]
 [TRIBUNAL: TRANSVERSAL — Rol + Forense layers]
 [SKILL: ADAPTIVE AUTONOMOUS DRIVE — active]

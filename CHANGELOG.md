@@ -5,6 +5,34 @@ Format: [VERSION] — DATE — Description
 
 ---
 
+## [3.3.0] — 2026-05-29
+
+### Minor — Prompt-Sweep Cycle Closure + Skills Metadata Normalization
+
+Closes the full prompt-sweep audit cycle (B1-B5) opened in the v3.3 sprint. 26 artifacts reviewed (21 prompts + 5 skills). No behavioral changes — this release is metadata normalization, version-stamp alignment, and documentation truth-up. Atomic bump per §4.14.1.
+
+#### §4.14.1 validated end-to-end
+- 19/19 domain variants confirmed COMPLIANT against the Domain Variant Contract — 0 contract violations across the catalog.
+- Legal deep pass: 12/12 sub-area catalogs verified complete (6 historically-flagged catalogs L05/L06/L09/L10/L11/L12 confirmed present since v3.1.0 remote).
+- Confirmed non-findings: LGv33-01 (Legal BLOCK 7 is the canonical Contract-permitted example), LGv33-02 (2-letter prefix is the only naming requirement).
+
+#### Skills metadata normalized (DSv33-S01 + DSv33-S02)
+- Added `version:` field to frontmatter of 4 structural skills (kac-assumption-audit, ach-competing-explanations, deception-detection, verdict-verification) — stamped 2.6.0 (introduction version, per content-based skill versioning).
+- Converted `adaptive-autonomous-drive/SKILL.md` from markdown-comment header to valid YAML frontmatter (name + version 3.2.0 + description). Load path unaffected (SKILLS_CATALOG resolves by explicit path, not auto-discovery — DSv33-S02 confirmed MODERATE, latent portability risk only).
+
+#### Version-stamp alignment (atomic, §4.14.1)
+- base, router (→v3.3.0-ROUTER), 19 variants (vX.3.0-DOMAIN + BASE_PROTOCOL v3.3.0), README, CLAUDE.md bumped to 3.3.0.
+- Product-face stamps in orchestrator updated: main.py (entry/argparse/runtime print) and tribunal_transversal.py Transparency Report header → v3.3.0. Module-level docstrings left at their content-introduction versions (content-based versioning, consistent with skills).
+- OBS-1 resolved: variant header provenance normalized in-sweep.
+
+#### Diagnostic audits (no cert impact)
+- PA-20260528-001 (B1), PA-20260528-002 (B4+B5) — diagnostic finding-sweeps, not certifications.
+
+#### Deferred (not in this release)
+- DSv33-06 (identity-lock + critical-rule reinforcement in base) — requires dedicated design + §4.14 self-audit. Deferred to its own cycle.
+
+---
+
 ## [Certification] — 2026-05-25
 
 ### JARP_CERTIFIED: DS v3.2.2 — PA-20260525-001 ✅
@@ -74,10 +102,10 @@ Geofence severity calibration table replaced with monotonic tier-shift rules. Ea
 **Punctual fix — P08 Agro Yield mis-classified (1 SERIOUS resolved — B4 finding):**
 "Yield above regional benchmark without documented justification" reclassified from 🔴 FATAL → 🟠 SERIOUS. The previous FATAL contradicted the variant's own severity taxonomy definition (FATAL = biological impossibility). Yield overestimation is overstatement, not impossibility. With documented justification (technical irrigation, improved seeds), the finding is removed entirely rather than escalated.
 
-#### Findings deferred to v3.3 (non-blocking)
+#### Findings deferred to v3.3 (non-blocking) — RESOLVED in [3.3.0]
 
 - 38 MODERATE findings from the batch (sub-area Failure Catalogs missing for Legal L05/L06/L09/L10/L11/L12; multi-day batch resumption rules in prompt-architect-agent; comparative mode Phase 0 collection scope; etc.)
-- 22 LATENT findings (most resolved at root by §4.14.1 — residuals tracked for v3.3)
+- 22 LATENT findings (most resolved at root by §4.14.1 — residuals closed in [3.3.0] prompt-sweep cycle)
 - 1 LATENT residual from B2-RE.1 ("v2.5.1 forensic base" wording in ARCHITECTURAL LAYERS section)
 
 #### Cascade impact recorded

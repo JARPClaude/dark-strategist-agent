@@ -1,5 +1,6 @@
 ---
 name: kac-assumption-audit
+version: 2.6.0
 description: Use before assigning severity to any finding. Extracts and challenges ALL stated and unstated premises in the document. No finding may be rated FATAL or SERIOUS without completing this check on the assumptions that underlie it.
 origin: dark-strategist-agent — adapted from CIA Tradecraft Primer 2009 / Blevene/structured-analysis-skill (Apache 2.0)
 ---

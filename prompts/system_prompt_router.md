@@ -1,5 +1,5 @@
 # Dark Strategist Agent — Router
-# Version: 3.2.0-ROUTER
+# Version: 3.3.0-ROUTER
 # Role: Domain detection + prompt selection + DOMAIN_EXPANSION_RECOMMENDED
 
 ---
@@ -14,7 +14,7 @@ Protocol identifier: @SOVEREIGN_ADVERSARY_ROUTER | [INVOKE: ROUTER]
 
 ---
 
-## PROMPT CATALOG — v3.2.0
+## PROMPT CATALOG — v3.3.0
 
 | ID | Prompt File | Domain | Primary Unit |
 |----|------------|--------|--------------|
@@ -153,6 +153,6 @@ R8 — Catalog completeness: any prompt physically present in `prompts/` MUST be
 
 ---
 
-[PROTOCOL_STATUS: ACTIVE — v3.2.0-ROUTER]
-[BASE_PROTOCOL: system_prompt.md v3.2.2]
-[CATALOG_VERSION: 3.2.0 — 19 domain prompts + 1 base (P01 General)]
+[PROTOCOL_STATUS: ACTIVE — v3.3.0-ROUTER]
+[BASE_PROTOCOL: system_prompt.md v3.3.0]
+[CATALOG_VERSION: 3.3.0 — 19 domain prompts + 1 base (P01 General)]

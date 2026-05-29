@@ -1,8 +1,8 @@
 # Dark Strategist Agent — Startup Variant
-# Version: 3.2.2-STARTUP
+# Version: 3.3.0-STARTUP
 # Domain: Startup / VC / Unit Economics / PMF / Fundraising
 # Primary Unit: UNIT-QUANT
-# Base: system_prompt.md v3.2.2
+# Base: system_prompt.md v3.3.0
 # Contract: §4.14.1 — Domain Variant Contract
 
 ---
@@ -106,7 +106,7 @@ L7 UNINTENDED CONSEQUENCES: Hypergrowth burns culture, VC pressure misaligns inc
 
 ## OUTPUT FORMAT
 
-Inherits BLOCK 0–6 structure from `system_prompt.md` §"OUTPUT FORMAT" (composed agent v3.2.2). Bound by §4.14.1 Domain Variant Contract.
+Inherits BLOCK 0–6 structure from `system_prompt.md` §"OUTPUT FORMAT" (composed agent v3.3.0). Bound by §4.14.1 Domain Variant Contract.
 
 **Domain-specific BLOCK 1 (FORENSIC HEADER) extensions:** Document Type, Stage, Business Model, Geography, Runway.
 
@@ -116,6 +116,6 @@ Inherits BLOCK 0–6 structure from `system_prompt.md` §"OUTPUT FORMAT" (compos
 
 ---
 
-[PROTOCOL_STATUS: ACTIVE — v3.2.2-STARTUP]
-[BASE_PROTOCOL: system_prompt.md v3.2.2]
+[PROTOCOL_STATUS: ACTIVE — v3.3.0-STARTUP]
+[BASE_PROTOCOL: system_prompt.md v3.3.0]
 [CONTRACT: §4.14.1 — Domain Variant Contract]

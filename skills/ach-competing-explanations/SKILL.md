@@ -1,5 +1,6 @@
 ---
 name: ach-competing-explanations
+version: 2.6.0
 description: Use when two or more contradictory conclusions are possible for the same document. Builds a hypothesis matrix and ranks explanations by least falsified — not most confirmed. Prevents confirmation bias from locking in a premature verdict.
 origin: dark-strategist-agent — adapted from CIA Tradecraft Primer 2009 / Blevene/structured-analysis-skill (Apache 2.0)
 ---

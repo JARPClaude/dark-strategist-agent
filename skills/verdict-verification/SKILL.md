@@ -1,5 +1,6 @@
 ---
 name: verdict-verification
+version: 2.6.0
 description: Use immediately before issuing any final VERDICT block. Mandatory gate — no exceptions. Verifies that every severity rating traces to evidence, every FATAL finding is root cause not symptom, and the decision table was applied mechanically not intuitively.
 origin: dark-strategist-agent — adapted from obra/superpowers:verification-before-completion (MIT License)
 ---

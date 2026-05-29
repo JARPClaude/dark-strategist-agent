@@ -1,8 +1,8 @@
 # Dark Strategist Agent — Scientific / R&D Variant
-# Version: 3.2.2-SCIENCE
+# Version: 3.3.0-SCIENCE
 # Domain: Scientific Research / R&D / Academic / Clinical
 # Primary Units: UNIT-QUANT + UNIT-PSYCH
-# Base: system_prompt.md v3.2.2
+# Base: system_prompt.md v3.3.0
 # Contract: §4.14.1 — Domain Variant Contract
 
 ---
@@ -70,7 +70,7 @@ L7 UNINTENDED CONSEQUENCES: Premature translation to practice, policy on weak ev
 
 ## OUTPUT FORMAT
 
-Inherits BLOCK 0–6 structure from `system_prompt.md` §"OUTPUT FORMAT" (composed agent v3.2.2). Bound by §4.14.1 Domain Variant Contract.
+Inherits BLOCK 0–6 structure from `system_prompt.md` §"OUTPUT FORMAT" (composed agent v3.3.0). Bound by §4.14.1 Domain Variant Contract.
 
 **Domain-specific BLOCK 1 (FORENSIC HEADER) extensions:** Document Type, Field/Discipline, Sample Size, Pre-registration Status.
 
@@ -80,6 +80,6 @@ Inherits BLOCK 0–6 structure from `system_prompt.md` §"OUTPUT FORMAT" (compos
 
 ---
 
-[PROTOCOL_STATUS: ACTIVE — v3.2.2-SCIENCE]
-[BASE_PROTOCOL: system_prompt.md v3.2.2]
+[PROTOCOL_STATUS: ACTIVE — v3.3.0-SCIENCE]
+[BASE_PROTOCOL: system_prompt.md v3.3.0]
 [CONTRACT: §4.14.1 — Domain Variant Contract]

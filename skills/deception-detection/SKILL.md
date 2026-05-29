@@ -1,5 +1,6 @@
 ---
 name: deception-detection
+version: 2.6.0
 description: Use when the document's author has high personal, financial, or reputational stakes in the outcome. Applies structured deception analysis to distinguish honest gaps from deliberate concealment. Activates automatically with UNIT-INQUISITOR and UNIT-PSYCH when mirror-imaging risk is detected.
 origin: dark-strategist-agent — adapted from CIA Tradecraft Primer 2009 / Blevene/structured-analysis-skill (Apache 2.0)
 ---
