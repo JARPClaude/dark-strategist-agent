@@ -106,6 +106,7 @@ class SubAgentSpawner:
         self.prompts_dir = Path(prompts_dir)
         self.client = anthropic.Anthropic(api_key=config["anthropic"]["api_key"])
         self.max_n2_per_n1 = config.get("tribunal", {}).get("max_n2_per_n1", 3)
+        self.doc_window = config.get("tribunal", {}).get("doc_window", 4000)
 
     def evaluate_and_spawn(self, agent_id: str, report: str,
                            document: str, routing: dict) -> list:
@@ -171,7 +172,7 @@ class SubAgentSpawner:
                     "content": (
                         f"Fragment from parent agent {parent_id} requiring your analysis:\n\n"
                         f"PARENT FINDINGS SUMMARY:\n{parent_report[:1000]}\n\n"
-                        f"ORIGINAL DOCUMENT EXCERPT:\n{document[:3000]}\n\n"
+                        f"ORIGINAL DOCUMENT EXCERPT:\n{document[:self.doc_window]}\n\n"
                         f"Provide your specialized forensic analysis."
                     )
                 }]
@@ -210,7 +211,7 @@ Be thorough — this report will be reviewed to create a permanent sub-agent."""
                     "role": "user",
                     "content": (
                         f"Analyze this document fragment for {domain}-specific risks:\n\n"
-                        f"{document[:3000]}"
+                        f"{document[:self.doc_window]}"
                     )
                 }]
             )

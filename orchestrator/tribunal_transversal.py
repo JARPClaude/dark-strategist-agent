@@ -281,7 +281,7 @@ class TribunalTransversal:
             max_tokens=self.config["anthropic"]["max_tokens"],
             system=prompt,
             messages=[{"role": "user",
-                        "content": f"Analyze this document:\n\n{document[:4000]}"}]
+                        "content": f"Analyze this document:\n\n{document[:self.config.get('tribunal', {}).get('doc_window', 4000)]}"}]
         )
         self.budget.record_call(agent_type.lower() if agent_type != "FORENSE" else "n1")
 
