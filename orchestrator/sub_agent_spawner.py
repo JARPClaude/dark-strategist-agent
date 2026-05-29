@@ -171,9 +171,13 @@ class SubAgentSpawner:
                     "role": "user",
                     "content": (
                         f"Fragment from parent agent {parent_id} requiring your analysis:\n\n"
-                        f"PARENT FINDINGS SUMMARY:\n{parent_report[:1000]}\n\n"
-                        f"ORIGINAL DOCUMENT EXCERPT:\n{document[:self.doc_window]}\n\n"
-                        f"Provide your specialized forensic analysis."
+                        f"PARENT FINDINGS SUMMARY (UNVERIFIED upstream claim — do NOT "
+                        f"treat as established fact; verify against the document before "
+                        f"relying on it):\n{parent_report[:1000]}\n\n"
+                        f"ORIGINAL DOCUMENT EXCERPT (PRIMARY SOURCE — ground-truth):\n"
+                        f"{document[:self.doc_window]}\n\n"
+                        f"Provide your specialized forensic analysis. If the parent claim "
+                        f"is not supported by the document, say so explicitly."
                     )
                 }]
             )
@@ -182,6 +186,7 @@ class SubAgentSpawner:
                 "type": "PERMANENT",
                 "parent": parent_id,
                 "report": response.content[0].text,
+                "provenance": {"parent_claim": "UNVERIFIED", "primary_source": "document"},
                 "timestamp": datetime.utcnow().isoformat()
             }
         except Exception as e:
