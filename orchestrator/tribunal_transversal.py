@@ -78,6 +78,12 @@ class TribunalTransversal:
              "verdict": f.get("preliminary_verdict", "UNKNOWN")}
             for f in forense_outputs
         ]
+        for f in forense_outputs:
+            for sa in f.get("sub_agents_used", []):
+                if not isinstance(sa, dict):
+                    continue
+                bucket = "permanent" if sa.get("type") == "PERMANENT" else "temporary"
+                self._transparency["sub_agents"][bucket].append(sa.get("unit", "UNKNOWN"))
 
         # ── Synthesis ──────────────────────────────────────────────────────
         self._log("Synthesizing all outputs...")
@@ -391,6 +397,12 @@ class TribunalTransversal:
             f"    {a['id']}  {a['role'][:45]}  verdict={a['verdict']}"
             for a in t.get("forense_agents", [])
         ])
+        sub_perm = sorted(set(t.get("sub_agents", {}).get("permanent", [])))
+        sub_temp = sorted(set(t.get("sub_agents", {}).get("temporary", [])))
+        perm_lines = "\n".join([f"    {u}" for u in sub_perm]) if sub_perm else "    None"
+        temp_lines = "\n".join([
+            f"    {u}  ← SUB_AGENT_EXPANSION_RECOMMENDED dispatched"
+            for u in sub_temp]) if sub_temp else "    None"
         budget = t.get("budget", {})
         ssm_block = (
             f"\n  STATUS:  ACTIVATED | Scale: {t['ssm']['scale']} | "
@@ -401,7 +413,7 @@ class TribunalTransversal:
 
         return f"""
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-DARK STRATEGIST v3.3.0 — TRANSPARENCY REPORT
+DARK STRATEGIST v3.4.0 — TRANSPARENCY REPORT
 Session: DS-{self.session_id} | Duration: {round(duration,1)}s
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
@@ -418,6 +430,12 @@ TRIBUNAL TRANSVERSAL — LAYER 1: AGENTES DE ROL
 TRIBUNAL TRANSVERSAL — LAYER 2: AGENTES FORENSES
   (Audited the simulation + document)
 {for_lines or '    None'}
+
+SUB-AGENTES FORENSES (N2 — spawned by Forense layer)
+  Permanent:
+{perm_lines}
+  Temporary:
+{temp_lines}
 
 VERDICT SUMMARY
   🔴 FATAL:    {len(unified.fatal_findings)}
@@ -443,6 +461,7 @@ FINAL VERDICT: {unified.final_verdict} | Confidence: {unified.confidence}
             "afo": {"verdict_synthesized": False},
             "rol_agents": [],
             "forense_agents": [],
+            "sub_agents": {"permanent": [], "temporary": []},
             "ssm": {"activated": False, "reason": None,
                     "scale": None, "social_verdict": None},
             "budget": {},

@@ -5,6 +5,36 @@ Format: [VERSION] — DATE — Description
 
 ---
 
+## [3.4.0] — 2026-05-31
+
+### Minor — Synthesis Shape Contract + Live Transparency Provenance + Dead-Code Removal
+
+First release validated against a live `claude-opus-4-7` end-to-end run (E2E regression gate, blocker (b) cleared). Three substantive changes plus the atomic version-stamp alignment per §4.14.1.
+
+#### DSv34-SHAPE — Synthesis output contract (prompt_engine.py)
+- `SYNTHESIS_TEMPLATE` OUTPUT FORMAT previously showed empty findings arrays with no object schema, so the live model abbreviated MODERATE/LATENT entries and the Pydantic `Finding` validation rejected them (missing `severity`/`evidence`/`root_cause`).
+- Pinned the full six-field finding object shape in all four `*_findings` arrays + an explicit instruction not to abbreviate or merge findings into `multi_agent_confirmed`. The `Finding` schema (strict, 5 required fields) is unchanged — the prompt was under-specifying the contract, not the validator over-constraining it.
+
+#### DSv34-PROV — Live transparency provenance restored (tribunal_transversal.py)
+- The live `_build_transparency_report` had dropped the sub-agent provenance block that the (now-removed) `tribunal.py` rendered. Restored: `_init_transparency` gains the `sub_agents` key; `run()` collects `sub_agents_used` from the Forense layer (defensive `.get()`/`isinstance`); the report renders a `SUB-AGENTES FORENSES (N2)` block (permanent + temporary) between Layer 2 and Verdict Summary.
+
+#### DSv34-DEAD — Dead modules removed
+- Deleted `orchestrator/tribunal.py` and `orchestrator/verdict_synthesizer.py` (orphaned since the v3.0 Tribunal Transversal migration; verified zero importers — only `tribunal.py` referenced `verdict_synthesizer`). Synthesis lives in `TribunalTransversal._synthesize` with a deterministic fallback.
+- Synced the "v2.x preserved / coexisting for backward compatibility" narrative in `CLAUDE.md` (repository structure tree) and `prompts/system_prompt.md` (Composition map) to reflect the removal.
+
+#### DSv34-SYNTH — Accepted characteristic (no code change)
+- The live LLM synthesis parses cleanly only for low-finding-density documents; for finding-rich documents the JSON exceeds the output budget / malforms and the deterministic fallback (a designed, validated component — `c_fallback_intact`) produces the verdict. Accepted as designed graceful degradation, not a defect. Documented for future hardening if a synthesis-purity requirement emerges.
+
+#### Version-stamp alignment (atomic, §4.14.1)
+- base, router (→v3.4.0-ROUTER), 19 variants (vX.4.0-DOMAIN + BASE_PROTOCOL v3.4.0), README, CLAUDE.md bumped to 3.4.0.
+- Product-face stamps in orchestrator updated: main.py (entry/argparse/runtime print) and tribunal_transversal.py Transparency Report header → v3.4.0. Module-level docstrings left at their content-introduction versions (content-based versioning, consistent with skills).
+- §4.14/§4.14.1 rule examples refreshed to the current minor (router v3.4.x ↔ agent v3.4.x).
+
+#### Certification status
+- v3.4.0 NOT yet certified at time of this entry. Re-cert (7-axis Level 1 JARP DEEP, full coverage) pending — will supersede PA-20260529-001.
+
+---
+
 ## [Certification] — 2026-05-29
 
 ### JARP_CERTIFIED: DS v3.3.0 — PA-20260529-001 ✅

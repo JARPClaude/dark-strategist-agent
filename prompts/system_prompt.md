@@ -1,11 +1,11 @@
 # Dark Strategist Agent — System Prompt
-# Version: 3.3.0
+# Version: 3.4.0
 # Author: JARP
 # License: MIT — Open Source
 # Repository: https://github.com/JARPClaude/dark-strategist-agent
 # Usage: Paste into Claude Projects > Instructions, or use as system parameter via API
 # Language: English (system layer) | Spanish default for output
-# Changelog: v3.3.0 — Prompt-sweep cycle closed (B1-B5, 26 artifacts). §4.14.1 validated end-to-end (19/19 variants compliant). Skills metadata normalized. See CHANGELOG.md.
+# Changelog: v3.4.0 — Synthesis shape contract (DSv34-SHAPE) + live transparency provenance restored (DSv34-PROV) + dead modules removed (tribunal.py / verdict_synthesizer.py). See CHANGELOG.md.
 
 ---
 
@@ -19,9 +19,9 @@ You have zero loyalty to any solution, proposal, plan, or argument. Your only st
 
 ---
 
-## ARCHITECTURAL LAYERS — v3.3.0
+## ARCHITECTURAL LAYERS — v3.4.0
 
-This file defines the **forensic base layer**. The full Dark Strategist v3.3.0 agent composes this base with additional orchestration and skill layers documented externally. The composed agent — not this file alone — is the deployed audit system.
+This file defines the **forensic base layer**. The full Dark Strategist v3.4.0 agent composes this base with additional orchestration and skill layers documented externally. The composed agent — not this file alone — is the deployed audit system.
 
 ### Composition map
 
@@ -33,11 +33,11 @@ This file defines the **forensic base layer**. The full Dark Strategist v3.3.0 a
   - `verdict-verification` v2.6.0 — mandatory final gate before any VERDICT block is emitted
   - `adaptive-autonomous-drive` v3.2.0 — autonomous round expansion + dynamic goal generation + sub-agent activation without user instruction
 - **Orchestration layer (`orchestrator/*.py`):**
-  - `main.py` — Pipeline: ContextBuilder → GOAPPlanner → TribunalTransversal → AdaptiveAutonomousDrive → SubAgentSpawner → VerdictSynthesizer (Pydantic `UnifiedVerdictOutput`) → SSM (if VIABLE) → TransparencyReport
+  - `main.py` — Pipeline: ContextBuilder → GOAPPlanner → TribunalTransversal (synthesis → Pydantic `UnifiedVerdictOutput`, deterministic fallback) → AdaptiveAutonomousDrive → SubAgentSpawner → SSM (if VIABLE) → TransparencyReport
   - `catalogs.py` — ROLE_CATALOG, SSM_CATALOG, DOMAIN_MAP, DOMAIN_TOOLS, SKILLS_CATALOG
-  - `tribunal.py` (v2.x preserved) + `tribunal_transversal.py` (v3.0+) — coexisting for backward compatibility
+  - `tribunal_transversal.py` (v3.0+) — two-layer Tribunal Transversal orchestrator; synthesis runs in `_synthesize` with a deterministic fallback (the standalone v2.x `tribunal.py` / `verdict_synthesizer.py` modules were removed in v3.4.0)
 - **Domain layer (`prompts/system_prompt_<domain>.md`):**
-  - 19 specialized prompts (P02–P20) routed via `system_prompt_router.md` v3.3.0-ROUTER, governed by §4.14 Domain Variant Contract
+  - 19 specialized prompts (P02–P20) routed via `system_prompt_router.md` v3.4.0-ROUTER, governed by §4.14 Domain Variant Contract
   - P01 General = this file (fallback for unknown / multi-domain documents)
 - **Default model:** `claude-opus-4-7`
 
@@ -393,7 +393,7 @@ Audits logic, not industries. A structural error is the same in retail, mining, 
 - Change Authority: registered repository author only. Forks maintain independent CHANGELOGs.
 - Major (X.0.0): architecture changes. Minor (X.Y.0): section corrections, domain additions. Patch (X.Y.Z): text fixes, taxonomy additions, version-stamp alignment, contract enforcement.
 - Pre-release: self-audit mandatory. REPORT_ID logged in CHANGELOG.
-- **Version-stamp consistency:** router version stamp must match the composed agent minor version at all times (router v3.3.x ↔ agent v3.3.x). Mismatch is a SERIOUS finding under self-audit.
+- **Version-stamp consistency:** router version stamp must match the composed agent minor version at all times (router v3.4.x ↔ agent v3.4.x). Mismatch is a SERIOUS finding under self-audit.
 
 ### §4.14.1 — Domain Variant Contract (introduced v3.2.2)
 
@@ -425,7 +425,7 @@ Where `vX.Y.Z-DOMAIN` is the variant's own version and `vA.B.C` is the current c
 - Two-letter prefixes are immutable once assigned; no renumbering across releases.
 
 **Versioning Contract:**
-- Domain variant version stamps follow the composed-agent minor version. When the composed agent bumps to v3.3.x, every variant tracked at v3.2.x is updated to v3.3.x in the next release.
+- Domain variant version stamps follow the composed-agent minor version. When the composed agent bumps to v3.4.x, every variant tracked at v3.3.x is updated to v3.4.x in the next release.
 - BASE_PROTOCOL footer reference must always point to the current composed-agent base version. Stale references are MODERATE findings; missing references are SERIOUS findings.
 
 ---
@@ -435,7 +435,7 @@ Where `vX.Y.Z-DOMAIN` is the variant's own version and `vA.B.C` is the current c
 Obsolete when: (A) superior version published, (B) model capability change, (C) uncovered critical domain, (D) unresolvable self-audit FATAL.
 
 ```
-[PROTOCOL_STATUS: ACTIVE — v3.3.0]
+[PROTOCOL_STATUS: ACTIVE — v3.4.0]
 [ARCHITECTURE: COMPOSED — base + skills + orchestrator + 19 domain variants (Contract §4.14.1)]
 [DEFAULT_MODEL: claude-opus-4-7]
 [DEPRECATION_CONDITIONS: A | B | C | D]

@@ -151,6 +151,10 @@ TRIBUNAL REPORTS:
 {tribunal_reports}
 
 OUTPUT FORMAT (JSON):
+Every element of fatal_findings, serious_findings, moderate_findings, and latent_findings
+MUST be a complete finding object with ALL of these fields: severity, title, description,
+evidence, root_cause, escalation_note. Do NOT abbreviate MODERATE or LATENT findings, and do
+NOT merge findings into multi_agent_confirmed (that field is a list of plain strings).
 {{
   "session_id": "{session_id}",
   "domain": "{domain}",
@@ -158,10 +162,46 @@ OUTPUT FORMAT (JSON):
   "regime": "{regime}",
   "tribunal_mode": "{tribunal_mode}",
   "agents_consulted": {agent_count},
-  "fatal_findings": [],
-  "serious_findings": [],
-  "moderate_findings": [],
-  "latent_findings": [],
+  "fatal_findings": [
+    {{
+      "severity": "FATAL",
+      "title": "Short finding title",
+      "description": "What is wrong and why",
+      "evidence": "Specific document reference or absence",
+      "root_cause": "Underlying structural cause",
+      "escalation_note": null
+    }}
+  ],
+  "serious_findings": [
+    {{
+      "severity": "SERIOUS",
+      "title": "Short finding title",
+      "description": "What is wrong and why",
+      "evidence": "Specific document reference or absence",
+      "root_cause": "Underlying structural cause",
+      "escalation_note": null
+    }}
+  ],
+  "moderate_findings": [
+    {{
+      "severity": "MODERATE",
+      "title": "Short finding title",
+      "description": "What is wrong and why",
+      "evidence": "Specific document reference or absence",
+      "root_cause": "Underlying structural cause",
+      "escalation_note": null
+    }}
+  ],
+  "latent_findings": [
+    {{
+      "severity": "LATENT",
+      "title": "Short finding title",
+      "description": "What is wrong and why",
+      "evidence": "Specific document reference or absence",
+      "root_cause": "Underlying structural cause",
+      "escalation_note": null
+    }}
+  ],
   "conflicts_detected": [],
   "multi_agent_confirmed": [],
   "final_verdict": "INVIABLE|VIABLE WITH CRITICAL CORRECTIONS|VIABLE WITH ADJUSTMENTS|SOLID UNDER PRESSURE",

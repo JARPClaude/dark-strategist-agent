@@ -1,11 +1,11 @@
 # CLAUDE.md — Dark Strategist Agent
-# Version: 3.3.0
+# Version: 3.4.0
 
 ## What is this repo
 
 `dark-strategist-agent` is THE SOVEREIGN ADVERSARY — a forensic audit agent and adversarial orchestrator.
 
-**Version:** 3.3.0 — Minor Release
+**Version:** 3.4.0 — Minor Release
 **License:** MIT — Open Source
 **Repository:** https://github.com/JARPClaude/dark-strategist-agent
 **Name:** dark-strategist-agent — immutable, does not change under any circumstance.
@@ -81,10 +81,8 @@ dark-strategist-agent/
 │   ├── prompt_engine.py
 │   ├── context_builder.py
 │   ├── tribunal_transversal.py
-│   ├── tribunal.py                 ← v2.x preserved
 │   ├── budget_controller.py
 │   ├── sub_agent_spawner.py
-│   ├── verdict_synthesizer.py
 │   ├── router.py
 │   ├── notifier.py
 │   ├── sheets_logger.py
@@ -170,6 +168,7 @@ python main.py --type startup --subscenario series_a --objective "investor readi
 | v3.1.0 GOAP A* + Legal 12 Sub-areas | ✅ |
 | v3.2.0 Adaptive Autonomous Drive + 5 Domains | ✅ |
 | v3.3.0 Prompt-sweep closed — §4.14.1 validated | ✅ |
+| v3.4.0 Synthesis shape contract + provenance restored + dead-code removal | ✅ |
 
 ---
 
@@ -183,4 +182,4 @@ python main.py --type startup --subscenario series_a --objective "investor readi
 6. New skill → `skills/[skill-name]/SKILL.md` + entry in SKILLS_CATALOG
 7. The name `dark-strategist-agent` does not change under any circumstance
 
-**ACTIVE — v3.3.0**
+**ACTIVE — v3.4.0**
