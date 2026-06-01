@@ -171,7 +171,8 @@ def main():
         if not doc_path.exists():
             print(f"❌ Document not found: {args.document}")
             sys.exit(1)
-        document = doc_path.read_text(encoding="utf-8")
+        from ingest import ingest_document
+        document = ingest_document(str(doc_path))
         # Auto-infer case from document
         case = {
             "type": "general",

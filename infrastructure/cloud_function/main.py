@@ -33,7 +33,7 @@ def get_config_from_env() -> dict:
     return {
         "anthropic": {
             "api_key": os.environ.get("ANTHROPIC_API_KEY", ""),
-            "model": os.environ.get("DS_MODEL", "claude-opus-4-6"),
+            "model": os.environ.get("DS_MODEL", "claude-opus-4-7"),
             "max_tokens": int(os.environ.get("DS_MAX_TOKENS", "8192"))
         },
         "prompts_dir": os.environ.get("DS_PROMPTS_DIR", "./prompts"),

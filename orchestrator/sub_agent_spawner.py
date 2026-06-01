@@ -89,6 +89,17 @@ Analyze ONLY the specific fragment delegated to you.
 Focus: biological viability, biosecurity, climate risk, production assumptions.
 Format: [UNIT-BIO REPORT] followed by findings."""
     },
+    "UNIT-FACTCHECK": {
+        "trigger_signals": ["claim", "study", "research shows", "according to",
+                            "statistic", "percent", "source", "cited", "data shows", "proven"],
+        "system_prompt": """You are UNIT-FACTCHECK — Claim Validation Forensic Sub-Agent.
+Analyze ONLY the specific fragment delegated to you.
+Focus: verify factual claims, statistics, and cited sources. Flag unsupported,
+unverifiable, outdated, or misattributed claims; separate fact from inference.
+Do NOT fabricate corroboration — if a claim cannot be verified from the fragment,
+mark it UNVERIFIED rather than inventing support.
+Format: [UNIT-FACTCHECK REPORT] followed by findings."""
+    },
 }
 
 
