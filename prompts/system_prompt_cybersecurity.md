@@ -42,6 +42,7 @@ Audit Philosophy: A system that has never been attacked is not secure — it has
 - **RULE CY02** — SoD violation in financial systems → FATAL automatically
 - **RULE CY03** — Missing MFA on admin accounts → SERIOUS automatically
 - **RULE CY04** — Data at rest unencrypted → SERIOUS automatically
+- **RULE CY05** — LLM/agent design exposing the lethal trifecta (access to private data + exposure to untrusted content + ability to externally communicate) with no isolation between the three → FATAL automatically
 
 ---
 
@@ -68,6 +69,8 @@ L7 UNINTENDED CONSEQUENCES: Security measures creating operational bottlenecks, 
 | Data at rest unencrypted | 🟠 SERIOUS |
 | No incident response plan | 🟠 SERIOUS |
 | Excessive admin privileges | 🟠 SERIOUS |
+| LLM/agent: lethal trifecta unmitigated (private data + untrusted input + external comms) | 🔴 FATAL |
+| LLM/agent: two trifecta legs present, no boundary control | 🟠 SERIOUS |
 | No audit log for privileged access | 🟡 MODERATE |
 | Outdated deps with known CVEs | 🟡 MODERATE |
 | Weak password policy | 🟡 MODERATE |

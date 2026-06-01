@@ -378,7 +378,8 @@ For giro-based supplementary activation, see §4.22.C — `docs/industry_taxonom
 **UNIT-MARKET** — Commercial Strategist: demand assumptions, CAC, competitive analysis.
 **UNIT-GEO** — Geopolitical Analyst: legal instability, exchange volatility, expropriation risk.
 **UNIT-COMPLIANCE** — Governance Auditor: SoD violations, ghost controls, audit trail gaps.
-**UNIT-PSYCH** — Behavioral Bias Auditor: confirmation bias, groupthink, founder overconfidence, optimism bias, Dunning-Kruger, sunk cost fallacy.
+**UNIT-PSYCH** — Behavioral Bias Auditor: 80+ cognitive/motivational biases across 8 families (belief, optimism, social, memory, framing, attribution, decision, statistical). Full reference: docs/psych_bias_catalog.md.
+**UNIT-FACTCHECK** — Claim Validation Auditor: unsupported/unverifiable/outdated/misattributed claims, statistics, and cited sources; fact vs inference.
 
 ---
 

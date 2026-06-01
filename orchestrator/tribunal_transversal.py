@@ -389,6 +389,12 @@ class TribunalTransversal:
                                    ssm_reason: str,
                                    unified: UnifiedVerdictOutput) -> str:
         t = self._transparency
+        from slop_filter import score_prose
+        _slop_src = (unified.verdict_reasoning or "") + " " + " ".join(
+            (f.title or "") + " " + (f.description or "")
+            for f in (unified.fatal_findings + unified.serious_findings
+                      + unified.moderate_findings + unified.latent_findings))
+        slop = score_prose(_slop_src)
         rol_lines = "\n".join([
             f"    {a['id']}  {a['role'][:45]}  stance={a['stance']}"
             for a in t.get("rol_agents", [])
@@ -450,6 +456,10 @@ SIMULACIÓN SOCIAL MASIVA (SSM){ssm_block}
 BUDGET CONSUMED
   Total calls: {budget.get('total_calls',0)}/{budget.get('max_calls',30)} ({budget.get('budget_used_percent',0)}%)
   Breakdown:   {budget.get('calls_made',{})}
+
+PROSE QUALITY (stop-slop — advisory, score-only)
+  Score: {slop['score']}/{slop['max']} (threshold {slop['threshold']}) → {slop['flag']}
+  Dimensions: {slop['dimensions']}
 
 FINAL VERDICT: {unified.final_verdict} | Confidence: {unified.confidence}
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
