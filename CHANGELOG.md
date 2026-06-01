@@ -5,6 +5,40 @@ Format: [VERSION] — DATE — Description
 
 ---
 
+## [3.5.0] — 2026-06-01
+
+### Minor — Ingestion + Fact-Check + Behavioral Catalog + Prose Scorer + P07 Hardening
+
+Five capability additions (v3.3/v3.4 roadmap TOP-7 low-effort batch + s19
+governance-classified lethal-trifecta). Atomic version-stamp bump per §4.14.1.
+
+#### New capabilities
+- UNIT-INGEST (orchestrator/ingest.py) — markitdown document preprocessor
+  (PDF/DOCX/PPTX/XLSX/HTML -> Markdown), graceful fallback, never crashes the
+  pipeline. Hooked at main.py document load. NOT a finding-emitter.
+- UNIT-FACTCHECK (orchestrator/sub_agent_spawner.py) — new permanent N2 forensic
+  sub-agent: claim/statistic/source validation; anti-fabrication (UNVERIFIED).
+- UNIT-PSYCH expansion (sub_agent_spawner.py + docs/psych_bias_catalog.md) —
+  bias catalog ~15 -> 80+ across 8 families.
+- stop-slop (orchestrator/slop_filter.py) — stdlib-only 5-dim prose scorer
+  (35/50 threshold; any saturated dimension forces REVIEW), score-only advisory
+  block in the transparency report; never mutates findings or verdict.
+- lethal-trifecta -> P07 Cybersecurity (system_prompt_cybersecurity.md) —
+  RULE CY05 (FATAL) + 2 monotonic Failure Catalog rows.
+
+#### Version-stamp alignment (atomic, §4.14.1)
+- base, router (->v3.5.0-ROUTER), 19 variants (vX.5.0-DOMAIN + BASE_PROTOCOL
+  v3.5.0), README, CLAUDE.md bumped to 3.5.0. Product-face: main.py +
+  tribunal_transversal.py Transparency Report header -> v3.5.0.
+  sub_agent_spawner.py content-version 2.8.0 -> 2.9.0. Other module docstrings
+  left at content-introduction versions (content-based, per v3.4.0 precedent).
+
+#### Certification status
+- v3.5.0 NOT yet certified. Re-cert (Level 1 JARP DEEP, full coverage) pending —
+  will supersede PA-20260601-002. Audited surface expanded -> NOT confirmatory.
+
+---
+
 ## [Certification] — 2026-06-01
 ### JARP_CERTIFIED: DS v3.4.0 — PA-20260601-002 ✅
 Full 7-axis forensic audit (Level 1 — JARP DEEP) executed by `prompt-architect-agent` v1.3.0 (JARP_CERTIFIED PA-20260527-002) over the complete v3.4.0 release: base + router + 19 domain variants + 5 skills + orchestrator product-face + docs. FULL COVERAGE (19/19 domain variants). Result: 0 CRITICAL | 0 SERIOUS | 0 MODERATE | 0 LATENT → `JARP_CERTIFIED`. `BIAS_CHECK_RESULT: PASS`. Confirmatory re-cert (v3.4.0 changed synthesis/provenance/dead-code, not the prompt/skill surface). Supersedes PA-20260529-001 (DS v3.3.0). `JARP_BENCHMARK_LIVE` advances to v3.4.0. Valid until 30/08/2026 or DS v4.0.0.

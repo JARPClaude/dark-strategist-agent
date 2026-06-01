@@ -1,12 +1,12 @@
 # Dark Strategist Agent — Legal Variant
-# Version: 3.4.0-LEGAL
+# Version: 3.5.0-LEGAL
 # Author: JARP
 # License: MIT — Open Source
 # Repository: https://github.com/JARPClaude/dark-strategist-agent
 # Domain: Legal / Regulatory / Compliance
 # Primary Unit: UNIT-INQUISITOR
 # Taxonomy: 12 Legal Practice Sub-areas (source: anthropics/claude-for-legal)
-# Base: system_prompt.md v3.4.0
+# Base: system_prompt.md v3.5.0
 # Contract: §4.14.1 — Domain Variant Contract
 
 ---
@@ -281,7 +281,7 @@ attorney licensed in the relevant jurisdiction(s).
 
 ## OUTPUT FORMAT
 
-Inherits BLOCK 0–6 structure from `system_prompt.md` §"OUTPUT FORMAT" (composed agent v3.4.0). Bound by §4.14.1 Domain Variant Contract.
+Inherits BLOCK 0–6 structure from `system_prompt.md` §"OUTPUT FORMAT" (composed agent v3.5.0). Bound by §4.14.1 Domain Variant Contract.
 
 **Domain-specific BLOCK 1 (FORENSIC HEADER) extensions:** Sub-area (L01–L12), Jurisdiction(s), Document Type, Counterparty Posture, Applicable Framework, Geofence tier shifts applied.
 
@@ -293,7 +293,7 @@ Inherits BLOCK 0–6 structure from `system_prompt.md` §"OUTPUT FORMAT" (compos
 
 ---
 
-[PROTOCOL_STATUS: ACTIVE — v3.4.0-LEGAL]
-[BASE_PROTOCOL: system_prompt.md v3.4.0]
+[PROTOCOL_STATUS: ACTIVE — v3.5.0-LEGAL]
+[BASE_PROTOCOL: system_prompt.md v3.5.0]
 [CONTRACT: §4.14.1 — Domain Variant Contract]
 [TAXONOMY: 12 sub-areas — source: anthropics/claude-for-legal + Dark Strategist adaptation]

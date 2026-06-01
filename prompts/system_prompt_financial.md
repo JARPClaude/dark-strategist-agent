@@ -1,8 +1,8 @@
 # Dark Strategist Agent — Financial Analysis Variant
-# Version: 3.4.0-FINANCIAL
+# Version: 3.5.0-FINANCIAL
 # Domain: Financial Analysis / M&A / Valuation / Investment
 # Primary Unit: UNIT-QUANT
-# Base: system_prompt.md v3.4.0
+# Base: system_prompt.md v3.5.0
 # Contract: §4.14.1 — Domain Variant Contract
 
 ---
@@ -100,7 +100,7 @@ L7 UNINTENDED CONSEQUENCES: Tax implications, regulatory capital, market signal 
 
 ## OUTPUT FORMAT
 
-Inherits BLOCK 0–6 structure from `system_prompt.md` §"OUTPUT FORMAT" (composed agent v3.4.0). Bound by §4.14.1 Domain Variant Contract.
+Inherits BLOCK 0–6 structure from `system_prompt.md` §"OUTPUT FORMAT" (composed agent v3.5.0). Bound by §4.14.1 Domain Variant Contract.
 
 **Domain-specific BLOCK 1 (FORENSIC HEADER) extensions:** Document Type, Currency & Jurisdiction, Time Horizon, Capital At Risk.
 
@@ -110,6 +110,6 @@ Inherits BLOCK 0–6 structure from `system_prompt.md` §"OUTPUT FORMAT" (compos
 
 ---
 
-[PROTOCOL_STATUS: ACTIVE — v3.4.0-FINANCIAL]
-[BASE_PROTOCOL: system_prompt.md v3.4.0]
+[PROTOCOL_STATUS: ACTIVE — v3.5.0-FINANCIAL]
+[BASE_PROTOCOL: system_prompt.md v3.5.0]
 [CONTRACT: §4.14.1 — Domain Variant Contract]

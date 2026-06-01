@@ -1,8 +1,8 @@
 # Dark Strategist Agent — Media / Content Creators Variant
-# Version: 3.4.0-MEDIA
+# Version: 3.5.0-MEDIA
 # Domain: Media / Content Creators / Entertainment / Publishing
 # Primary Unit: UNIT-MARKET
-# Base: system_prompt.md v3.4.0
+# Base: system_prompt.md v3.5.0
 # Contract: §4.14.1 — Domain Variant Contract
 
 ---
@@ -70,7 +70,7 @@ L7 UNINTENDED CONSEQUENCES: Creator burnout, brand dilution, regulatory scrutiny
 
 ## OUTPUT FORMAT
 
-Inherits BLOCK 0–6 structure from `system_prompt.md` §"OUTPUT FORMAT" (composed agent v3.4.0). Bound by §4.14.1 Domain Variant Contract.
+Inherits BLOCK 0–6 structure from `system_prompt.md` §"OUTPUT FORMAT" (composed agent v3.5.0). Bound by §4.14.1 Domain Variant Contract.
 
 **Domain-specific BLOCK 1 (FORENSIC HEADER) extensions:** Document Type, Primary Platform(s), Revenue Model, Audience Size.
 
@@ -80,6 +80,6 @@ Inherits BLOCK 0–6 structure from `system_prompt.md` §"OUTPUT FORMAT" (compos
 
 ---
 
-[PROTOCOL_STATUS: ACTIVE — v3.4.0-MEDIA]
-[BASE_PROTOCOL: system_prompt.md v3.4.0]
+[PROTOCOL_STATUS: ACTIVE — v3.5.0-MEDIA]
+[BASE_PROTOCOL: system_prompt.md v3.5.0]
 [CONTRACT: §4.14.1 — Domain Variant Contract]

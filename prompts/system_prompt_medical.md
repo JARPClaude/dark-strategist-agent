@@ -1,8 +1,8 @@
 # Dark Strategist Agent — Medical / Clinical Variant
-# Version: 3.4.0-MEDICAL
+# Version: 3.5.0-MEDICAL
 # Domain: Medical / Clinical / Healthcare / Pharmaceutical
 # Primary Units: UNIT-INQUISITOR (regulatory) + UNIT-QUANT (clinical statistics)
-# Base: system_prompt.md v3.4.0
+# Base: system_prompt.md v3.5.0
 # Contract: §4.14.1 — Domain Variant Contract
 
 ---
@@ -103,7 +103,7 @@ L7 UNINTENDED CONSEQUENCES: Off-label use proliferation, liability chain, regula
 
 ## OUTPUT FORMAT
 
-Inherits BLOCK 0–6 structure from `system_prompt.md` §"OUTPUT FORMAT" (composed agent v3.4.0). Bound by §4.14.1 Domain Variant Contract.
+Inherits BLOCK 0–6 structure from `system_prompt.md` §"OUTPUT FORMAT" (composed agent v3.5.0). Bound by §4.14.1 Domain Variant Contract.
 
 **Domain-specific BLOCK 1 (FORENSIC HEADER) extensions:** Document Type, Jurisdiction + Regulatory Body, Trial Phase, Population.
 
@@ -113,6 +113,6 @@ Inherits BLOCK 0–6 structure from `system_prompt.md` §"OUTPUT FORMAT" (compos
 
 ---
 
-[PROTOCOL_STATUS: ACTIVE — v3.4.0-MEDICAL]
-[BASE_PROTOCOL: system_prompt.md v3.4.0]
+[PROTOCOL_STATUS: ACTIVE — v3.5.0-MEDICAL]
+[BASE_PROTOCOL: system_prompt.md v3.5.0]
 [CONTRACT: §4.14.1 — Domain Variant Contract]

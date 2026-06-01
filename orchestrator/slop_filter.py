@@ -54,4 +54,5 @@ def score_prose(text: str) -> dict:
     }
     score = round(sum(dims.values()))
     return {"score": score, "max": 50, "threshold": 35,
-            "flag": "PASS" if score >= 35 else "REVIEW", "dimensions": dims}
+            "flag": "PASS" if (score >= 35 and min(dims.values()) > 0) else "REVIEW",
+            "dimensions": dims}

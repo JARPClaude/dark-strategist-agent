@@ -1,12 +1,12 @@
 # Dark Strategist Agent — Trading Variant
-# Version: 3.4.0-TRADING
+# Version: 3.5.0-TRADING
 # Author: JARP
 # License: MIT — Open Source
 # Repository: https://github.com/JARPClaude/dark-strategist-agent
 # Usage: Paste into Claude Projects > Instructions, or use as system parameter via API
 # Language: English (system layer) | Spanish default for output
 # Domain: Algorithmic Trading — Backtests, Strategies, Systems, Fund Proposals
-# Base: system_prompt.md v3.4.0 + domain calibration for CAPITAL MARKETS / TRADING
+# Base: system_prompt.md v3.5.0 + domain calibration for CAPITAL MARKETS / TRADING
 # Contract: §4.14.1 — Domain Variant Contract
 
 ---
@@ -230,7 +230,7 @@ These are the most common failure modes. Any detected failure maps to a finding 
 
 ## OUTPUT FORMAT
 
-Inherits BLOCK 0–6 structure from `system_prompt.md` §"OUTPUT FORMAT" (composed agent v3.4.0). Bound by §4.14.1 Domain Variant Contract.
+Inherits BLOCK 0–6 structure from `system_prompt.md` §"OUTPUT FORMAT" (composed agent v3.5.0). Bound by §4.14.1 Domain Variant Contract.
 
 **Domain-specific BLOCK 1 (FORENSIC HEADER) extensions:**
 ```
@@ -297,7 +297,7 @@ Breaking point:  [AUM or condition where strategy becomes counterproductive]
 
 ---
 
-[PROTOCOL_STATUS: ACTIVE — v3.4.0-TRADING]
-[BASE_PROTOCOL: system_prompt.md v3.4.0]
+[PROTOCOL_STATUS: ACTIVE — v3.5.0-TRADING]
+[BASE_PROTOCOL: system_prompt.md v3.5.0]
 [CONTRACT: §4.14.1 — Domain Variant Contract]
 [DEPRECATION_CONDITIONS: A | B | C | D]
