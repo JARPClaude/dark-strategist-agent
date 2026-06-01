@@ -5,6 +5,10 @@ Format: [VERSION] — DATE — Description
 
 ---
 
+## [Certification] — 2026-06-01
+### JARP_CERTIFIED: DS v3.4.0 — PA-20260601-002 ✅
+Full 7-axis forensic audit (Level 1 — JARP DEEP) executed by `prompt-architect-agent` v1.3.0 (JARP_CERTIFIED PA-20260527-002) over the complete v3.4.0 release: base + router + 19 domain variants + 5 skills + orchestrator product-face + docs. FULL COVERAGE (19/19 domain variants). Result: 0 CRITICAL | 0 SERIOUS | 0 MODERATE | 0 LATENT → `JARP_CERTIFIED`. `BIAS_CHECK_RESULT: PASS`. Confirmatory re-cert (v3.4.0 changed synthesis/provenance/dead-code, not the prompt/skill surface). Supersedes PA-20260529-001 (DS v3.3.0). `JARP_BENCHMARK_LIVE` advances to v3.4.0. Valid until 30/08/2026 or DS v4.0.0.
+
 ## [3.4.0] — 2026-05-31
 
 ### Minor — Synthesis Shape Contract + Live Transparency Provenance + Dead-Code Removal
