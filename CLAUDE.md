@@ -51,7 +51,7 @@ TRANSPARENCY REPORT
 | **Human Resources domain (P18)** | UNIT-COMPLIANCE primary. Rules HR1-HR4. Pay equity + labor law. |
 | **Strategy domain (P19)** | UNIT-MARKET primary. Rules ST1-ST4. Competitive + assumption audit. |
 | **Startup domain (P20)** | UNIT-QUANT primary. Rules SU1-SU5. PMF + unit economics. |
-| **SKILLS_CATALOG** | New section in catalogs.py registering all 5 active skills. |
+| **SKILLS_CATALOG** | New section in catalogs.py registering all 6 active skills. |
 
 ---
 
@@ -95,7 +95,8 @@ dark-strategist-agent/
     ├── ach-competing-explanations/SKILL.md
     ├── deception-detection/SKILL.md
     ├── verdict-verification/SKILL.md
-    └── adaptive-autonomous-drive/SKILL.md  ← NEW v3.2.0
+    ├── adaptive-autonomous-drive/SKILL.md  ← NEW v3.2.0
+    └── context-degradation/SKILL.md  ← NEW v3.7.0
 ```
 
 ---
@@ -109,6 +110,7 @@ dark-strategist-agent/
 | `deception-detection` | When author has high personal/financial stakes | v2.6.0 |
 | `verdict-verification` | Mandatory gate before any VERDICT block | v2.6.0 |
 | `adaptive-autonomous-drive` | Autonomous goal generation and expansion | v3.2.0 |
+| `context-degradation` | Context-degradation lens for LLM/RAG/agentic audits (P04/P07) | v1.0.0 |
 
 ---
 

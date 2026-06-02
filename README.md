@@ -8,7 +8,7 @@
 ![License](https://img.shields.io/badge/license-MIT-green)
 ![Status](https://img.shields.io/badge/status-ACTIVE-brightgreen)
 ![Domains](https://img.shields.io/badge/domains-20-blue)
-![Skills](https://img.shields.io/badge/skills-5-orange)
+![Skills](https://img.shields.io/badge/skills-6-orange)
 ![Tribunal](https://img.shields.io/badge/tribunal-transversal-black)
 ![SSM](https://img.shields.io/badge/SSM-active-purple)
 ![GOAP](https://img.shields.io/badge/GOAP-A*_planner-orange)
@@ -76,6 +76,7 @@ Final report — deeper, higher coverage, no gaps left unaddressed
 | `deception-detection` | When author has high personal/financial stakes |
 | `verdict-verification` | Mandatory gate before any VERDICT block |
 | `adaptive-autonomous-drive` | Autonomous goal generation and gap expansion |
+| `context-degradation` | LLM/RAG/agentic context-degradation audit lens (P04/P07) |
 
 ---
 
@@ -203,7 +204,7 @@ python main.py --type startup --subscenario pitch \
 [TRIBUNAL: TRANSVERSAL — Rol + Forense layers]
 [SKILL: ADAPTIVE AUTONOMOUS DRIVE — active]
 [DOMAINS: 20 total — P01 to P20]
-[SKILLS: 5 active]
+[SKILLS: 6 active]
 [SSM: ACTIVE — MICRO/MESO/MACRO]
 [TRANSPARENCY_REPORT: ACTIVE — every session]
 [NOTIFICATION_CHANNELS: SLACK + GITHUB + SHEETS]
