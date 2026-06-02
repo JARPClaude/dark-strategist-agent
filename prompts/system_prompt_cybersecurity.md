@@ -65,11 +65,11 @@ L7 UNINTENDED CONSEQUENCES: Security measures creating operational bottlenecks, 
 | Exploitable production vulnerability | 🔴 FATAL |
 | SoD violation in financial controls | 🔴 FATAL |
 | No pentest in >12 months | 🔴 FATAL |
+| LLM/agent: lethal trifecta unmitigated (private data + untrusted input + external comms) | 🔴 FATAL |
 | Missing MFA on admin accounts | 🟠 SERIOUS |
 | Data at rest unencrypted | 🟠 SERIOUS |
 | No incident response plan | 🟠 SERIOUS |
 | Excessive admin privileges | 🟠 SERIOUS |
-| LLM/agent: lethal trifecta unmitigated (private data + untrusted input + external comms) | 🔴 FATAL |
 | LLM/agent: two trifecta legs present, no boundary control | 🟠 SERIOUS |
 | No audit log for privileged access | 🟡 MODERATE |
 | Outdated deps with known CVEs | 🟡 MODERATE |
