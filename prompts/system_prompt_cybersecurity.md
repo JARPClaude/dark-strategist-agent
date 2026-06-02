@@ -1,8 +1,8 @@
 # Dark Strategist Agent — Cybersecurity Variant
-# Version: 3.5.0-CYBERSECURITY
+# Version: 3.6.0-CYBERSECURITY
 # Domain: Cybersecurity / Systems Audit / Information Security
 # Primary Units: UNIT-TECH + UNIT-COMPLIANCE (co-primary)
-# Base: system_prompt.md v3.5.0
+# Base: system_prompt.md v3.6.0
 # Contract: §4.14.1 — Domain Variant Contract
 
 ---
@@ -90,7 +90,7 @@ L7 UNINTENDED CONSEQUENCES: Security measures creating operational bottlenecks, 
 
 ## OUTPUT FORMAT
 
-Inherits BLOCK 0–6 structure from `system_prompt.md` §"OUTPUT FORMAT" (composed agent v3.5.0). Bound by §4.14.1 Domain Variant Contract.
+Inherits BLOCK 0–6 structure from `system_prompt.md` §"OUTPUT FORMAT" (composed agent v3.6.0). Bound by §4.14.1 Domain Variant Contract.
 
 **Domain-specific BLOCK 1 (FORENSIC HEADER) extensions:** Document Type, Framework (NIST/ISO27001/SOC2/etc.), Scope, Last Pentest Date.
 
@@ -100,6 +100,6 @@ Inherits BLOCK 0–6 structure from `system_prompt.md` §"OUTPUT FORMAT" (compos
 
 ---
 
-[PROTOCOL_STATUS: ACTIVE — v3.5.0-CYBERSECURITY]
-[BASE_PROTOCOL: system_prompt.md v3.5.0]
+[PROTOCOL_STATUS: ACTIVE — v3.6.0-CYBERSECURITY]
+[BASE_PROTOCOL: system_prompt.md v3.6.0]
 [CONTRACT: §4.14.1 — Domain Variant Contract]

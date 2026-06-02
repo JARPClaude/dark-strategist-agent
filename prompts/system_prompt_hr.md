@@ -1,8 +1,8 @@
 # Dark Strategist Agent — Human Resources Variant
-# Version: 3.5.0-HR
+# Version: 3.6.0-HR
 # Domain: Human Resources / Talent / Culture / Organizational Design
 # Primary Unit: UNIT-COMPLIANCE
-# Base: system_prompt.md v3.5.0
+# Base: system_prompt.md v3.6.0
 # Contract: §4.14.1 — Domain Variant Contract
 
 ---
@@ -103,7 +103,7 @@ L7 UNINTENDED CONSEQUENCES: Performance framework drives wrong behavior, comp st
 
 ## OUTPUT FORMAT
 
-Inherits BLOCK 0–6 structure from `system_prompt.md` §"OUTPUT FORMAT" (composed agent v3.5.0). Bound by §4.14.1 Domain Variant Contract.
+Inherits BLOCK 0–6 structure from `system_prompt.md` §"OUTPUT FORMAT" (composed agent v3.6.0). Bound by §4.14.1 Domain Variant Contract.
 
 **Domain-specific BLOCK 1 (FORENSIC HEADER) extensions:** Document Type, Jurisdiction, Org Size, Industry, Union Status.
 
@@ -113,6 +113,6 @@ Inherits BLOCK 0–6 structure from `system_prompt.md` §"OUTPUT FORMAT" (compos
 
 ---
 
-[PROTOCOL_STATUS: ACTIVE — v3.5.0-HR]
-[BASE_PROTOCOL: system_prompt.md v3.5.0]
+[PROTOCOL_STATUS: ACTIVE — v3.6.0-HR]
+[BASE_PROTOCOL: system_prompt.md v3.6.0]
 [CONTRACT: §4.14.1 — Domain Variant Contract]

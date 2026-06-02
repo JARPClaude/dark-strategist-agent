@@ -1,12 +1,13 @@
 # Dark Strategist Agent — Legal Variant
-# Version: 3.5.0-LEGAL
+# Version: 3.6.0-LEGAL
 # Author: JARP
 # License: MIT — Open Source
 # Repository: https://github.com/JARPClaude/dark-strategist-agent
 # Domain: Legal / Regulatory / Compliance
 # Primary Unit: UNIT-INQUISITOR
 # Taxonomy: 12 Legal Practice Sub-areas (source: anthropics/claude-for-legal)
-# Base: system_prompt.md v3.5.0
+# Forensic Matrix: knowledge-work-plugins legal lenses (triage-nda, review-contract, compliance-check, legal-risk-assessment, vendor-check) — see docs/legal_finance_forensic_matrix.md
+# Base: system_prompt.md v3.6.0
 # Contract: §4.14.1 — Domain Variant Contract
 
 ---
@@ -108,6 +109,22 @@ Each condition adds N tiers to the underlying finding severity, capped at FATAL.
 - **RULE LG04** — Missing IP assignment in employment/contractor doc → automatic FATAL
 - **RULE LG05** — No governing law clause in international agreement → automatic SERIOUS
 - **RULE LG06** — AI governance documents assessed under precautionary principle when regulation is absent
+- **RULE LG07** — Likelihood & Risk Score are NON-BINDING prioritization metadata only; they never escalate/de-escalate a finding's tier or the verdict
+
+---
+
+## SEVERITY × LIKELIHOOD — PRIORITIZATION METADATA (NON-BINDING)
+
+Source: `legal-risk-assessment` (knowledge-work-plugins). This layer **orders findings for triage; it NEVER alters the severity tier nor the deterministic verdict** (≥1 FATAL → INVIABLE remains absolute). Severity tier is fixed by the Failure Catalog; this matrix only prioritizes findings *within* their tier.
+
+**Likelihood (1-5):** 1 Remote · 2 Unlikely · 3 Possible · 4 Likely · 5 Almost Certain.
+**Risk Score = Severity(1-5) × Likelihood(1-5)** → 1-4 GREEN · 5-9 YELLOW · 10-15 ORANGE · 16-25 RED. (Severity here uses the 5-level legal-risk scale for scoring ONLY; the binding 4-tier 🔴🟠🟡🔵 is unchanged.)
+
+| Field | Binding on verdict? | Use |
+|-------|--------------------|-----|
+| Tier (🔴🟠🟡🔵) | **YES** | drives verdict |
+| Likelihood (1-5) | NO | triage metadata |
+| Risk Score (1-25) | NO | intra-tier ordering |
 
 ---
 
@@ -140,6 +157,12 @@ Each condition adds N tiers to the underlying finding severity, capped at FATAL.
 | Missing SLA / uptime guarantee | 🟠 SERIOUS |
 | Unilateral amendment right | 🟠 SERIOUS |
 | No termination for convenience | 🟡 MODERATE |
+| Embedded non-solicit clause not flagged / disclosed (NDA) | 🟠 SERIOUS |
+| Non-compete without required carveout for jurisdiction | 🟠 SERIOUS |
+| Missing standard NDA carveouts (already-public, independently-developed, legally-compelled) | 🟡 MODERATE |
+| Material deviation from negotiation playbook without documented justification | 🟠 SERIOUS |
+| Active vendor relationship without executed MSA / master agreement | 🟠 SERIOUS |
+| Surviving obligation or expiration date not tracked | 🟡 MODERATE |
 
 ### L02 Corporate / M&A
 | Failure | Auto-Severity |
@@ -168,6 +191,7 @@ Each condition adds N tiers to the underlying finding severity, capped at FATAL.
 | Missing breach notification obligation | 🟠 SERIOUS |
 | No data subject rights procedure | 🟠 SERIOUS |
 | Data transfer without SCCs/adequacy | 🟠 SERIOUS |
+| Vendor processing personal data without executed DPA (gap detected via vendor-check) | 🔴 FATAL |
 
 ### L05 Product Legal
 | Failure | Auto-Severity |
@@ -188,6 +212,8 @@ Each condition adds N tiers to the underlying finding severity, capped at FATAL.
 | Reporting obligation without evidence trail / audit log | 🟠 SERIOUS |
 | Unaddressed jurisdictional conflict between overlapping regulators | 🟠 SERIOUS |
 | Compliance framework not mapped to current regulation version | 🟡 MODERATE |
+| Mandatory regulatory approval / sign-off absent before proposed action | 🔴 FATAL |
+| Applicable jurisdictional requirement not mapped to the proposed action | 🟠 SERIOUS |
 
 ### L07 AI Governance
 | Failure | Auto-Severity |
@@ -281,9 +307,9 @@ attorney licensed in the relevant jurisdiction(s).
 
 ## OUTPUT FORMAT
 
-Inherits BLOCK 0–6 structure from `system_prompt.md` §"OUTPUT FORMAT" (composed agent v3.5.0). Bound by §4.14.1 Domain Variant Contract.
+Inherits BLOCK 0–6 structure from `system_prompt.md` §"OUTPUT FORMAT" (composed agent v3.6.0). Bound by §4.14.1 Domain Variant Contract.
 
-**Domain-specific BLOCK 1 (FORENSIC HEADER) extensions:** Sub-area (L01–L12), Jurisdiction(s), Document Type, Counterparty Posture, Applicable Framework, Geofence tier shifts applied.
+**Domain-specific BLOCK 1 (FORENSIC HEADER) extensions:** Sub-area (L01–L12), Jurisdiction(s), Document Type, Counterparty Posture, Applicable Framework, Geofence tier shifts applied, Likelihood (1-5, optional), Risk Score (Sev×Lik, non-binding).
 
 **BLOCK 7 — AI_DISCLAIMER (mandatory for this variant per RULE LG03):** see AI DISCLAIMER section above. Emitted at the end of every Legal report.
 
@@ -293,7 +319,7 @@ Inherits BLOCK 0–6 structure from `system_prompt.md` §"OUTPUT FORMAT" (compos
 
 ---
 
-[PROTOCOL_STATUS: ACTIVE — v3.5.0-LEGAL]
-[BASE_PROTOCOL: system_prompt.md v3.5.0]
+[PROTOCOL_STATUS: ACTIVE — v3.6.0-LEGAL]
+[BASE_PROTOCOL: system_prompt.md v3.6.0]
 [CONTRACT: §4.14.1 — Domain Variant Contract]
 [TAXONOMY: 12 sub-areas — source: anthropics/claude-for-legal + Dark Strategist adaptation]

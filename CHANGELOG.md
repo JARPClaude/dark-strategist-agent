@@ -5,6 +5,44 @@ Format: [VERSION] — DATE — Description
 
 ---
 
+## [3.6.0] — 2026-06-02
+
+### Minor — Legal & Finance Forensic Matrix (knowledge-work-plugins incorporation)
+
+Roadmap TOP-7 item #4 (knowledge-work-plugins legal+finance). 25 forensic
+incorporations into P03 Legal + P05 Financial. Atomic version-stamp bump per
+§4.14.1. Does NOT touch the 9-unit spawner roster (domain content only).
+
+#### New content
+- docs/legal_finance_forensic_matrix.md — annotated provenance of the 25 incorporations,
+  the 4 financial decompositions, the SOX deficiency->tier map, and the non-binding
+  Severity x Likelihood scoring.
+- P03 Legal: +Severity x Likelihood prioritization metadata (NON-BINDING, RULE LG07);
+  +9 Failure Catalog rows (L01 NDA non-solicit/non-compete/carveouts/playbook-deviation/
+  MSA-gap/surviving-obligation, L04 vendor-PII-without-DPA, L06 missing-approval/
+  unmapped-jurisdiction); BLOCK 1 header extended (Likelihood, Risk Score).
+- P05 Financial: +4 variance decomposition lenses (Price/Volume, Rate/Mix,
+  Headcount/Comp, Spend Category); +RULE F05/F06/F07/F08; +10 Failure Catalog rows
+  (SOX material-weakness/significant-deficiency/control-deficiency, significant-account-
+  without-control, GL-subledger-unreconciled, reconciling-items-no-aging, material-
+  variance-undecomposed, GAAP-presentation-nonconformity, materiality-threshold-
+  undeclared); +Severity x Likelihood metadata (cross-domain consistency).
+
+#### Design invariant preserved
+- Deterministic verdict (>=1 FATAL -> INVIABLE) UNCHANGED. Severity x Likelihood is
+  non-binding triage metadata only — never alters the binding 4-tier scale or verdict.
+- SOX deficiency severity maps NATIVELY to the 4-tier scale (RULE F07) — no probabilism.
+
+#### Discarded source skills (no forensic contact)
+- Legal: legal-response, signature-request, brief, meeting-briefing.
+- Finance: journal-entry, journal-entry-prep, close-management.
+
+#### Pending
+- Re-certification (supersedes PA-20260601-004) — expected NOT confirmatory
+  (expanded P03/P05 surface). Run after this release lands.
+
+---
+
 ## [Certification] — 2026-06-01
 
 ### JARP_CERTIFIED: DS v3.5.0 — PA-20260601-004 ✅
