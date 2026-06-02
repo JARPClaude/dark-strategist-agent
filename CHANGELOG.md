@@ -43,6 +43,14 @@ incorporations into P03 Legal + P05 Financial. Atomic version-stamp bump per
 
 ---
 
+## [Certification] — 2026-06-02
+
+### JARP_CERTIFIED: DS v3.6.0 — PA-20260602-001 ✅
+
+Level 1 — JARP DEEP full-coverage 7-axis forensic audit of `dark-strategist-agent` v3.6.0 by `prompt-architect-agent` v1.3.0 (PA-20260527-002). Scope: base + router + 19 domain variants + 5 skills + orchestrator product-face + docs + v3.6.0 additions (legal+finance forensic matrix: Severity×Likelihood non-binding metadata, 4 variance decompositions, SOX deficiency tier map, 18 new Failure Catalog rows P03/P05, docs/legal_finance_forensic_matrix.md). FULL COVERAGE (19/19). Result: 0 CRITICAL | 0 SERIOUS | 0 MODERATE | 0 LATENT → `JARP_CERTIFIED`. `BIAS_CHECK_RESULT: PASS`. NOT confirmatory (expanded P03/P05 surface): two findings caught and resolved pre-cert — C-v36-01 (LATENT, monotonic catalog order L01/L04/L06+financial, fixed 73e3de2) + D-v36-01 (MODERATE, stale row counts +12->+18 / +10->+9, fixed 73e3de2). Supersedes PA-20260601-004 (DS v3.5.0). `JARP_BENCHMARK_LIVE` advances to v3.6.0. Valid until 30/08/2026 or DS v4.0.0.
+
+---
+
 ## [Certification] — 2026-06-01
 
 ### JARP_CERTIFIED: DS v3.5.0 — PA-20260601-004 ✅
