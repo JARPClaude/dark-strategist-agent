@@ -156,12 +156,12 @@ Source: `legal-risk-assessment` (knowledge-work-plugins). This layer **orders fi
 | No limitation of liability | 🟠 SERIOUS |
 | Missing SLA / uptime guarantee | 🟠 SERIOUS |
 | Unilateral amendment right | 🟠 SERIOUS |
-| No termination for convenience | 🟡 MODERATE |
 | Embedded non-solicit clause not flagged / disclosed (NDA) | 🟠 SERIOUS |
 | Non-compete without required carveout for jurisdiction | 🟠 SERIOUS |
-| Missing standard NDA carveouts (already-public, independently-developed, legally-compelled) | 🟡 MODERATE |
 | Material deviation from negotiation playbook without documented justification | 🟠 SERIOUS |
 | Active vendor relationship without executed MSA / master agreement | 🟠 SERIOUS |
+| No termination for convenience | 🟡 MODERATE |
+| Missing standard NDA carveouts (already-public, independently-developed, legally-compelled) | 🟡 MODERATE |
 | Surviving obligation or expiration date not tracked | 🟡 MODERATE |
 
 ### L02 Corporate / M&A
@@ -187,11 +187,11 @@ Source: `legal-risk-assessment` (knowledge-work-plugins). This layer **orders fi
 |---------|--------------|
 | No DPA where GDPR applies | 🔴 FATAL |
 | Invalid consent mechanism | 🔴 FATAL |
+| Vendor processing personal data without executed DPA (gap detected via vendor-check) | 🔴 FATAL |
 | No data retention policy | 🟠 SERIOUS |
 | Missing breach notification obligation | 🟠 SERIOUS |
 | No data subject rights procedure | 🟠 SERIOUS |
 | Data transfer without SCCs/adequacy | 🟠 SERIOUS |
-| Vendor processing personal data without executed DPA (gap detected via vendor-check) | 🔴 FATAL |
 
 ### L05 Product Legal
 | Failure | Auto-Severity |
@@ -208,12 +208,12 @@ Source: `legal-risk-assessment` (knowledge-work-plugins). This layer **orders fi
 |---------|--------------|
 | Active regulatory violation with enforcement exposure | 🔴 FATAL |
 | Mandatory regulatory filing missing or past statutory deadline | 🔴 FATAL |
+| Mandatory regulatory approval / sign-off absent before proposed action | 🔴 FATAL |
 | No designated compliance owner / accountability gap | 🟠 SERIOUS |
 | Reporting obligation without evidence trail / audit log | 🟠 SERIOUS |
 | Unaddressed jurisdictional conflict between overlapping regulators | 🟠 SERIOUS |
-| Compliance framework not mapped to current regulation version | 🟡 MODERATE |
-| Mandatory regulatory approval / sign-off absent before proposed action | 🔴 FATAL |
 | Applicable jurisdictional requirement not mapped to the proposed action | 🟠 SERIOUS |
+| Compliance framework not mapped to current regulation version | 🟡 MODERATE |
 
 ### L07 AI Governance
 | Failure | Auto-Severity |

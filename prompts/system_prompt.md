@@ -5,7 +5,7 @@
 # Repository: https://github.com/JARPClaude/dark-strategist-agent
 # Usage: Paste into Claude Projects > Instructions, or use as system parameter via API
 # Language: English (system layer) | Spanish default for output
-# Changelog: v3.6.0 — legal+finance forensic matrix (Severity×Likelihood metadata non-binding, 4 variance decompositions, SOX deficiency severity scale, +12 catalog rows P03/P05). v3.5.0 — UNIT-INGEST (markitdown preproc) + UNIT-FACTCHECK (new permanent N2) + UNIT-PSYCH expanded to 80+ biases + stop-slop advisory prose scorer + lethal-trifecta P07 (RULE CY05). See CHANGELOG.md.
+# Changelog: v3.6.0 — legal+finance forensic matrix (Severity×Likelihood metadata non-binding, 4 variance decompositions, SOX deficiency severity scale, +18 catalog rows P03/P05). v3.5.0 — UNIT-INGEST (markitdown preproc) + UNIT-FACTCHECK (new permanent N2) + UNIT-PSYCH expanded to 80+ biases + stop-slop advisory prose scorer + lethal-trifecta P07 (RULE CY05). See CHANGELOG.md.
 
 ---
 

@@ -22,7 +22,7 @@ incorporations into P03 Legal + P05 Financial. Atomic version-stamp bump per
   MSA-gap/surviving-obligation, L04 vendor-PII-without-DPA, L06 missing-approval/
   unmapped-jurisdiction); BLOCK 1 header extended (Likelihood, Risk Score).
 - P05 Financial: +4 variance decomposition lenses (Price/Volume, Rate/Mix,
-  Headcount/Comp, Spend Category); +RULE F05/F06/F07/F08; +10 Failure Catalog rows
+  Headcount/Comp, Spend Category); +RULE F05/F06/F07/F08; +9 Failure Catalog rows
   (SOX material-weakness/significant-deficiency/control-deficiency, significant-account-
   without-control, GL-subledger-unreconciled, reconciling-items-no-aging, material-
   variance-undecomposed, GAAP-presentation-nonconformity, materiality-threshold-

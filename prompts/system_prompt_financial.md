@@ -99,21 +99,21 @@ Mirrors the Legal variant for cross-domain consistency. **Orders findings within
 | Circular reference unresolved | 🔴 FATAL |
 | Undisclosed material liability | 🔴 FATAL |
 | Terminal value >80% of DCF | 🔴 FATAL |
+| SOX material weakness in ICFR | 🔴 FATAL |
 | Terminal value 70–80% of DCF without stress test | 🟠 SERIOUS |
 | Revenue CAGR >50% without basis | 🟠 SERIOUS |
 | No sensitivity analysis | 🟠 SERIOUS |
 | Aggregate synergy claim | 🟠 SERIOUS |
 | CAC without historical data | 🟠 SERIOUS |
-| Terminal value 60–70% of DCF | 🟡 MODERATE |
-| FX exposure unhedged | 🟡 MODERATE |
-| No working capital model | 🟡 MODERATE |
-| Peer selection bias | 🟡 MODERATE |
-| SOX material weakness in ICFR | 🔴 FATAL |
 | Significant account without identified control (SOX scoping gap) | 🟠 SERIOUS |
 | GL-to-subledger account unreconciled | 🟠 SERIOUS |
 | Material variance without driver decomposition | 🟠 SERIOUS |
 | GAAP presentation non-conformity (ASC 220/210/230) | 🟠 SERIOUS |
 | SOX significant deficiency | 🟠 SERIOUS |
+| Terminal value 60–70% of DCF | 🟡 MODERATE |
+| FX exposure unhedged | 🟡 MODERATE |
+| No working capital model | 🟡 MODERATE |
+| Peer selection bias | 🟡 MODERATE |
 | Reconciling items without aging / categorization | 🟡 MODERATE |
 | SOX control deficiency | 🟡 MODERATE |
 | Variance analysis without declared materiality threshold | 🟡 MODERATE |
