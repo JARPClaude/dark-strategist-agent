@@ -5,6 +5,14 @@ Format: [VERSION] — DATE — Description
 
 ---
 
+## [Certification] — 2026-06-01
+
+### JARP_CERTIFIED: DS v3.5.0 — PA-20260601-004 ✅
+
+Level 1 — JARP DEEP full-coverage 7-axis forensic audit of `dark-strategist-agent` v3.5.0 by `prompt-architect-agent` v1.3.0 (PA-20260527-002). Scope: base + router + 19 domain variants + 5 skills + orchestrator product-face + docs + v3.5.0 additions (UNIT-INGEST, UNIT-FACTCHECK, UNIT-PSYCH 80+ catalog, stop-slop scorer, P07 RULE CY05). FULL COVERAGE (19/19). Result: 0 CRITICAL | 0 SERIOUS | 0 MODERATE | 0 LATENT → `JARP_CERTIFIED`. `BIAS_CHECK_RESULT: PASS`. NOT confirmatory (expanded surface): two findings caught and resolved pre-cert — C-P07-01 (LATENT, Failure Catalog ordering, fixed 0a234ff) + D-UNIT-01 (MODERATE, 8→9 unit-count drift, fixed 3d1c29e). Supersedes PA-20260601-002 (DS v3.4.0). `JARP_BENCHMARK_LIVE` advances to v3.5.0. Valid until 30/08/2026 or DS v4.0.0.
+
+---
+
 ## [3.5.0] — 2026-06-01
 
 ### Minor — Ingestion + Fact-Check + Behavioral Catalog + Prose Scorer + P07 Hardening
@@ -34,8 +42,9 @@ governance-classified lethal-trifecta). Atomic version-stamp bump per §4.14.1.
   left at content-introduction versions (content-based, per v3.4.0 precedent).
 
 #### Certification status
-- v3.5.0 NOT yet certified. Re-cert (Level 1 JARP DEEP, full coverage) pending —
-  will supersede PA-20260601-002. Audited surface expanded -> NOT confirmatory.
+- v3.5.0 CERTIFIED — PA-20260601-004 (Level 1 JARP DEEP, full coverage 19/19,
+  0/0/0/0). Supersedes PA-20260601-002. Two pre-cert findings resolved:
+  C-P07-01 (catalog ordering) + D-UNIT-01 (unit-count drift). See [Certification].
 
 ---
 
