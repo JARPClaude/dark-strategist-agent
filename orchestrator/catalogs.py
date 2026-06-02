@@ -537,4 +537,5 @@ SKILLS_CATALOG = {
     "deception-detection":        "skills/deception-detection/SKILL.md",
     "verdict-verification":       "skills/verdict-verification/SKILL.md",
     "adaptive-autonomous-drive":  "skills/adaptive-autonomous-drive/SKILL.md",  # NEW v3.2.0
+    "context-degradation":        "skills/context-degradation/SKILL.md",  # NEW v3.7.0
 }

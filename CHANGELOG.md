@@ -5,6 +5,19 @@ Format: [VERSION] — DATE — Description
 
 ---
 
+## [3.7.0] — 2026-06-02
+
+### Added — Context Degradation forensic lens (roadmap TOP-7 item #6)
+- New skill #6 `context-degradation` (v1.0.0, adapted from Agent-Skills-for-Context-Engineering, MIT): five degradation patterns (lost-in-middle, poisoning, distraction, confusion, clash) + four-bucket mitigation (Write/Select/Compress/Isolate). Detection lens only — does NOT alter the deterministic verdict or severity taxonomy.
+- P04 Code: RULE C05 (blind `[:N]` truncation of structured output → lost-in-middle → SERIOUS) + 5 Failure Catalog rows + CONTEXT_PIPELINE/LLM_INTEGRATION taxonomy row.
+- P07 Cybersecurity: RULE CY06 (untrusted content poisoning a context that drives a privileged action → SERIOUS, FATAL via Rule 09) + 5 Failure Catalog rows + AGENT_LLM_ARCHITECTURE taxonomy row. Complements CY05 lethal-trifecta.
+- Skills registry: 5 → 6 (system_prompt.md Composition map + catalogs.py SKILLS_CATALOG).
+
+### Notes
+- Telephone-game NOT re-worked: already resolved in v3.4 (R1 FUGA#1/#3). This bump adds the outward-facing audit lens, not a re-implementation.
+- Atomic §4.14.1 bump: all 19 domain variants + router + product-face → v3.7.0.
+- Deferred to v3.8.0 (with infinity/RAG): hardening DS's own residual `[:N]` cuts in prompt_engine/spawner — the very pattern C05 now audits in third parties.
+
 ## [3.6.0] — 2026-06-02
 
 ### Minor — Legal & Finance Forensic Matrix (knowledge-work-plugins incorporation)

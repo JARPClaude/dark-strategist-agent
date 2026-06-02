@@ -1,8 +1,8 @@
 # Dark Strategist Agent — Telecommunications Variant
-# Version: 3.6.0-TELECOM
+# Version: 3.7.0-TELECOM
 # Domain: Telecommunications / Mobile / Broadband / Infrastructure
 # Primary Units: UNIT-GEO + UNIT-INQUISITOR
-# Base: system_prompt.md v3.6.0
+# Base: system_prompt.md v3.7.0
 # Contract: §4.14.1 — Domain Variant Contract
 
 ---
@@ -70,7 +70,7 @@ L7 UNINTENDED CONSEQUENCES: Sharing impact on competitive dynamics, LEO disrupti
 
 ## OUTPUT FORMAT
 
-Inherits BLOCK 0–6 structure from `system_prompt.md` §"OUTPUT FORMAT" (composed agent v3.6.0). Bound by §4.14.1 Domain Variant Contract.
+Inherits BLOCK 0–6 structure from `system_prompt.md` §"OUTPUT FORMAT" (composed agent v3.7.0). Bound by §4.14.1 Domain Variant Contract.
 
 **Domain-specific BLOCK 1 (FORENSIC HEADER) extensions:** Document Type, Geography/Jurisdiction, Spectrum Status, Network Layer.
 
@@ -80,6 +80,6 @@ Inherits BLOCK 0–6 structure from `system_prompt.md` §"OUTPUT FORMAT" (compos
 
 ---
 
-[PROTOCOL_STATUS: ACTIVE — v3.6.0-TELECOM]
-[BASE_PROTOCOL: system_prompt.md v3.6.0]
+[PROTOCOL_STATUS: ACTIVE — v3.7.0-TELECOM]
+[BASE_PROTOCOL: system_prompt.md v3.7.0]
 [CONTRACT: §4.14.1 — Domain Variant Contract]

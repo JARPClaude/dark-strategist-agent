@@ -1,8 +1,8 @@
 # Dark Strategist Agent — Public Sector Variant
-# Version: 3.6.0-PUBLICSECTOR
+# Version: 3.7.0-PUBLICSECTOR
 # Domain: Public Sector / Government / Policy / Public Education
 # Primary Units: UNIT-COMPLIANCE + UNIT-GEO
-# Base: system_prompt.md v3.6.0
+# Base: system_prompt.md v3.7.0
 # Contract: §4.14.1 — Domain Variant Contract
 
 ---
@@ -72,7 +72,7 @@ L7 UNINTENDED CONSEQUENCES: Perverse incentives, dependency creation, market dis
 
 ## OUTPUT FORMAT
 
-Inherits BLOCK 0–6 structure from `system_prompt.md` §"OUTPUT FORMAT" (composed agent v3.6.0). Bound by §4.14.1 Domain Variant Contract.
+Inherits BLOCK 0–6 structure from `system_prompt.md` §"OUTPUT FORMAT" (composed agent v3.7.0). Bound by §4.14.1 Domain Variant Contract.
 
 **Domain-specific BLOCK 1 (FORENSIC HEADER) extensions:** Document Type, Jurisdiction, Political Cycle Position, Budget Scale.
 
@@ -82,6 +82,6 @@ Inherits BLOCK 0–6 structure from `system_prompt.md` §"OUTPUT FORMAT" (compos
 
 ---
 
-[PROTOCOL_STATUS: ACTIVE — v3.6.0-PUBLICSECTOR]
-[BASE_PROTOCOL: system_prompt.md v3.6.0]
+[PROTOCOL_STATUS: ACTIVE — v3.7.0-PUBLICSECTOR]
+[BASE_PROTOCOL: system_prompt.md v3.7.0]
 [CONTRACT: §4.14.1 — Domain Variant Contract]

@@ -1,8 +1,8 @@
 # Dark Strategist Agent — Marketing Variant
-# Version: 3.6.0-MARKETING
+# Version: 3.7.0-MARKETING
 # Domain: Marketing / Growth / Brand / Digital Advertising
 # Primary Unit: UNIT-MARKET
-# Base: system_prompt.md v3.6.0
+# Base: system_prompt.md v3.7.0
 # Contract: §4.14.1 — Domain Variant Contract
 
 ---
@@ -101,7 +101,7 @@ L7 UNINTENDED CONSEQUENCES: Brand dilution from performance marketing, privacy r
 
 ## OUTPUT FORMAT
 
-Inherits BLOCK 0–6 structure from `system_prompt.md` §"OUTPUT FORMAT" (composed agent v3.6.0). Bound by §4.14.1 Domain Variant Contract.
+Inherits BLOCK 0–6 structure from `system_prompt.md` §"OUTPUT FORMAT" (composed agent v3.7.0). Bound by §4.14.1 Domain Variant Contract.
 
 **Domain-specific BLOCK 1 (FORENSIC HEADER) extensions:** Document Type, Channel Mix, Funnel Stage, Geography, Budget Range.
 
@@ -111,6 +111,6 @@ Inherits BLOCK 0–6 structure from `system_prompt.md` §"OUTPUT FORMAT" (compos
 
 ---
 
-[PROTOCOL_STATUS: ACTIVE — v3.6.0-MARKETING]
-[BASE_PROTOCOL: system_prompt.md v3.6.0]
+[PROTOCOL_STATUS: ACTIVE — v3.7.0-MARKETING]
+[BASE_PROTOCOL: system_prompt.md v3.7.0]
 [CONTRACT: §4.14.1 — Domain Variant Contract]
