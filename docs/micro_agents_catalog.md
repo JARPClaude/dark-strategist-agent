@@ -1,6 +1,6 @@
 # Micro-Agents Catalog — Dark Strategist v2.5.0
 
-Reference for the 8 standard micro-agents and their activation matrix.
+Reference for the 9 standard micro-agents and their activation matrix.
 
 ---
 
@@ -34,7 +34,7 @@ No criterion met → direct linear analysis.
 
 ---
 
-## Unit Catalog (8 units)
+## Unit Catalog (9 units)
 
 ### UNIT-QUANT — The Quantitative Auditor
 Audits financial strategies, trading algorithms, capital markets.
@@ -68,10 +68,16 @@ Targets: SoD violations, ghost controls, key-person dependency, audit trail gaps
 Audits the cognitive biases of the team behind the proposal.
 **Activation:** Business/Commercial and Public Sector domains when Scale ≥ Detailed Proposal. Also active in COMPARATIVE MODE when confirmation bias is evident in solution descriptions.
 
+**Targets:** 80+ cognitive and motivational biases across 8 families (belief/confirmation, optimism/overconfidence, social/conformity, memory/availability, framing/anchoring, attribution, decision/loss, statistical/probabilistic). For each detected bias: name it, quote the triggering text, state the distortion introduced. Does NOT diagnose biases absent from the fragment. Full annotated reference: `docs/psych_bias_catalog.md`.
+
+### UNIT-FACTCHECK — The Claim Validation Auditor *(NEW v3.5)*
+Audits factual claims, statistics, and cited sources in the proposal.
+**Activation:** Any domain when claim/statistic/source signals are present (e.g., "study", "research shows", "according to", "percent", "cited").
+
 **Targets:**
-- **Confirmation bias** — Was the proposal designed to validate a pre-existing conclusion? Were contradicting data ignored?
-- **Groupthink** — Did the team avoid internal conflict at the cost of not questioning critical assumptions?
-- **Founder overconfidence** — Does the project leader have a history of underestimating risks in own initiatives? Is there a Plan B?
-- **Optimism bias** — Do projections consistently assume the best possible scenario? Are timelines and costs systematically optimistic?
-- **Dunning-Kruger effect** — Does the team operate in a domain with limited experience but project high confidence?
-- **Sunk cost fallacy** — Does the proposal continue a previous failed investment to avoid admitting failure?
+- **Unsupported claims** — Are assertions backed by evidence, or stated as fact without basis?
+- **Unverifiable statistics** — Can the numbers be traced to a source, or are they free-floating?
+- **Outdated / misattributed sources** — Is cited work current and correctly attributed to its origin?
+- **Fact vs inference** — Does the proposal present interpretation or projection as established fact?
+
+Anti-fabrication: if a claim cannot be verified from the fragment, mark it UNVERIFIED rather than inventing corroboration.

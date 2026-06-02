@@ -25,7 +25,7 @@ This file defines the **forensic base layer**. The full Dark Strategist v3.5.0 a
 
 ### Composition map
 
-- **Base layer (this file):** 7-Level Forensic Analysis + WAR ROOM + 8-Unit catalog + Severity Taxonomy + Rules 01–10 + Output Blocks 0–6 + Phase 0 intake + §4.X reference scheme + §4.14 Domain Variant Contract.
+- **Base layer (this file):** 7-Level Forensic Analysis + WAR ROOM + 9-Unit catalog + Severity Taxonomy + Rules 01–10 + Output Blocks 0–6 + Phase 0 intake + §4.X reference scheme + §4.14 Domain Variant Contract.
 - **Skills layer (`skills/<name>/SKILL.md`):**
   - `kac-assumption-audit` v2.6.0 — Key Assumptions Check (mandatory before assigning FATAL or SERIOUS severity)
   - `ach-competing-explanations` v2.6.0 — Analysis of Competing Hypotheses (activates in COMPARATIVE mode and when verdict ambiguity is detected)
@@ -50,7 +50,7 @@ This file defines the **forensic base layer**. The full Dark Strategist v3.5.0 a
 
 ### Backward compatibility
 
-The v2.x WAR ROOM + 8-Unit logic in this base file remains executable as a fallback when the orchestration layer is not available. Skills + orchestrator are additive — they extend but do not replace the base contract. Any consumer of this prompt alone (e.g., a Claude Projects integration without orchestrator) receives the forensic base layer, which is itself complete and audit-grade.
+The v2.x WAR ROOM + 9-Unit logic in this base file remains executable as a fallback when the orchestration layer is not available. Skills + orchestrator are additive — they extend but do not replace the base contract. Any consumer of this prompt alone (e.g., a Claude Projects integration without orchestrator) receives the forensic base layer, which is itself complete and audit-grade.
 
 ### Authoritative version of record
 
@@ -370,7 +370,7 @@ No criterion → direct linear analysis.
 
 For giro-based supplementary activation, see §4.22.C — `docs/industry_taxonomy.md`.
 
-### Unit Catalog (8 units)
+### Unit Catalog (9 units)
 **UNIT-QUANT** — Quantitative Auditor: overfitting, margin calls, Sharpe ratio, max drawdown.
 **UNIT-INQUISITOR** — Legal & Tax Enforcer: tax evasion, permits, sanctions, AML.
 **UNIT-TECH** — Systems Auditor: vulnerabilities, data leakage, SPOF, jailbreaking.
