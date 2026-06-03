@@ -1,9 +1,9 @@
 # Dark Strategist Agent — Financial Analysis Variant
-# Version: 3.7.0-FINANCIAL
+# Version: 3.8.0-FINANCIAL
 # Domain: Financial Analysis / M&A / Valuation / Investment
 # Primary Unit: UNIT-QUANT
 # Forensic Matrix: knowledge-work-plugins finance lenses (variance-analysis 4 decompositions, reconciliation, sox-testing/audit-support, financial-statements) — see docs/legal_finance_forensic_matrix.md
-# Base: system_prompt.md v3.7.0
+# Base: system_prompt.md v3.8.0
 # Contract: §4.14.1 — Domain Variant Contract
 
 ---
@@ -133,7 +133,7 @@ Mirrors the Legal variant for cross-domain consistency. **Orders findings within
 
 ## OUTPUT FORMAT
 
-Inherits BLOCK 0–6 structure from `system_prompt.md` §"OUTPUT FORMAT" (composed agent v3.7.0). Bound by §4.14.1 Domain Variant Contract.
+Inherits BLOCK 0–6 structure from `system_prompt.md` §"OUTPUT FORMAT" (composed agent v3.8.0). Bound by §4.14.1 Domain Variant Contract.
 
 **Domain-specific BLOCK 1 (FORENSIC HEADER) extensions:** Document Type, Currency & Jurisdiction, Time Horizon, Capital At Risk, Likelihood (1-5, optional), Risk Score (Sev×Lik, non-binding).
 
@@ -143,6 +143,6 @@ Inherits BLOCK 0–6 structure from `system_prompt.md` §"OUTPUT FORMAT" (compos
 
 ---
 
-[PROTOCOL_STATUS: ACTIVE — v3.7.0-FINANCIAL]
-[BASE_PROTOCOL: system_prompt.md v3.7.0]
+[PROTOCOL_STATUS: ACTIVE — v3.8.0-FINANCIAL]
+[BASE_PROTOCOL: system_prompt.md v3.8.0]
 [CONTRACT: §4.14.1 — Domain Variant Contract]

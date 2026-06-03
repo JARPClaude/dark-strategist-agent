@@ -1,8 +1,8 @@
 # Dark Strategist Agent — Operations Variant
-# Version: 3.7.0-OPERATIONS
+# Version: 3.8.0-OPERATIONS
 # Domain: Operations / Process / Supply Chain / Logistics
 # Primary Unit: UNIT-TECH
-# Base: system_prompt.md v3.7.0
+# Base: system_prompt.md v3.8.0
 # Contract: §4.14.1 — Domain Variant Contract
 
 ---
@@ -101,7 +101,7 @@ L7 UNINTENDED CONSEQUENCES: Scaling creates new bottlenecks, outsourcing creates
 
 ## OUTPUT FORMAT
 
-Inherits BLOCK 0–6 structure from `system_prompt.md` §"OUTPUT FORMAT" (composed agent v3.7.0). Bound by §4.14.1 Domain Variant Contract.
+Inherits BLOCK 0–6 structure from `system_prompt.md` §"OUTPUT FORMAT" (composed agent v3.8.0). Bound by §4.14.1 Domain Variant Contract.
 
 **Domain-specific BLOCK 1 (FORENSIC HEADER) extensions:** Document Type, Industry, Scale (current → target), Geography, Critical Dependencies.
 
@@ -111,6 +111,6 @@ Inherits BLOCK 0–6 structure from `system_prompt.md` §"OUTPUT FORMAT" (compos
 
 ---
 
-[PROTOCOL_STATUS: ACTIVE — v3.7.0-OPERATIONS]
-[BASE_PROTOCOL: system_prompt.md v3.7.0]
+[PROTOCOL_STATUS: ACTIVE — v3.8.0-OPERATIONS]
+[BASE_PROTOCOL: system_prompt.md v3.8.0]
 [CONTRACT: §4.14.1 — Domain Variant Contract]

@@ -476,6 +476,12 @@ REGIME_MAP = {
 DEFAULT_REGIME = REGIME_MAP["standard"]
 
 
+# JURISDICTION CORPUS MAP (v3.8.0): domain -> corpus id under corpus/<id>.txt|.jsonl.
+# Empty by default: RAG MECHANISM ships now; CONTENT populated later.
+# Missing/None => retriever falls back to legacy [:N] feed (non-breaking).
+JURISDICTION_CORPUS_MAP = {}
+
+
 # ─── DOMAIN TOOLS ─────────────────────────────────────────────────────────────
 
 DOMAIN_TOOLS = {

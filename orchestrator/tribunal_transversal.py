@@ -26,6 +26,7 @@ from sub_agent_spawner import SubAgentSpawner
 from notifier import SlackNotifier, GitHubNotifier
 from sheets_logger import SheetsLogger
 from ssm import SimulacionSocialMasiva
+from retriever import build_agent_context, load_corpus
 
 
 class TribunalTransversal:
@@ -53,6 +54,7 @@ class TribunalTransversal:
         Returns dict with final verdict, SSM report, and transparency report.
         """
         start_time = time.time()
+        self._active_corpus = load_corpus(getattr(ctx, "corpus", None))  #--- v3.8.0 RAG R2
         self._log(f"Tribunal Transversal initiated — {ctx.domain} / {ctx.subscenario}")
         self._log(f"Regime: {ctx.regime} | Tribunal: {ctx.tribunal_label}")
 
@@ -196,7 +198,7 @@ class TribunalTransversal:
                     # Spawn N2 sub-agents if needed
                     sub_agents = self.spawner.evaluate_and_spawn(
                         agent_id, str(result), document,
-                        {"domain": ctx.domain, "session_id": self.session_id}
+                        {"domain": ctx.domain, "session_id": self.session_id}, corpus=self._active_corpus
                     )
                     result["sub_agents_used"] = sub_agents
                     results.append(result)
@@ -280,6 +282,19 @@ class TribunalTransversal:
 
     # ─── Helpers ──────────────────────────────────────────────────────────────
 
+    def _agent_doc_context(self, document, query_text):
+        #--- v3.8.0: RAG-assisted feed; non-breaking fallback to [:N] inside.
+        rag = self.config.get("rag", {})
+        return build_agent_context(
+            document, query_text,
+            window=self.config.get("tribunal", {}).get("doc_window", 4000),
+            chunk_size=rag.get("chunk_size", 1000),
+            chunk_overlap=rag.get("chunk_overlap", 150),
+            doc_top_k=rag.get("doc_top_k", 6),
+            corpus=self._active_corpus,
+            corpus_top_k=rag.get("corpus_top_k", 3),
+        )
+
     def _call_agent(self, agent_id: str, agent_type: str, role: str,
                     prompt: str, document: str) -> dict:
         """Makes a single Claude API call for any agent type."""
@@ -292,7 +307,7 @@ class TribunalTransversal:
             max_tokens=self.config["anthropic"]["max_tokens"],
             system=prompt,
             messages=[{"role": "user",
-                        "content": f"Analyze this document:\n\n{document[:self.config.get('tribunal', {}).get('doc_window', 4000)]}"}]
+                        "content": f"Analyze this document:\n\n{self._agent_doc_context(document, role)}"}]
         )
         self.budget.record_call(agent_type.lower() if agent_type != "FORENSE" else "n1")
 
@@ -419,7 +434,7 @@ class TribunalTransversal:
 
         return f"""
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-DARK STRATEGIST v3.7.0 — TRANSPARENCY REPORT
+DARK STRATEGIST v3.8.0 — TRANSPARENCY REPORT
 Session: DS-{self.session_id} | Duration: {round(duration,1)}s
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 

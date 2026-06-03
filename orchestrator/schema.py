@@ -161,3 +161,6 @@ class RuntimeContext(BaseModel):
     # SSM configuration
     run_ssm: bool = False
     ssm_scale: str = Field(default="MESO")
+
+    # Jurisdictional corpus selector (v3.8.0) — resolved by ContextBuilder; None = no corpus
+    corpus: str | None = Field(default=None)

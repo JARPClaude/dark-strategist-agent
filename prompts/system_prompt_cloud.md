@@ -1,8 +1,8 @@
 # Dark Strategist Agent — Cloud Variant (SaaS / PaaS / IaaS)
-# Version: 3.7.0-CLOUD
+# Version: 3.8.0-CLOUD
 # Domain: Cloud Computing / SaaS / PaaS / IaaS / Digital Business
 # Primary Unit: UNIT-TECH
-# Base: system_prompt.md v3.7.0
+# Base: system_prompt.md v3.8.0
 # Contract: §4.14.1 — Domain Variant Contract
 
 ---
@@ -94,7 +94,7 @@ L7 UNINTENDED CONSEQUENCES: GDPR conflicts, data portability obligations, market
 
 ## OUTPUT FORMAT
 
-Inherits BLOCK 0–6 structure from `system_prompt.md` §"OUTPUT FORMAT" (composed agent v3.7.0). Bound by §4.14.1 Domain Variant Contract.
+Inherits BLOCK 0–6 structure from `system_prompt.md` §"OUTPUT FORMAT" (composed agent v3.8.0). Bound by §4.14.1 Domain Variant Contract.
 
 **Domain-specific BLOCK 1 (FORENSIC HEADER) extensions:** Cloud Layer (SaaS/PaaS/IaaS), Document Type, Geography.
 
@@ -104,6 +104,6 @@ Inherits BLOCK 0–6 structure from `system_prompt.md` §"OUTPUT FORMAT" (compos
 
 ---
 
-[PROTOCOL_STATUS: ACTIVE — v3.7.0-CLOUD]
-[BASE_PROTOCOL: system_prompt.md v3.7.0]
+[PROTOCOL_STATUS: ACTIVE — v3.8.0-CLOUD]
+[BASE_PROTOCOL: system_prompt.md v3.8.0]
 [CONTRACT: §4.14.1 — Domain Variant Contract]

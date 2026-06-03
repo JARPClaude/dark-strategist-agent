@@ -1,11 +1,11 @@
 # Dark Strategist Agent — System Prompt
-# Version: 3.7.0
+# Version: 3.8.0
 # Author: JARP
 # License: MIT — Open Source
 # Repository: https://github.com/JARPClaude/dark-strategist-agent
 # Usage: Paste into Claude Projects > Instructions, or use as system parameter via API
 # Language: English (system layer) | Spanish default for output
-# Changelog: v3.7.0 — context-degradation forensic lens (skill #6) into P04 Code + P07 Cybersecurity (five patterns, RULE C05/CY06, +10 Failure Catalog rows, AGENT_LLM_ARCHITECTURE taxonomy). v3.6.0 — legal+finance forensic matrix (Severity×Likelihood metadata non-binding, 4 variance decompositions, SOX deficiency severity scale, +18 catalog rows P03/P05). v3.5.0 — UNIT-INGEST (markitdown preproc) + UNIT-FACTCHECK (new permanent N2) + UNIT-PSYCH expanded to 80+ biases + stop-slop advisory prose scorer + lethal-trifecta P07 (RULE CY05). See CHANGELOG.md.
+# Changelog: v3.8.0 — RAG retrieval at document-feed layer (BM25 retriever: R1 intra-document relevance replaces blind doc_window truncation; R2 optional jurisdictional corpus injection; non-breaking [:N] fallback). v3.7.0 — context-degradation forensic lens (skill #6) into P04 Code + P07 Cybersecurity (five patterns, RULE C05/CY06, +10 Failure Catalog rows, AGENT_LLM_ARCHITECTURE taxonomy). v3.6.0 — legal+finance forensic matrix (Severity×Likelihood metadata non-binding, 4 variance decompositions, SOX deficiency severity scale, +18 catalog rows P03/P05). v3.5.0 — UNIT-INGEST (markitdown preproc) + UNIT-FACTCHECK (new permanent N2) + UNIT-PSYCH expanded to 80+ biases + stop-slop advisory prose scorer + lethal-trifecta P07 (RULE CY05). See CHANGELOG.md.
 
 ---
 
@@ -19,9 +19,9 @@ You have zero loyalty to any solution, proposal, plan, or argument. Your only st
 
 ---
 
-## ARCHITECTURAL LAYERS — v3.7.0
+## ARCHITECTURAL LAYERS — v3.8.0
 
-This file defines the **forensic base layer**. The full Dark Strategist v3.7.0 agent composes this base with additional orchestration and skill layers documented externally. The composed agent — not this file alone — is the deployed audit system.
+This file defines the **forensic base layer**. The full Dark Strategist v3.8.0 agent composes this base with additional orchestration and skill layers documented externally. The composed agent — not this file alone — is the deployed audit system.
 
 ### Composition map
 
@@ -38,7 +38,7 @@ This file defines the **forensic base layer**. The full Dark Strategist v3.7.0 a
   - `catalogs.py` — ROLE_CATALOG, SSM_CATALOG, DOMAIN_MAP, DOMAIN_TOOLS, SKILLS_CATALOG
   - `tribunal_transversal.py` (v3.0+) — two-layer Tribunal Transversal orchestrator; synthesis runs in `_synthesize` with a deterministic fallback (the standalone v2.x `tribunal.py` / `verdict_synthesizer.py` modules were removed in v3.4.0)
 - **Domain layer (`prompts/system_prompt_<domain>.md`):**
-  - 19 specialized prompts (P02–P20) routed via `system_prompt_router.md` v3.7.0-ROUTER, governed by §4.14 Domain Variant Contract
+  - 19 specialized prompts (P02–P20) routed via `system_prompt_router.md` v3.8.0-ROUTER, governed by §4.14 Domain Variant Contract
   - P01 General = this file (fallback for unknown / multi-domain documents)
 - **Default model:** `claude-opus-4-7`
 
@@ -437,7 +437,7 @@ Where `vX.Y.Z-DOMAIN` is the variant's own version and `vA.B.C` is the current c
 Obsolete when: (A) superior version published, (B) model capability change, (C) uncovered critical domain, (D) unresolvable self-audit FATAL.
 
 ```
-[PROTOCOL_STATUS: ACTIVE — v3.7.0]
+[PROTOCOL_STATUS: ACTIVE — v3.8.0]
 [ARCHITECTURE: COMPOSED — base + skills + orchestrator + 19 domain variants (Contract §4.14.1)]
 [DEFAULT_MODEL: claude-opus-4-7]
 [DEPRECATION_CONDITIONS: A | B | C | D]

@@ -4,7 +4,7 @@ Builds and validates the RuntimeContext object for each case.
 Replaces manual flag passing with a structured, validated context.
 """
 
-from catalogs import ROLE_CATALOG, SSM_CATALOG, DOMAIN_MAP, REGIME_MAP, DEFAULT_REGIME
+from catalogs import ROLE_CATALOG, SSM_CATALOG, DOMAIN_MAP, REGIME_MAP, DEFAULT_REGIME, JURISDICTION_CORPUS_MAP
 from schema import RuntimeContext
 
 
@@ -97,6 +97,7 @@ class ContextBuilder:
             tools=tools,
             run_ssm=case.get("run_ssm", False),
             ssm_scale=case.get("ssm_scale", "MESO"),
+            corpus=JURISDICTION_CORPUS_MAP.get(domain),
         )
 
     def _resolve_domain(self, doc_type: str, subscenario: str) -> str:

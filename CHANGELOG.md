@@ -5,6 +5,28 @@ Format: [VERSION] — DATE — Description
 
 ---
 
+## [3.8.0] — 2026-06-03
+
+### Added — RAG retrieval at the document-feed layer (roadmap TOP-7: infinity->RAG, re-scoped)
+- New `orchestrator/retriever.py`: lexical BM25 retriever (`rank_bm25`, pure Python + numpy — no model, no API, no daemon, no Docker). Two jobs, both at the document-feed layer:
+  - R1 intra-document: replaces the blind `document[:doc_window]` truncation in the tribunal (`_call_agent`) and sub-agent spawner with role-relevant chunk retrieval, so long documents no longer silently lose everything past the window.
+  - R2 jurisdictional corpus: optional injection of relevant local-corpus passages, selected per resolved domain via `JURISDICTION_CORPUS_MAP` (`catalogs.py`) and loaded from `corpus/<id>.txt|.jsonl`. Ships EMPTY (mechanism now, content later).
+- New `corpus/` directory (README + .gitkeep) for jurisdictional corpora.
+- `RuntimeContext.corpus` selector field, resolved by `ContextBuilder`.
+- Config: `rag` block + `tribunal.parent_report_window` in `config.example.json` and the `main.py` runtime default. Config-izes the previously hardcoded `parent_report[:1000]` cut (closes the "windows-by-config" inconsistency).
+
+### Architecture (re-scope vs roadmap)
+- The roadmap premise "RAG jurisdictional in ContextBuilder" was corrected against the live code: `ContextBuilder` is document-free, so it only SELECTS the corpus; retrieval + injection live at the document-feed layer. `infinity`/Docker rejected as overkill for single-document forensic audits — embedded BM25 keeps the agent zero-infra.
+
+### Non-breaking guarantee
+- Strictly additive: if a document fits the window AND no corpus is mapped, OR `rank_bm25` is unavailable, the legacy `[:N]` feed is preserved byte-for-byte. Only long documents / mapped corpora activate retrieval.
+
+### Dependencies
+- `+ rank_bm25>=0.2.2` (orchestrator/requirements.txt).
+
+### Versioning
+- Atomic §4.14.1 bump: base + router + 19 domain variants + orchestrator product-face -> v3.8.0. Module docstrings and skills unchanged (content-based). Skill count unchanged (6).
+
 ## [3.7.0] — 2026-06-02
 
 ### Added — Context Degradation forensic lens (roadmap TOP-7 item #6)

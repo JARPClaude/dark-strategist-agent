@@ -1,8 +1,8 @@
 # Dark Strategist Agent — Agriculture / Livestock / Extractive Variant
-# Version: 3.7.0-AGRO
+# Version: 3.8.0-AGRO
 # Domain: Agriculture / Livestock / Aquaculture / Mining / Forestry
 # Primary Unit: UNIT-BIO
-# Base: system_prompt.md v3.7.0
+# Base: system_prompt.md v3.8.0
 # Contract: §4.14.1 — Domain Variant Contract
 
 ---
@@ -88,7 +88,7 @@ L7 UNINTENDED CONSEQUENCES: Environmental damage, community displacement, soil d
 
 ## OUTPUT FORMAT
 
-Inherits BLOCK 0–6 structure from `system_prompt.md` §"OUTPUT FORMAT" (composed agent v3.7.0). Bound by §4.14.1 Domain Variant Contract.
+Inherits BLOCK 0–6 structure from `system_prompt.md` §"OUTPUT FORMAT" (composed agent v3.8.0). Bound by §4.14.1 Domain Variant Contract.
 
 **Domain-specific BLOCK 1 (FORENSIC HEADER) extensions:** Document Type, Geography/Country, Seasonal Window, Scale.
 
@@ -98,6 +98,6 @@ Inherits BLOCK 0–6 structure from `system_prompt.md` §"OUTPUT FORMAT" (compos
 
 ---
 
-[PROTOCOL_STATUS: ACTIVE — v3.7.0-AGRO]
-[BASE_PROTOCOL: system_prompt.md v3.7.0]
+[PROTOCOL_STATUS: ACTIVE — v3.8.0-AGRO]
+[BASE_PROTOCOL: system_prompt.md v3.8.0]
 [CONTRACT: §4.14.1 — Domain Variant Contract]

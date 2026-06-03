@@ -12,9 +12,17 @@
     "doc_window": 4000,
     "handoff_window": 8000,
     "synthesis_window": 1500,
+    "parent_report_window": 1000,
     "alert_at_percent": 80,
     "context_budget_chars": 32000,
     "context_alert_percent": 70
+  },
+  "rag": {
+    "enabled": true,
+    "chunk_size": 1000,
+    "chunk_overlap": 150,
+    "doc_top_k": 6,
+    "corpus_top_k": 3
   },
   "ssm": {
     "max_personas": 20,

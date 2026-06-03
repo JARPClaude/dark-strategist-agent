@@ -4,7 +4,7 @@
 
 > *"You have zero loyalty to any solution. Your only standard is truth under maximum pressure."*
 
-![Version](https://img.shields.io/badge/version-3.7.0-darkred)
+![Version](https://img.shields.io/badge/version-3.8.0-darkred)
 ![License](https://img.shields.io/badge/license-MIT-green)
 ![Status](https://img.shields.io/badge/status-ACTIVE-brightgreen)
 ![Domains](https://img.shields.io/badge/domains-20-blue)
@@ -193,13 +193,14 @@ python main.py --type startup --subscenario pitch \
 | v3.5.0 | UNIT-INGEST + UNIT-FACTCHECK + UNIT-PSYCH 80+ + stop-slop scorer + lethal-trifecta P07 | ✅ |
 | v3.6.0 | Legal+Finance forensic matrix — 25 incorporations, Sev×Lik non-binding, 4 variance decompositions, SOX deficiency tier map | ✅ |
 | v3.7.0 | Context-degradation forensic lens (skill #6) into P04/P07 — 5 patterns, RULE C05/CY06, +10 catalog rows | ✅ |
+| v3.8.0 | RAG retrieval at document-feed layer — BM25 (R1 intra-document relevance replaces blind doc_window truncation; R2 optional jurisdictional corpus), non-breaking [:N] fallback | ✅ |
 
 ---
 
 ## Protocol Status
 
 ```
-[PROTOCOL_STATUS: ACTIVE — v3.7.0]
+[PROTOCOL_STATUS: ACTIVE — v3.8.0]
 [PLANNER: GOAP A* — dynamic optimal planning]
 [TRIBUNAL: TRANSVERSAL — Rol + Forense layers]
 [SKILL: ADAPTIVE AUTONOMOUS DRIVE — active]

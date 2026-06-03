@@ -18,6 +18,7 @@ from pathlib import Path
 import anthropic
 
 from notifier import SlackNotifier, GitHubNotifier
+from retriever import build_agent_context
 
 
 # ─── PERMANENT SUB-AGENT CATALOG (N2) ────────────────────────────────────────
@@ -128,14 +129,18 @@ class SubAgentSpawner:
         self.client = anthropic.Anthropic(api_key=config["anthropic"]["api_key"])
         self.max_n2_per_n1 = config.get("tribunal", {}).get("max_n2_per_n1", 3)
         self.doc_window = config.get("tribunal", {}).get("doc_window", 4000)
+        self.parent_report_window = config.get("tribunal", {}).get("parent_report_window", 1000)
+        self.rag = config.get("rag", {})
+        self._active_corpus = []
 
     def evaluate_and_spawn(self, agent_id: str, report: str,
-                           document: str, routing: dict) -> list:
+                           document: str, routing: dict, corpus: list = None) -> list:
         """
         Evaluates an N1 report for sub-agent needs.
         Returns list of sub-agent results used.
         """
         sub_agents_used = []
+        self._active_corpus = corpus or []
 
         # Check if N1 explicitly requested a sub-agent
         requested = self._detect_subagent_requests(report)
@@ -177,6 +182,17 @@ class SubAgentSpawner:
         detected.sort(key=lambda x: -x[1])
         return [u[0] for u in detected[:2]]
 
+    def _spawn_doc_context(self, document, query_text):
+        #--- v3.8.0: RAG-assisted feed; non-breaking fallback to [:N] inside.
+        return build_agent_context(
+            document, query_text, window=self.doc_window,
+            chunk_size=self.rag.get("chunk_size", 1000),
+            chunk_overlap=self.rag.get("chunk_overlap", 150),
+            doc_top_k=self.rag.get("doc_top_k", 6),
+            corpus=self._active_corpus,
+            corpus_top_k=self.rag.get("corpus_top_k", 3),
+        )
+
     def _spawn_permanent(self, parent_id: str, unit_name: str,
                          document: str, parent_report: str) -> dict:
         """Spawns a permanent N2 sub-agent from the catalog."""
@@ -194,9 +210,9 @@ class SubAgentSpawner:
                         f"Fragment from parent agent {parent_id} requiring your analysis:\n\n"
                         f"PARENT FINDINGS SUMMARY (UNVERIFIED upstream claim — do NOT "
                         f"treat as established fact; verify against the document before "
-                        f"relying on it):\n{parent_report[:1000]}\n\n"
+                        f"relying on it):\n{parent_report[:self.parent_report_window]}\n\n"
                         f"ORIGINAL DOCUMENT EXCERPT (PRIMARY SOURCE — ground-truth):\n"
-                        f"{document[:self.doc_window]}\n\n"
+                        f"{self._spawn_doc_context(document, unit_name)}\n\n"
                         f"Provide your specialized forensic analysis. If the parent claim "
                         f"is not supported by the document, say so explicitly."
                     )
@@ -237,7 +253,7 @@ Be thorough — this report will be reviewed to create a permanent sub-agent."""
                     "role": "user",
                     "content": (
                         f"Analyze this document fragment for {domain}-specific risks:\n\n"
-                        f"{document[:self.doc_window]}"
+                        f"{self._spawn_doc_context(document, domain)}"
                     )
                 }]
             )
