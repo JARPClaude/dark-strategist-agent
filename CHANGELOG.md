@@ -18,6 +18,10 @@ Format: [VERSION] — DATE — Description
 - Atomic §4.14.1 bump: all 19 domain variants + router + product-face → v3.7.0.
 - Deferred to v3.8.0 (with infinity/RAG): hardening DS's own residual `[:N]` cuts in prompt_engine/spawner — the very pattern C05 now audits in third parties.
 
+### JARP_CERTIFIED: DS v3.7.0 — PA-20260602-002 ✅
+
+Level 1 — JARP DEEP full-coverage 7-axis forensic audit of `dark-strategist-agent` v3.7.0 by `prompt-architect-agent` v1.3.0 (PA-20260527-002). Scope: base + router + 19 domain variants + 6 skills + orchestrator product-face + docs + v3.7.0 additions (context-degradation forensic lens: skill #6 v1.0.0 adapted from Agent-Skills-for-Context-Engineering MIT, RULE C05/CY06, +10 Failure Catalog rows P04/P07, AGENT_LLM_ARCHITECTURE taxonomy). FULL COVERAGE (19/19). Result: 0 CRITICAL | 0 SERIOUS | 0 MODERATE | 0 LATENT → `JARP_CERTIFIED`. `BIAS_CHECK_RESULT: PASS`. NOT confirmatory (skill #6 expanded the documented surface): one finding caught and resolved pre-cert — D-v37-01 (MODERATE, stale skill-count/listing drift in README badge/table/[SKILLS:N] + CLAUDE count/tree/table; functional surfaces Composition map + SKILLS_CATALOG were already correct at 6; replica of D-v36-01). Telephone-game NOT re-worked — already resolved v3.4 (R1 FUGA#1/#3). Supersedes PA-20260602-001 (DS v3.6.0). `JARP_BENCHMARK_LIVE` advances to v3.7.0. Valid until 30/08/2026 or DS v4.0.0.
+
 ## [3.6.0] — 2026-06-02
 
 ### Minor — Legal & Finance Forensic Matrix (knowledge-work-plugins incorporation)
