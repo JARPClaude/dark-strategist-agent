@@ -27,6 +27,10 @@ Format: [VERSION] — DATE — Description
 ### Versioning
 - Atomic §4.14.1 bump: base + router + 19 domain variants + orchestrator product-face -> v3.8.0. Module docstrings and skills unchanged (content-based). Skill count unchanged (6).
 
+### JARP_CERTIFIED: DS v3.8.0 — PA-20260603-002 ✅
+
+Level 1 — JARP DEEP delta-coverage 7-axis forensic audit of `dark-strategist-agent` v3.8.0 by `prompt-architect-agent` v1.3.0 (PA-20260527-002), over the v3.7.0 full-coverage baseline (19/19 unchanged). Scope: v3.8.0 delta — `orchestrator/retriever.py` (BM25; R1 intra-document + R2 jurisdictional corpus), tribunal/spawner document-feed integration, `RuntimeContext.corpus` + `JURISDICTION_CORPUS_MAP`, config (`rag` block + `parent_report_window`), dual-version barrido (base + router + 19 variants + product-face), docs. RULE 08 self-audit L0 (PA-20260603-001) PASS first. Functional evidence: retriever unit 12/12 + runtime integration test (module graph imports, `ctx.corpus` resolves, RAG helpers execute without API, byte-identical fallback, long-doc clause retrieval). Result: 0 CRITICAL | 0 SERIOUS | 0 MODERATE | 1 LATENT (accepted) → `JARP_CERTIFIED`. `BIAS_CHECK_RESULT: PASS`. LATENT D-v38-01: `doc_top_k` default skew (retriever signature 5 vs config/orchestrator 6) — non-functional (config authoritative), accepted, align on next retriever touch. infinity/Docker rejected (overkill for single-document forensic audit; embedded BM25 keeps zero-infra). RAG re-scoped: ContextBuilder is document-free → selects corpus only; retrieval at the document-feed layer. Supersedes PA-20260602-002 (DS v3.7.0). `JARP_BENCHMARK_LIVE` advances to v3.8.0. Valid until 30/08/2026 or DS v4.0.0.
+
 ## [3.7.0] — 2026-06-02
 
 ### Added — Context Degradation forensic lens (roadmap TOP-7 item #6)
