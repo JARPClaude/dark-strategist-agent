@@ -26,7 +26,7 @@ THE SOVEREIGN ADVERSARY is an AI agent that **systematically destroys** any solu
 
 ---
 
-### Foundational Feature Set (v3.0-v3.2; see Version History below for v3.3 onward)
+### Full Feature Set
 
 | Feature | Status |
 |---|---|
@@ -42,6 +42,12 @@ THE SOVEREIGN ADVERSARY is an AI agent that **systematically destroys** any solu
 | **Human Resources domain (P18)** | ✅ **v3.2** |
 | **Strategy domain (P19)** | ✅ **v3.2** |
 | **Startup domain (P20)** | ✅ **v3.2** |
+| Forensic units (INGEST / FACTCHECK / PSYCH) + stop-slop scorer | ✅ v3.5 |
+| Legal + Finance forensic matrix (Sev×Lik non-binding, SOX tier map, 4 variance lenses) | ✅ v3.6 |
+| Context-degradation forensic lens (skill #6) | ✅ v3.7 |
+| RAG document-feed — BM25 (R1 intra-document + R2 corpus), non-breaking [:N] fallback | ✅ v3.8 |
+| Interactive Wizard CLI (guided flag builder) | ✅ v3.9 |
+| BYO per-case reference corpus (`--corpus`, any jurisdiction) + R2 token-overlap floor | ✅ v3.10 |
 
 ---
 
