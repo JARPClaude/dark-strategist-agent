@@ -1,5 +1,5 @@
 """
-Dark Strategist v3.9.0 — Interactive Wizard
+Dark Strategist v3.10.0 — Interactive Wizard
 Guided CLI for non-technical users. Walks the operator through domain, subscenario,
 objective, regime, Tribunal and SSM, then SYNTHESIZES the exact argv that main.py
 already understands. The wizard never re-implements pipeline logic: it builds the
@@ -71,6 +71,7 @@ def build_command(answers: dict) -> list:
       objective (str, required)   regime (str, required)
       tribunal (bool)             agents (int|None)  -> None = auto-size
       ssm (bool)                  ssm_scale (str)
+      corpus (list[str]|None)     -> BYO per-case reference file paths (optional)
     """
     args = [
         "--type", answers["type"],
@@ -86,6 +87,10 @@ def build_command(answers: dict) -> list:
     if answers.get("ssm"):
         args.append("--ssm")
         args += ["--ssm-scale", answers.get("ssm_scale", "MESO")]
+    corpus = answers.get("corpus") or []
+    if corpus:
+        args.append("--corpus")
+        args += [str(p) for p in corpus]  #--- BYO per-case reference texts (any jurisdiction)
     return args
 
 
@@ -141,7 +146,7 @@ def _ask_text(question: str, default: str | None = None) -> str:
 def run_wizard() -> tuple:
     """Drives the interactive flow. Returns (argv_list, should_run)."""
     print("=" * 60)
-    print("DARK STRATEGIST v3.9.0 — INTERACTIVE WIZARD")
+    print("DARK STRATEGIST v3.10.0 — INTERACTIVE WIZARD")
     print("Answer the prompts; I'll build the command for you.")
     print("=" * 60)
 
@@ -185,10 +190,20 @@ def run_wizard() -> tuple:
         sc_idx = _ask_choice("SSM SCALE:", SSM_SCALES, default_index=1)
         ssm_scale = SSM_SCALES[sc_idx]
 
+    #--- 7. BYO per-case reference corpus (optional; any jurisdiction)
+    corpus = []
+    if _ask_yes_no("Attach reference texts (laws/standards) for grounding?", default=False):
+        print("  Enter file paths one per line (.jsonl/.txt/.md or PDF/DOCX). Blank to finish.")
+        while True:
+            p = input("  path: ").strip()
+            if not p:
+                break
+            corpus.append(p)
+
     answers = {
         "type": type_token, "subscenario": subscenario, "objective": objective,
         "regime": regime, "tribunal": tribunal, "agents": agents,
-        "ssm": ssm, "ssm_scale": ssm_scale,
+        "ssm": ssm, "ssm_scale": ssm_scale, "corpus": corpus,
     }
     argv = build_command(answers)
 

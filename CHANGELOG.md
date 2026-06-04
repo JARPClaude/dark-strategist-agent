@@ -5,6 +5,33 @@ Format: [VERSION] — DATE — Description
 
 ---
 
+## [3.10.0] — 2026-06-03
+
+### Added — BYO per-case reference corpus (roadmap: corpus R2, re-scoped)
+- Re-scoped corpus R2 from "pre-load laws per jurisdiction" (does not scale) to a BYO per-case mechanism. The repo holds no laws; the operator attaches reference texts for their own case via `--corpus`.
+- `orchestrator/retriever.py`: new `load_corpus_files(paths)` — loads `.jsonl/.txt/.md` directly and PDF/DOCX/PPTX/XLSX/HTML via UNIT-INGEST (markitdown, lazy) + chunk. Any jurisdiction; nothing pre-loaded.
+- `orchestrator/main.py`: new `--corpus <path...>` flag (nargs) wired into both case dicts via `corpus_paths`.
+- `orchestrator/wizard.py`: optional step 7 "Attach reference texts?" → synthesizes `--corpus`, delegates to the same parser (s23 pattern).
+- `orchestrator/{schema,context_builder,tribunal_transversal}.py`: additive `corpus_paths` + passthrough + BYO branch (`load_corpus_files` if BYO, else `load_corpus(ctx.corpus)` map fallback; empty -> no-op). `JURISDICTION_CORPUS_MAP` stays `{}` (optional hook).
+
+### Changed — R2 relevance floor (anti-noise)
+- R2 floor switched from BM25-score to TOKEN-OVERLAP (`query(..., drop_zero_overlap=True)`). A score floor false-negatives on tiny corpora (BM25 IDF=0 for relevant terms); overlap is robust to corpus size. R1 path unchanged (default `False`, byte-identical).
+
+### Dependencies
+- `+ pydantic>=2.0.0` (orchestrator/requirements.txt) — was transitive via anthropic; now declared (closes pre-existing LATENT).
+
+### Versioning
+- Atomic §4.14.1 bump: base + router + 19 domain variants + README + CLAUDE product-face -> v3.10.0 (23 files, 69 stamp lines). No prompt/skill CONTENT changed; no roster/verdict-logic change. Skills 6, domains 20 (unchanged).
+
+### Non-forensic guarantee
+- v3.10.0 touches the orchestrator feed-layer only. Forensic surface (19 variants + 6 skills + base + router CONTENT) byte-identical except stamps. "corpus R2" roadmap item CLOSED as a MECHANISM (BYO operator input), not repo-curated data.
+
+### JARP_CERTIFIED: DS v3.10.0 — PA-20260603-006 ✅
+
+Level 1 — JARP DEEP delta-coverage 7-axis forensic audit of `dark-strategist-agent` v3.10.0 by `prompt-architect-agent` v1.3.0 (PA-20260527-002), over the v3.9.0 baseline (19/19 unchanged). Scope: v3.10.0 delta — BYO per-case corpus (`--corpus`, `load_corpus_files`, wizard step 7, `corpus_paths`), R2 token-overlap floor, `pydantic>=2.0.0`, atomic §4.14.1 barrido (23 files, 69 lines). RULE 08 self-audit L0 (PA-20260603-005) PASS first. Functional evidence on the real machine: `test_wizard.py` 7/7 + `smoke_test_e2e.py` OFFLINE GREEN (0 FAIL, 1 SKIP = `b_unified_output`, non-blocking) + `byo_check.py` GREEN (BYO loader + R2 injection + overlap-floor noise rejection + byte-identical legacy, live BM25, no key). One robustness defect caught/fixed pre-cert — initial BM25-score floor false-negatived on tiny corpora (IDF=0); switched to token-overlap. Result: 0 CRITICAL | 0 SERIOUS | 0 MODERATE | 0 LATENT -> `JARP_CERTIFIED`. `BIAS_CHECK_RESULT: PASS`. Non-forensic feed-layer bump. Supersedes PA-20260603-004 (DS v3.9.0). `JARP_BENCHMARK_LIVE` advances to v3.10.0. Valid until 03/09/2026 or DS v4.0.0.
+
+---
+
 ## [3.9.0] — 2026-06-03
 
 ### Added — Interactive Wizard CLI (roadmap v3.9.0)

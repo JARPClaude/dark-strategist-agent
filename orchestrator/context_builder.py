@@ -98,6 +98,7 @@ class ContextBuilder:
             run_ssm=case.get("run_ssm", False),
             ssm_scale=case.get("ssm_scale", "MESO"),
             corpus=JURISDICTION_CORPUS_MAP.get(domain),
+            corpus_paths=case.get("corpus_paths"),
         )
 
     def _resolve_domain(self, doc_type: str, subscenario: str) -> str:

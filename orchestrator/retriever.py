@@ -1,8 +1,13 @@
 """
-Dark Strategist v3.8.0 — Retriever
+Dark Strategist v3.10.0 — Retriever
 Lexical (BM25) retrieval at the document-feed layer. Two jobs:
   R1 intra-document: replace blind document[:N] truncation with role-relevant chunks.
-  R2 jurisdictional corpus: inject relevant local-corpus passages (optional; empty -> no-op).
+  R2 reference corpus: inject relevant reference passages (optional; empty -> no-op).
+        v3.10.0: BYO per-case corpus (load_corpus_files) + R2 token-overlap
+        floor so zero-overlap passages are never injected as grounding. The floor
+        is overlap-based (NOT BM25-score-based): on tiny BYO corpora BM25 IDF can
+        be 0 for genuinely relevant terms, so a score floor would drop valid
+        grounding; token overlap is robust to corpus size.
 
 Pure Python + numpy via rank_bm25. No model, no API, no daemon, no native extension.
 STRICTLY ADDITIVE: if the document fits the window and there is no corpus, OR retrieval
@@ -65,15 +70,22 @@ class Retriever:
     def available(self):
         return self._bm25 is not None
 
-    def query(self, text, top_k=5):
+    def query(self, text, top_k=5, drop_zero_overlap=False):
+        #--- drop_zero_overlap=False -> R1 behavior unchanged, byte-identical.
+        #--- True -> drop passages that share NO token with the query (pure noise).
+        #--- Overlap-based, not score-based: BM25 IDF can be 0 for relevant terms
+        #--- on tiny corpora, so a score floor yields false negatives; overlap does not.
         if not self.available or top_k <= 0:
             return []
         q = _tokenize(text)
         if not q:
             return self.passages[:top_k]
         scores = self._bm25.get_scores(q)
-        ranked = sorted(range(len(self.passages)), key=lambda i: -scores[i])
-        return [self.passages[i] for i in ranked[:top_k]]
+        ranked = sorted(range(len(self.passages)), key=lambda i: -scores[i])[:top_k]
+        if drop_zero_overlap:
+            qset = set(q)
+            ranked = [i for i in ranked if qset & set(_tokenize(self.passages[i]))]
+        return [self.passages[i] for i in ranked]
 
 
 def load_corpus(corpus_id, base_dir="corpus"):
@@ -103,6 +115,55 @@ def load_corpus(corpus_id, base_dir="corpus"):
             except Exception:
                 return []
     return []
+
+
+def load_corpus_files(paths, *, chunk_size=1000, chunk_overlap=150):
+    """BYO per-case corpus: load arbitrary reference files into a passage list.
+
+    Accepts a single path or a list. .jsonl/.txt parse as passages directly;
+    other types (PDF/DOCX/PPTX/XLSX/HTML/MD/...) are converted to text via
+    UNIT-INGEST (markitdown, lazy import) and chunked. Missing/unreadable files
+    are skipped silently so the pipeline is never starved. Empty/None -> [].
+    """
+    if not paths:
+        return []
+    if isinstance(paths, str):
+        paths = [paths]
+    out = []
+    for raw in paths:
+        if not raw:
+            continue
+        path = str(raw)
+        if not os.path.exists(path):
+            continue
+        ext = os.path.splitext(path)[1].lower()
+        try:
+            if ext == ".jsonl":
+                with open(path, encoding="utf-8") as f:
+                    for line in f:
+                        line = line.strip()
+                        if not line:
+                            continue
+                        try:
+                            obj = json.loads(line)
+                            out.append(obj.get("text", "") if isinstance(obj, dict) else str(obj))
+                        except Exception:
+                            out.append(line)
+            elif ext == ".txt":
+                with open(path, encoding="utf-8") as f:
+                    out.extend(p.strip() for p in f.read().split("\n\n"))
+            else:
+                #--- binary/markup -> UNIT-INGEST (markitdown) -> chunk.
+                try:
+                    from ingest import ingest_document
+                    text = ingest_document(path)
+                except Exception:
+                    with open(path, encoding="utf-8", errors="replace") as f:
+                        text = f.read()
+                out.extend(chunk(text, chunk_size, chunk_overlap))
+        except Exception:
+            continue
+    return [p for p in out if p and p.strip()]
 
 
 def build_agent_context(document, query_text, *, window,
@@ -141,7 +202,7 @@ def build_agent_context(document, query_text, *, window,
 
     if has_corpus and budget > 200:
         cr = Retriever(corpus)
-        cps = cr.query(query_text or document[:500], corpus_top_k) if cr.available else []
+        cps = cr.query(query_text or document[:500], corpus_top_k, drop_zero_overlap=True) if cr.available else []
         if cps:
             block = "\n\n[JURISDICTIONAL CORPUS - REFERENCE GROUNDING]\n" + "\n\n".join(cps)
             parts.append(block[:budget])

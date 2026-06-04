@@ -26,7 +26,7 @@ from sub_agent_spawner import SubAgentSpawner
 from notifier import SlackNotifier, GitHubNotifier
 from sheets_logger import SheetsLogger
 from ssm import SimulacionSocialMasiva
-from retriever import build_agent_context, load_corpus
+from retriever import build_agent_context, load_corpus, load_corpus_files
 
 
 class TribunalTransversal:
@@ -54,7 +54,10 @@ class TribunalTransversal:
         Returns dict with final verdict, SSM report, and transparency report.
         """
         start_time = time.time()
-        self._active_corpus = load_corpus(getattr(ctx, "corpus", None))  #--- v3.8.0 RAG R2
+        #--- v3.10.0: BYO per-case corpus overrides; v3.8.0 map gancho is fallback (empty -> no-op).
+        _byo = getattr(ctx, "corpus_paths", None)
+        self._active_corpus = (load_corpus_files(_byo) if _byo
+                               else load_corpus(getattr(ctx, "corpus", None)))
         self._log(f"Tribunal Transversal initiated — {ctx.domain} / {ctx.subscenario}")
         self._log(f"Regime: {ctx.regime} | Tribunal: {ctx.tribunal_label}")
 

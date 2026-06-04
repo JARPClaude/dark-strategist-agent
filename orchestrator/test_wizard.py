@@ -1,5 +1,5 @@
 """
-Dark Strategist v3.9.0 — Wizard unit test
+Dark Strategist v3.10.0 — Wizard unit test
 Covers the pure build_command() contract (no stdin/IO). Run: python test_wizard.py
 """
 from wizard import build_command, format_command, AGENT_SIZES
@@ -62,6 +62,33 @@ def test_invalid_agents_omitted():
     print("[PASS] invalid agents size (4) omitted -> auto")
 
 
+def test_byo_corpus_appended():
+    answers = {
+        "type": "legal", "subscenario": "lease",
+        "objective": "identify risks", "regime": "adversarial",
+        "tribunal": True, "agents": None, "ssm": False, "ssm_scale": "MESO",
+        "corpus": ["laws/cc_peru.pdf", "laws/ley29733.txt"],
+    }
+    _check("BYO corpus appended after flags", build_command(answers), [
+        "--type", "legal", "--subscenario", "lease",
+        "--objective", "identify risks", "--regime", "adversarial",
+        "--tribunal",
+        "--corpus", "laws/cc_peru.pdf", "laws/ley29733.txt",
+    ])
+
+
+def test_no_corpus_omits_flag():
+    answers = {
+        "type": "general", "subscenario": "case",
+        "objective": "identify risks and failure modes", "regime": "standard",
+        "tribunal": False, "agents": None, "ssm": False, "ssm_scale": "MESO",
+        "corpus": [],
+    }
+    out = build_command(answers)
+    assert "--corpus" not in out, f"[FAIL] empty corpus must omit --corpus: {out}"
+    print("[PASS] empty corpus omits --corpus")
+
+
 def test_format_command_quotes_spaces():
     argv = ["--type", "legal", "--objective", "identify risks"]
     _check("format quotes tokens with spaces", format_command(argv),
@@ -73,5 +100,7 @@ if __name__ == "__main__":
     test_trading_full_pipeline()
     test_tribunal_auto_size_omits_agents()
     test_invalid_agents_omitted()
+    test_byo_corpus_appended()
+    test_no_corpus_omits_flag()
     test_format_command_quotes_spaces()
-    print("\n[OK] wizard unit suite: 5/5 passed")
+    print("\n[OK] wizard unit suite: 7/7 passed")

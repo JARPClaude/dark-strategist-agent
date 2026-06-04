@@ -1,9 +1,9 @@
 """
-Dark Strategist Agent v3.9.0 — Main Entry Point
+Dark Strategist Agent v3.10.0 — Main Entry Point
 Tribunal Transversal + Dynamic Prompts + Structured Output
 
 Usage:
-    # Interactive wizard (v3.9.0 — recommended for non-technical operators)
+    # Interactive wizard (v3.10.0 — recommended for non-technical operators)
     python main.py --wizard
 
     # Case-based (v3.0)
@@ -20,6 +20,9 @@ Usage:
 
     # Document-based (v2.x compatibility)
     python main.py --document doc.txt --tribunal --ssm
+
+    # With BYO per-case reference corpus (any jurisdiction; PDF/DOCX/TXT/JSONL)
+    python main.py --type legal --subscenario lease --objective "identify risks" --tribunal --corpus laws/cc_peru.pdf laws/ley29733.txt
 
     # Domain expansion report
     python main.py --report
@@ -120,7 +123,7 @@ def calculate_tribunal_size(tribunal: bool, agents: int) -> tuple:
 
 def main():
     parser = argparse.ArgumentParser(
-        description="Dark Strategist Agent v3.9.0 — Tribunal Transversal"
+        description="Dark Strategist Agent v3.10.0 — Tribunal Transversal"
     )
 
     # Case-based args (v3.0 — recommended)
@@ -138,6 +141,12 @@ def main():
     # Document-based args (v2.x compatibility)
     parser.add_argument("--document", type=str,
                         help="Path to document file (v2.x compatibility mode)")
+
+    # BYO per-case reference corpus (v3.10.0) — operator-supplied jurisdiction/reference texts
+    parser.add_argument("--corpus", type=str, nargs="*", default=None,
+                        help="Reference corpus file(s) for R2 grounding "
+                             "(.jsonl/.txt/.md or PDF/DOCX/PPTX/XLSX/HTML via markitdown). "
+                             "Any jurisdiction; nothing is pre-loaded.")
 
     # Tribunal args
     parser.add_argument("--tribunal", action="store_true",
@@ -188,6 +197,7 @@ def main():
             "regime": args.regime,
             "run_ssm": args.ssm,
             "ssm_scale": args.ssm_scale,
+            "corpus_paths": args.corpus,
         }
         document = f"[Document type: {args.type} | Subscenario: {args.subscenario}]"
     elif args.document:
@@ -206,6 +216,7 @@ def main():
             "regime": args.regime,
             "run_ssm": args.ssm,
             "ssm_scale": args.ssm_scale,
+            "corpus_paths": args.corpus,
         }
     else:
         parser.print_help()
@@ -228,7 +239,7 @@ def main():
     mode_label = tribunal_label if args.tribunal else "SINGLE"
     ssm_label = f" + SSM ({args.ssm_scale})" if args.ssm else ""
     print(f"\n{'='*60}")
-    print(f"DARK STRATEGIST v3.9.0 — Tribunal Transversal")
+    print(f"DARK STRATEGIST v3.10.0 — Tribunal Transversal")
     print(f"Domain: {ctx.domain} | Regime: {ctx.regime}")
     print(f"Mode: {mode_label}{ssm_label}")
     print(f"{'='*60}\n")

@@ -164,3 +164,5 @@ class RuntimeContext(BaseModel):
 
     # Jurisdictional corpus selector (v3.8.0) — resolved by ContextBuilder; None = no corpus
     corpus: str | None = Field(default=None)
+    # BYO per-case reference corpus (v3.10.0) — operator-supplied file paths; None = no BYO
+    corpus_paths: list[str] | None = Field(default=None)
