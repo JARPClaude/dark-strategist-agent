@@ -1,9 +1,12 @@
 """
-Dark Strategist Agent v3.8.0 — Main Entry Point
+Dark Strategist Agent v3.9.0 — Main Entry Point
 Tribunal Transversal + Dynamic Prompts + Structured Output
 
 Usage:
-    # Case-based (v3.0 — recommended)
+    # Interactive wizard (v3.9.0 — recommended for non-technical operators)
+    python main.py --wizard
+
+    # Case-based (v3.0)
     python main.py --type contract --subscenario alquiler --objective "identify risks" --regime adversarial
 
     # With Tribunal Transversal
@@ -117,7 +120,7 @@ def calculate_tribunal_size(tribunal: bool, agents: int) -> tuple:
 
 def main():
     parser = argparse.ArgumentParser(
-        description="Dark Strategist Agent v3.8.0 — Tribunal Transversal"
+        description="Dark Strategist Agent v3.9.0 — Tribunal Transversal"
     )
 
     # Case-based args (v3.0 — recommended)
@@ -150,12 +153,25 @@ def main():
                         help="SSM scale: MICRO(5-10) / MESO(20) / MACRO(50)")
 
     # Utility args
+    parser.add_argument("--wizard", action="store_true",
+                        help="Launch interactive wizard (guided flag builder)")
     parser.add_argument("--config", type=str, default="config.json")
     parser.add_argument("--verbose", action="store_true")
     parser.add_argument("--report", action="store_true",
                         help="Print domain expansion report")
 
     args = parser.parse_args()
+
+    # Interactive wizard: synthesize argv and re-parse through the SAME parser,
+    # so the guided path is byte-for-byte equivalent to manual flags.
+    if args.wizard:
+        from wizard import run_wizard, format_command
+        wiz_argv, should_run = run_wizard()
+        if not should_run:
+            print(f"\nNot executed. Run later with:\n  {format_command(wiz_argv)}\n")
+            return
+        args = parser.parse_args(wiz_argv)
+
     config = load_config(args.config)
 
     if args.report:
@@ -212,7 +228,7 @@ def main():
     mode_label = tribunal_label if args.tribunal else "SINGLE"
     ssm_label = f" + SSM ({args.ssm_scale})" if args.ssm else ""
     print(f"\n{'='*60}")
-    print(f"DARK STRATEGIST v3.8.0 — Tribunal Transversal")
+    print(f"DARK STRATEGIST v3.9.0 — Tribunal Transversal")
     print(f"Domain: {ctx.domain} | Regime: {ctx.regime}")
     print(f"Mode: {mode_label}{ssm_label}")
     print(f"{'='*60}\n")

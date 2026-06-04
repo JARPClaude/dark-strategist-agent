@@ -1,5 +1,5 @@
 # Dark Strategist Agent — Telecommunications Variant
-# Version: 3.8.0-TELECOM
+# Version: 3.9.0-TELECOM
 # Domain: Telecommunications / Mobile / Broadband / Infrastructure
 # Primary Units: UNIT-GEO + UNIT-INQUISITOR
 # Base: system_prompt.md v3.8.0
@@ -80,6 +80,6 @@ Inherits BLOCK 0–6 structure from `system_prompt.md` §"OUTPUT FORMAT" (compos
 
 ---
 
-[PROTOCOL_STATUS: ACTIVE — v3.8.0-TELECOM]
-[BASE_PROTOCOL: system_prompt.md v3.8.0]
+[PROTOCOL_STATUS: ACTIVE — v3.9.0-TELECOM]
+[BASE_PROTOCOL: system_prompt.md v3.9.0]
 [CONTRACT: §4.14.1 — Domain Variant Contract]

@@ -1,11 +1,11 @@
 # CLAUDE.md — Dark Strategist Agent
-# Version: 3.8.0
+# Version: 3.9.0
 
 ## What is this repo
 
 `dark-strategist-agent` is THE SOVEREIGN ADVERSARY — a forensic audit agent and adversarial orchestrator.
 
-**Version:** 3.8.0 — Minor Release
+**Version:** 3.9.0 — Minor Release
 **License:** MIT — Open Source
 **Repository:** https://github.com/JARPClaude/dark-strategist-agent
 **Name:** dark-strategist-agent — immutable, does not change under any circumstance.
@@ -75,6 +75,8 @@ dark-strategist-agent/
 │   └── system_prompt_[domain].md   ← 13 other domains
 ├── orchestrator/
 │   ├── main.py
+│   ├── wizard.py                   ← NEW v3.9.0 (interactive CLI)
+│   ├── test_wizard.py              ← NEW v3.9.0 (wizard unit)
 │   ├── goap_planner.py             ← v3.1.0
 │   ├── catalogs.py                 ← UPDATED v3.2.0 (21 domains)
 │   ├── schema.py
@@ -177,6 +179,7 @@ python main.py --type startup --subscenario series_a --objective "investor readi
 | v3.6.0 Legal+Finance forensic matrix (25 incorporations, Sev×Lik non-binding, 4 variance decomp, SOX tier map) | ✅ |
 | v3.7.0 Context-degradation lens (skill #6) into P04/P07 — 5 patterns, RULE C05/CY06, +10 rows | ✅ |
 | v3.8.0 RAG retrieval at doc-feed layer — BM25 R1 intra-document + R2 jurisdictional corpus, non-breaking [:N] fallback | ✅ |
+| v3.9.0 Interactive Wizard CLI (guided flag builder, synthesizes argv into the same parser) + doc_top_k align (D-v38-01) | ✅ |
 
 ---
 
@@ -190,4 +193,4 @@ python main.py --type startup --subscenario series_a --objective "investor readi
 6. New skill → `skills/[skill-name]/SKILL.md` + entry in SKILLS_CATALOG
 7. The name `dark-strategist-agent` does not change under any circumstance
 
-**ACTIVE — v3.8.0**
+**ACTIVE — v3.9.0**

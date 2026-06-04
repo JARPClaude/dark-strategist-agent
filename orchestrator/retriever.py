@@ -107,7 +107,7 @@ def load_corpus(corpus_id, base_dir="corpus"):
 
 def build_agent_context(document, query_text, *, window,
                         chunk_size=1000, chunk_overlap=150,
-                        doc_top_k=5, corpus=None, corpus_top_k=3):
+                        doc_top_k=6, corpus=None, corpus_top_k=3):
     """Assembles the context fed to an agent.
 
     Non-breaking contract:

@@ -5,6 +5,28 @@ Format: [VERSION] — DATE — Description
 
 ---
 
+## [3.9.0] — 2026-06-03
+
+### Added — Interactive Wizard CLI (roadmap v3.9.0)
+- New `orchestrator/wizard.py`: guided interactive flag builder for non-technical operators (closes the KIMI/Copilot gap). Pure `build_command(answers)` (deterministic, unit-tested) + `run_wizard()` (the only I/O). Walks domain (20) -> canonical `--type` token, Legal sub-area drill-down (L01-L12), subscenario, objective, regime (7), Tribunal (auto/1/3/5/7), SSM (MICRO/MESO/MACRO). Emits the equivalent `python main.py ...` command and offers to run it.
+- `main.py`: new `--wizard` flag. The wizard SYNTHESIZES argv and re-parses it through the SAME argparse parser, so the guided path is byte-for-byte equivalent to manual flags. No existing path altered.
+- New `orchestrator/test_wizard.py`: 5-case unit suite over `build_command`.
+
+### Fixed — D-v38-01 (LATENT carried from the v3.8.0 cert)
+- `orchestrator/retriever.py`: `build_agent_context` default `doc_top_k` aligned 5 -> 6 to match config/orchestrator (config was authoritative; the "next retriever touch" the v3.8.0 cert flagged). `query(top_k=5)` left untouched (out of scope). Module docstring left at v3.8.0 (content-based).
+
+### Versioning
+- Atomic §4.14.1 bump: base + router + 19 domain variants + README + CLAUDE product-face -> v3.9.0 (23 files, 69 stamp lines). No prompt/skill CONTENT changed; no roster/verdict-logic change. Skills 6, domains 20 (unchanged).
+
+### Non-forensic guarantee
+- v3.9.0 touches the orchestrator product-face only. The forensic surface (19 variants + 6 skills + base + router CONTENT) is byte-identical except version stamps.
+
+### JARP_CERTIFIED: DS v3.9.0 — PA-20260603-004 ✅
+
+Level 1 — JARP DEEP delta-coverage 7-axis forensic audit of `dark-strategist-agent` v3.9.0 by `prompt-architect-agent` v1.3.0 (PA-20260527-002), over the v3.8.0 baseline (19/19 unchanged). Scope: v3.9.0 delta — `wizard.py` (NEW), `test_wizard.py` (NEW), `main.py --wizard`, `retriever.py` doc_top_k alignment (D-v38-01), atomic §4.14.1 stamp barrido. RULE 08 self-audit L0 (PA-20260603-003) PASS first. Functional evidence: `test_wizard.py` 5/5 + `smoke_test_e2e.py` OFFLINE GREEN (0 FAIL, 1 SKIP = `b_unified_output`, needs live key — non-blocking) + interactive wizard flow validated live (correct argv, re-parse parity). Three doc-consistency findings caught and resolved pre-cert — D-v39-01 (MODERATE, CLAUDE.md bottom status `ACTIVE — v3.8.0` not caught by the anchored stamp pass) + D-v39-02 (MODERATE, CLAUDE.md repo tree missing wizard.py/test_wizard.py) + D-v39-03 (LATENT, README+CLAUDE roadmap tables missing the v3.9.0 row). Prior LATENT D-v38-01 CLOSED. Result: 0 CRITICAL | 0 SERIOUS | 0 MODERATE | 0 LATENT -> `JARP_CERTIFIED`. `BIAS_CHECK_RESULT: PASS`. Non-forensic bump. Supersedes PA-20260603-002 (DS v3.8.0). `JARP_BENCHMARK_LIVE` advances to v3.9.0. Valid until 30/08/2026 or DS v4.0.0.
+
+---
+
 ## [3.8.0] — 2026-06-03
 
 ### Added — RAG retrieval at the document-feed layer (roadmap TOP-7: infinity->RAG, re-scoped)
