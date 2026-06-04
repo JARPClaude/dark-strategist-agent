@@ -1,5 +1,5 @@
 # DARK STRATEGIST — PROMPT DE CONTINUIDAD
-**Generado:** 03/06/2026 (sesión 24 — DS v3.10.0 BYO corpus per-case + R2 overlap floor + pydantic, shipped & JARP_CERTIFIED) | **Para:** Sesión 25
+**Generado:** 03/06/2026 (sesión 24 — DS v3.10.0 BYO corpus per-case + R2 overlap floor + pydantic, shipped & JARP_CERTIFIED) | **Enmendado:** 04/06/2026 (rama B housekeeping cerrada) | **Para:** Sesión 25
 **Reemplaza:** v22 del 03/06/2026 (sesión 23)
 **Ubicación:** `dark-strategist-agent/dark-strategist-continuity-prompt_v23.md`
 **⚠️ BORRAR en este cierre:** v22 (`git rm` en el commit de cierre). v23 = único continuity vigente. Subir v23 al PROYECTO claude.ai + quitar v22.
@@ -13,6 +13,8 @@
 ## CONTEXTO SESIÓN 24 (resumen ejecutivo)
 
 Track (B) elegido: **roadmap restante**. El último ítem (corpus R2) se **re-scopeó** tras confrontación de JARP: de "pre-cargar leyes por jurisdicción" (no escala) → **mecanismo BYO per-case**. Resultado: **DS v3.10.0 shipped y CERTIFICADO** (`PA-20260603-006`). Bump **no-forense** (feed-layer). Trading (A) NO se eligió (21ª sesión postergada).
+
+**ADENDA 04/06 — rama (B) WATCH menores CERRADOS** (housekeeping, sin bump ni re-cert; `PA-006` intacto): scripts→`tools/` + caso BYO en el smoke. Incidente OneDrive/git resuelto sin daño. Detalle en tabla de deuda + decisiones + lecciones. Repo HEAD ahora `feb93be`.
 
 ### 1. (B) DS v3.10.0 — BYO corpus per-case + R2 overlap floor + pydantic
 Bump atómico §4.14.1. **8 archivos de código tocados, +134 líneas netas. CONTENIDO de prompts/skills, roster de 9 units y lógica de veredicto: byte-idénticos.**
@@ -38,22 +40,28 @@ Auditor PA-agent v1.3.0 (`PA-20260527-002`). RULE 08 self-audit L0 (`PA-20260603
 - **Evidencia funcional (máquina real, no sandbox):** `test_wizard.py` **7/7** + `smoke_test_e2e.py` **0 FAIL / 1 SKIP** (b_unified_output SKIP = key real, no-bloqueante) + `byo_check.py` GREEN (BYO loader + R2 inyecta + floor descarta ruido + legacy byte-idéntico, con BM25 vivo sin key).
 - **CERT EMITIDO:** `PA-20260603-006` — DS **v3.10.0 JARP_CERTIFIED**, **0/0/0/0**, BIAS_CHECK PASS. Válido hasta **03/09/2026 o v4.0.0**. **SUPERSEDES PA-20260603-004** (v3.9.0). Sin cascade (minor).
 
+### 4. (B) RAMA WATCH MENORES — CERRADA 04/06 (housekeeping, sin re-cert)
+- **scripts→tools/:** `bump_stamps.ps1` movido a `tools/` (tooling reutilizable). `git mv` falló (dir destino inexistente + posible untracked) → patrón robusto `New-Item -Force tools` + `Move-Item -Force` + `git add -A`.
+- **smoke BYO-case:** check **`r2_byo_corpus`** añadido a `smoke_test_e2e.py` (offline; `load_corpus_files` → R2 token-overlap floor: inyecta relevante, descarta ruido zero-overlap, legacy byte-idéntico). Smoke local **12 PASS / 1 SKIP**, `r2_byo_corpus` PASS. **`smoke_test_e2e.py` + `smoke_contract.txt` GITIGNORADOS** (paths locales hardcoded) → la mejora vive en la máquina local, NO en el repo (por diseño). El commit inicial prometía el caso BYO en el repo (inexacto) → **enmendado** a `chore: move bump_stamps.ps1 to tools/` (`git commit --amend` + `git push --force-with-lease`, HEAD `feb93be`).
+- **Incidente OneDrive/git:** `git gc --auto` post-commit disparó bucle `Deletion of directory '.git/objects/XX' failed (y/n)`. **`n` a todos = SEGURO** (commit intacto, solo omite poda de sueltos). `git fsck --full` LIMPIO (2 dangling trees = normal). `git config gc.auto 0` aplicado en DS como guarda permanente.
+
 ---
 
 ## ⚠️⚠️ ESTADO DE CERTIFICACIÓN ⚠️⚠️
 
-**DS repo v3.10.0 = CERTIFICADO (`PA-20260603-006`).** Sin version-gap. PA-20260603-004 (v3.9.0) → SUPERSEDED.
+**DS repo v3.10.0 = CERTIFICADO (`PA-20260603-006`).** Sin version-gap. PA-20260603-004 (v3.9.0) → SUPERSEDED. La rama (B) housekeeping NO tocó el agente → cert intacto.
 
 ---
 
-## REGISTRO POST-CERT — A APLICAR EN CIERRE (s24)
-1. Colocar los 8 archivos en `orchestrator/` (retriever.py + byo_check.py ya escritos directo por Claude en s24; byo_check NO se commitea).
-2. **Stamps anclados:** `bump_stamps.ps1 -OldVersion 3.9.0 -NewVersion 3.10.0` (dry-run → -Apply). Sweep: 19 variants + base + router + README badge + CLAUDE + CATALOG_VERSION. (Los 8 .py de orchestrator ya traen sus stamps de módulo a 3.10.0, sin anclas → el script no los re-toca.)
-3. **Edits de prosa no-anclados (revisar a mano — lección D-v39-01):** CHANGELOG `[3.10.0]`, fila roadmap README+CLAUDE, status final `ACTIVE → v3.10.0` en CLAUDE.
-4. `jarp-toolkit/JARP_TOOLKIT.md` — header + entry #30 + Note #16 → v3.10.0/PA-006.
+## REGISTRO POST-CERT — APLICADO EN CIERRE (s24) ✅
+1. Los 8 archivos en `orchestrator/` colocados (byo_check NO commiteado).
+2. **Stamps anclados:** `bump_stamps.ps1 3.9.0→3.10.0 -Apply` → 23 files / 69 stamp lines.
+3. **Edits de prosa no-anclados:** CHANGELOG `[3.10.0]`, filas roadmap README+CLAUDE, status `ACTIVE → v3.10.0` en CLAUDE — aplicados.
+4. `jarp-toolkit/JARP_TOOLKIT.md` — header + #16 + #30 + Note ajustados → v3.10.0/PA-006.
 5. `jarp-toolkit/.claude-init.md` — header + Note #7 → v3.10.0/PA-006.
-6. **Limpieza pre-commit:** borrar/gitignorar `orchestrator/byo_check.py` + `orchestrator/_byo_sample.jsonl` (temporales de validación).
-7. Continuity v23 (este archivo) — commitear; `git rm` v22.
+6. Temporales `byo_check.py` + `_byo_sample.jsonl` borrados.
+7. Continuity v23 commiteado; `git rm` v22.
+8. **(rama B, 04/06):** `tools/bump_stamps.ps1` versionado; caso BYO en smoke local; `gc.auto 0`.
 
 ---
 
@@ -64,22 +72,24 @@ Auditor PA-agent v1.3.0 (`PA-20260527-002`). RULE 08 self-audit L0 (`PA-20260603
 | **RE-CERT v3.10.0** | ✅ CERRADA | v3.10.0 CERTIFICADO (PA-20260603-006) | 0/0/0/0. |
 | **corpus R2** | ✅ CERRADA (re-scopeada) | Mecanismo BYO per-case shipped | Roadmap cerrado como MECANISMO, no data. Repo no contiene leyes. |
 | **pydantic en requirements** | ✅ CERRADA | `pydantic>=2.0.0` declarado | — |
-| **scripts helper en repo** | 🟢 DECIDIR | `bump_stamps.ps1` (+ futuros finalize) en raíz DS | Recomendado: `git mv` a `tools/` y commitear como tooling reutilizable. |
-| **smoke desactualizado** | 🟢 WATCH | `smoke_test_e2e.py` aún rotulado "v3 (v3.4 pre-bump gate)" | Gate estable pero viejo; no ejercita R2 (doc cabe, sin corpus). Considerar añadir un caso BYO al smoke. |
+| **scripts helper en repo** | ✅ CERRADA (04/06) | `bump_stamps.ps1` → `tools/` | Tooling reutilizable versionado. HEAD `feb93be`. |
+| **smoke desactualizado** | ✅ CERRADA-funcional (04/06) | caso `r2_byo_corpus` añadido | Ejercita R2 BYO offline (12 PASS/1 SKIP local). **Smoke GITIGNORADO** (paths locales) → vive local, fuera del repo por diseño. |
 | **clash n>0 live + gate b live** | 🟢 WATCH | `b_unified_output` necesita Opus real (key) | Pendiente validación con key. |
 | **DSv34-SYNTH** | 🟢 ACEPTADA | Fallback determinista = sintetizador de producción | Sin cambio. |
 
-**CERRADAS s24:** corpus R2 (BYO), pydantic, re-cert v3.10.0. **El TOP-7 + el último ítem de la rama (B) están CERRADOS. DS roadmap = 100%.**
+**El TOP-7 + corpus R2 + los WATCH menores (scripts, smoke BYO) están CERRADOS. DS roadmap = 100%.** Solo queda WATCH de validación live con key (no-bloqueante).
 
 ---
 
-## ESTADO ACTUAL VERIFICADO (03/06/2026 fin de sesión 24)
+## ESTADO ACTUAL VERIFICADO (04/06/2026 — fin rama B)
 
 ### Repo dark-strategist-agent
-- **v3.10.0 — CERTIFICADO (`PA-20260603-006`)**. Default `claude-opus-4-7`.
+- **v3.10.0 — CERTIFICADO (`PA-20260603-006`)**. Default `claude-opus-4-7`. HEAD `feb93be`.
 - **NEW:** `orchestrator/load_corpus_files` + `--corpus` + wizard paso 7 + `corpus_paths` (schema/context/tribunal). Floor R2 overlap-based.
+- **`tools/bump_stamps.ps1`** (tooling). **`gc.auto 0`** (guarda OneDrive, config local).
 - `corpus/` vacío. `JURISDICTION_CORPUS_MAP = {}` (gancho dormido; BYO es la vía activa).
 - **6 skills** (sin cambio). **9 sub-agentes N2 permanentes** (sin cambio).
+- `smoke_test_e2e.py` + `smoke_contract.txt` GITIGNORADOS (local-only, paths personales) — contienen el caso `r2_byo_corpus`.
 
 ### Repo prompt-architect-agent
 - v1.3.0 (`PA-20260527-002`) ACTIVE. Auditor de la re-cert s24. Sin cambios.
@@ -96,11 +106,12 @@ Auditor PA-agent v1.3.0 (`PA-20260527-002`). RULE 08 self-audit L0 (`PA-20260603
 1. **Desktop:** autorun `JARP_TOOLKIT.md`. **Web:** leer este archivo (v23).
 2. **PHASE 0 — Verificación:**
    - v22 borrado, v23 único continuity.
-   - Repo en v3.10.0. **Cert registry: DS v3.10.0 `PA-20260603-006` ACTIVE.** PA-agent v1.3.0 (`PA-20260527-002`) ACTIVE. `PA-20260603-004` SUPERSEDED.
+   - Repo en v3.10.0, HEAD `feb93be`. **Cert registry: DS v3.10.0 `PA-20260603-006` ACTIVE.** PA-agent v1.3.0 (`PA-20260527-002`) ACTIVE. `PA-20260603-004` SUPERSEDED.
    - `rank_bm25` + `pydantic` instalados (sin ellos R1/R2 corren degradados a legacy).
+   - `gc.auto 0` activo (no esperar el bucle OneDrive en commits).
 3. **PHASE 1 — Decisión:**
    - **(A) Trading hands-on** — **POSTERGADO 21 SESIONES (4-24).** Prioridad #1 en userPreferences. NO re-confrontar; si vuelve a no elegir A, asumir prioridad real ≠ escrita y seguir sin fricción.
-   - **(B) DS roadmap** — **CERRADO 100%.** Solo quedan WATCH/DECIDIR menores (scripts→tools/, smoke BYO-case). No hay roadmap mayor pendiente.
+   - **(B) DS roadmap** — **CERRADO 100%** incl. WATCH menores. Solo queda WATCH live-key (no-bloqueante).
    - **(C) Gobernanza** — backlog clasificado; sin limbo.
 4. Reportar phase por phase, esperar GO entre fases.
 
@@ -117,44 +128,39 @@ Auditor PA-agent v1.3.0 (`PA-20260527-002`). RULE 08 self-audit L0 (`PA-20260603
 - **mi-filesystem preserva escapes byte-exacto** (verificado): se puede escribir código con `\n` literales directo. Para reemplazos masivos seguir Ruta 3 si el archivo es grande/sensible.
 - **Validar features de retrieval con un corpus PEQUEÑO** (2-3 pasajes), no solo mediano — los edge cases de BM25 (IDF=0) solo aparecen con corpus diminutos, que son el caso realista de BYO.
 
+**De rama B (04/06):**
+- **`smoke_test_e2e.py` + `smoke_contract.txt` GITIGNORADOS** (paths locales hardcoded → `C:\...\Downloads\`). Las mejoras al smoke (p.ej. `r2_byo_corpus`) viven en la máquina local y corren en cada regresión, pero NO se versionan. NO forzar al repo (`git add -f`) sin parametrizar primero los paths personales.
+- **OneDrive + git gc:** `git gc --auto` post-commit dispara el bucle `Deletion of directory '.git/objects/XX' failed (y/n)` porque OneDrive lockea `.git/objects/`. Responder **`n` a todos es SEGURO** (commit ya escrito; solo se omite la poda de objetos sueltos, redundantes con el packfile). `git config gc.auto 0` aplicado como guarda. Mantener **OneDrive en PAUSA** durante operaciones git pesadas (gc, push grande, amend).
+- **Higiene de mensaje de commit:** verificar QUÉ entró realmente (`git log -1` / clone fresco) antes de dar por bueno un mensaje — un archivo gitignorado se omite en silencio y el mensaje puede sobre-prometer. Enmendar con `--amend` + `--force-with-lease` si el historial quedó inexacto (repo personal, sin colaboradores).
+
 ---
 
 ## DESCARTES — NO REINTRODUCIR
-MiroFish-ES, OASIS | n8n-mcp, claude-mem | claude-for-legal | servicios comerciales | "vibración cuántica" | MEGA-PAQUETE Copilot | `HandoffPacket` Pydantic full | compactador real de tokens (diferido) | debilitar schema `Finding` | "17 backends" free-claude-code (son 11) | UNIT-INGEST como sub-agente del spawner | Severity×Likelihood como dimensión VINCULANTE | skills knowledge-work descartadas | re-trabajar el telephone-game (resuelto v3.4) | context-degradation como driver del veredicto | latent-briefing de Agent-Skills (requiere KV-cache runtime) | infinity/Docker como backend RAG baseline | embeddings densos como baseline RAG (BM25 suficiente) | RAG de contenido en ContextBuilder (document-free) | re-implementar lógica de pipeline en el wizard | **pre-cargar corpus jurisdiccional por país en el repo (no escala) — s24** | **floor R2 por score BM25 (frágil en corpus pequeños; usar overlap) — s24.**
+MiroFish-ES, OASIS | n8n-mcp, claude-mem | claude-for-legal | servicios comerciales | "vibración cuántica" | MEGA-PAQUETE Copilot | `HandoffPacket` Pydantic full | compactador real de tokens (diferido) | debilitar schema `Finding` | "17 backends" free-claude-code (son 11) | UNIT-INGEST como sub-agente del spawner | Severity×Likelihood como dimensión VINCULANTE | skills knowledge-work descartadas | re-trabajar el telephone-game (resuelto v3.4) | context-degradation como driver del veredicto | latent-briefing de Agent-Skills (requiere KV-cache runtime) | infinity/Docker como backend RAG baseline | embeddings densos como baseline RAG (BM25 suficiente) | RAG de contenido en ContextBuilder (document-free) | re-implementar lógica de pipeline en el wizard | **pre-cargar corpus jurisdiccional por país en el repo (no escala) — s24** | **floor R2 por score BM25 (frágil en corpus pequeños; usar overlap) — s24** | **forzar el smoke al repo sin parametrizar paths locales — s24/B.**
 
 ---
 
 ## REFERENCIAS RÁPIDAS
 
 - **Repo local DS:** `C:\Users\jrodr\OneDrive\Documentos 1\GitHub\dark-strategist-agent\`
-- **Este archivo:** `dark-strategist-agent/dark-strategist-continuity-prompt_v23.md` (v22 a borrar s24)
+- **Este archivo:** `dark-strategist-agent/dark-strategist-continuity-prompt_v23.md` (v22 borrado s24)
 - **jarp-toolkit / .claude-init (CANÓNICOS):** `...\jarp-toolkit\` (PRIVADO — GitHub MCP o mi-filesystem)
-- **Push siempre vía GitHub Desktop.** Cuenta `JARPClaude`.
+- **Push siempre vía GitHub Desktop / CLI.** Cuenta `JARPClaude`. **OneDrive en PAUSA para operaciones git pesadas; `gc.auto 0` ya activo en DS.**
 - **MCPs:** mi-filesystem, GitHub. **Si mi-filesystem timeoutea: `node C:\Users\jrodr\filesystem-mcp\build\index.js` + reiniciar Claude Desktop.**
-- **Método de edición:** stamps multi-archivo = `bump_stamps.ps1` (anclado, dry-run → -Apply). Edits de prosa multi-archivo = script `.Replace` all-or-nothing. Edits pequeños/archivo nuevo = mi-filesystem directo (preserva escapes byte-exacto). Edits quirúrgicos en archivos grandes = Ruta 3. `github:create_or_update_file` prohibido por defecto. NO puedo ejecutar Python/PowerShell en la máquina de JARP → JARP corre regresión y scripts.
+- **Método de edición:** stamps multi-archivo = `tools/bump_stamps.ps1` (anclado, dry-run → -Apply). Edits de prosa multi-archivo = script `.Replace` all-or-nothing. Edits pequeños/archivo nuevo = mi-filesystem directo (preserva escapes byte-exacto). Edits quirúrgicos en archivos grandes = Ruta 3. `github:create_or_update_file` prohibido por defecto. NO puedo ejecutar Python/PowerShell en la máquina de JARP → JARP corre regresión y scripts.
 - **BYO corpus runtime:** `python main.py --type legal --subscenario lease --objective "..." --tribunal --corpus laws/x.pdf laws/y.txt` (cualquier jurisdicción). Sin `--corpus` → R2 no-op, legacy preservado.
-- **Smoke-test E2E:** `orchestrator/smoke_test_e2e.py`. Offline esperado 11 PASS / 1 SKIP. **`pip install rank_bm25` + `pydantic` antes de correr el agente** (si faltan, R1/R2 degradan a legacy).
+- **Smoke-test E2E (LOCAL, gitignorado):** `orchestrator/smoke_test_e2e.py`. Offline esperado **12 PASS / 1 SKIP** (incl. `r2_byo_corpus`). **`pip install rank_bm25` + `pydantic` antes de correr el agente** (si faltan, R1/R2 degradan a legacy).
 - **free-claude-code:** `fcc-server` puerto 8082. CERT = `sk-ant-...` real + sin proxy. Nunca pedir la key en el chat.
 - **Deps runtime DS:** anthropic, pydantic, requests, google-auth/-oauthlib/-api-python-client, python-dotenv, markitdown, rank_bm25.
 
-### Commit sugerido para cierre sesión 24
-**Repo dark-strategist-agent:**
+### Commits de cierre sesión 24
+**Repo dark-strategist-agent (v3.10.0 cert) — pusheado.**
 ```
 feat: DS v3.10.0 — BYO per-case corpus + R2 overlap floor + pydantic + JARP_CERTIFIED PA-20260603-006
-
-Session 24 — track (B): re-scoped corpus R2 from "pre-load laws per jurisdiction"
-(does not scale) to BYO per-case mechanism. --corpus flag (main.py) + wizard step 7
-+ retriever.load_corpus_files (.jsonl/.txt/.md + PDF/DOCX via markitdown) +
-corpus_paths (schema/context_builder/tribunal). R2 relevance floor switched from
-BM25-score to token-overlap (score floor false-negatives on tiny corpora, IDF=0).
-pydantic>=2.0.0 declared. Atomic §4.14.1 stamp bump. Non-forensic (feed-layer;
-prompt/skill/verdict surface byte-identical except stamps). Repo contains no laws;
-JURISDICTION_CORPUS_MAP stays {} (optional hook). Roadmap item "corpus R2" CLOSED
-as mechanism, not data. Re-cert PA-20260603-006, 0/0/0/0, BIAS PASS, supersedes
-PA-20260603-004.
-
-NEW: dark-strategist-continuity-prompt_v23.md (replaces v22)
-DELETED: dark-strategist-continuity-prompt_v22.md
+```
+**Repo dark-strategist-agent (rama B housekeeping) — HEAD feb93be.**
+```
+chore: move bump_stamps.ps1 to tools/
 ```
 **Repo jarp-toolkit:**
 ```
@@ -179,7 +185,9 @@ docs: sync DS v3.10.0 / PA-20260603-006 (BYO corpus + overlap floor) — header 
 1. **Confronta el roadmap contra el código real ANTES de ejecutar.** s24 encontró DOS desalineamientos: (a) el map es por DOMINIO, no jurisdicción; (b) pre-cargar leyes no escala. JARP confrontó (b); el resultado fue un re-scopeo a BYO que es la arquitectura correcta. Cuando el roadmap pide "poblar X", preguntar primero si "poblar" es siquiera la jugada correcta vs "habilitar mecanismo".
 2. **Valida retrieval con corpus PEQUEÑO.** El floor score-based pasó en sandbox (corpus de 5) y falló en máquina real (corpus de 2, IDF=0). El edge case de BYO es corpus diminuto. Probar siempre 2-3 pasajes.
 3. **Baseline regresión PRE-cambio + deps check** atrapó que `rank_bm25` no estaba instalado en el Python de JARP → R1/R2 corrían degradados a legacy. Sin ese check, todo "verde" habría sido un espejismo.
-4. **Para entregar archivos a JARP:** escritura directa vía mi-filesystem garantiza ubicación (JARP a veces descarga a Downloads y no mueve). Preferir mi-filesystem sobre present_files para archivos que DEBEN quedar en una ruta exacta. mi-filesystem preserva escapes `\n` byte-exacto (verificado con probe).
-5. **No puedo ejecutar en la máquina de JARP.** JARP corre regresión (`test_wizard.py`, `smoke_test_e2e.py`, `byo_check.py`) y los scripts. Gate regresión-verde ANTES de mover versión/cert.
+4. **Para entregar archivos a JARP:** escritura directa vía mi-filesystem garantiza ubicación. mi-filesystem preserva escapes `\n` byte-exacto (verificado con probe).
+5. **No puedo ejecutar en la máquina de JARP.** JARP corre regresión y scripts. Gate regresión-verde ANTES de mover versión/cert.
 6. **TRADING: 21 SESIONES POSTERGADO (4-24).** NO re-confrontar. Si s25 no elige A, asumir prioridad real ≠ escrita.
-7. **DS roadmap = 100% cerrado.** Próximas sesiones: o trading (A), o WATCH menores (scripts→tools/, smoke BYO-case), o nuevas ideas del pipeline.
+7. **DS roadmap = 100% cerrado** (incl. WATCH menores rama B). Próximas sesiones: trading (A), WATCH live-key, o nuevas ideas del pipeline.
+8. **Verifica el push por CONTENIDO, no por mensaje** (rama B): un archivo gitignorado se omite en silencio; el mensaje del commit puede sobre-prometer. Clone fresco / `git log -1` antes de cerrar. Enmendar con `--amend`+`--force-with-lease` si el historial quedó inexacto.
+9. **OneDrive + git:** `gc.auto 0` ya aplicado; OneDrive en PAUSA para git pesado. Bucle de borrado `.git/objects` → `n` a todo es seguro.
