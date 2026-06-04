@@ -18,8 +18,8 @@
 #>
 param(
     [string]$RepoRoot   = "C:\Users\jrodr\OneDrive\Documentos 1\GitHub\dark-strategist-agent",
-    [string]$OldVersion = "3.8.0",
-    [string]$NewVersion = "3.9.0",
+    [Parameter(Mandatory=$true)][string]$OldVersion,
+    [Parameter(Mandatory=$true)][string]$NewVersion,
     [switch]$Apply
 )
 

@@ -12,7 +12,7 @@
 
 ---
 
-## Full Pipeline v3.2.0
+## Full Pipeline
 
 ```
 INPUT: case dict OR document file
@@ -41,7 +41,7 @@ TRANSPARENCY REPORT
 
 ---
 
-## Key Changes v3.2.0
+## Key Changes (v3.2 baseline; later versions in Version History)
 
 | Feature | Description |
 |---------|-------------|

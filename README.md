@@ -19,14 +19,14 @@
 
 THE SOVEREIGN ADVERSARY is an AI agent that **systematically destroys** any solution, proposal, plan, or argument — exposing every weakness, contradiction, invalid assumption, logical gap, hidden risk, and potential failure before reality does it for you.
 
-**v3.2.0 introduces:**
+**Core capabilities:**
 - **Adaptive Autonomous Drive** — the AFO now expands analysis autonomously when it detects gaps, without user instruction.
 - **5 New Domains** — Marketing, Operations, Human Resources, Strategy, Startup (P16–P20).
 - **20 total domain variants** covering any industry, any document type, any country.
 
 ---
 
-### Version 3.2.0 — Full Feature Set
+### Foundational Feature Set (v3.0-v3.2; see Version History below for v3.3 onward)
 
 | Feature | Status |
 |---|---|
