@@ -5,6 +5,32 @@ Format: [VERSION] — DATE — Description
 
 ---
 
+## [3.11.0] — 2026-06-04
+
+### Added — Deterministic auditable confidence (value-add P3)
+- `orchestrator/schema.py`: new `compute_confidence(agents_consulted, driver_corroborated, driver_finding_count, unresolved_conflicts)` — pure, deterministic, NON-BINDING. Never alters `final_verdict` (severity-driven: >=1 FATAL -> INVIABLE).
+- `orchestrator/tribunal_transversal.py`: confidence now computed in BOTH synthesis paths (`_synthesize` LLM + `_deterministic_synthesis` fallback) via new `_apply_confidence`. Replaces the fallback's hardcoded `"MODERATE"` and the LLM's free-form self-assessment with a derived value.
+- `agents_consulted` and `multi_agent_confirmed` are now grounded deterministically from cross-agent corroboration (the fallback previously left them empty).
+- Rule: LOW if <2 agents, or the verdict hinges on a single uncorroborated finding, or >=2 unresolved clashes; HIGH if >=3 agents, 0 unresolved clashes, and the verdict-driving tier is clean or multi-agent-confirmed; MODERATE otherwise.
+
+### Changed — transparency
+- Verdict + transparency report label confidence as a NON-BINDING auditability signal (corroboration/conflict), explicitly not a probability of real-world success or efficiency guarantee.
+
+### Tests
+- `orchestrator/test_confidence.py`: 10-case offline truth table for `compute_confidence` (no API).
+
+### Versioning
+- Atomic §4.14.1 bump: base + router + 19 domain variants + README + CLAUDE product-face -> v3.11.0. Operator-visible orchestrator banners (main/wizard/transparency report) -> v3.11.0. Module docstrings frozen at architecture origin unchanged. No prompt/skill CONTENT, no roster (9 N2), no verdict-logic change.
+
+### Non-binding guarantee
+- Confidence is metadata only (consistent with RULE LG07/F08; Sev×Likelihood NON-BINDING). The deterministic verdict (FATAL->INVIABLE) is untouched; regression confirms `e_monotonic_verdict` + `c_fallback_intact` green.
+
+### JARP_CERTIFIED: DS v3.11.0 — PA-20260604-002 ✅
+
+Level 1 — JARP DEEP delta-coverage 7-axis forensic audit of `dark-strategist-agent` v3.11.0 by `prompt-architect-agent` v1.3.0 (PA-20260527-002), over the v3.10.0 baseline (19/19 unchanged). Scope: v3.11.0 delta — deterministic auditable confidence (`compute_confidence` + `_apply_confidence` wired into BOTH synthesis paths; `agents_consulted` + `multi_agent_confirmed` grounded deterministically), NON-BINDING (never alters the severity-driven FATAL->INVIABLE verdict; consistent with RULE LG07/F08), `test_confidence.py` added, atomic §4.14.1 bump (product-face + operator-visible orchestrator banners -> v3.11.0; module docstrings frozen at origin). RULE 08 self-audit L0 (PA-20260604-001) PASS first. Functional evidence on the real machine (post-bump): `test_confidence.py` 10/10 + `smoke_test_e2e.py` OFFLINE GREEN (0 FAIL, 1 SKIP = `b_unified_output`, non-blocking) with `c_fallback_intact` + `e_monotonic_verdict` PASS. Forensic surface (19 variants + 6 skills + base + router CONTENT) byte-identical except stamps. Result: 0 CRITICAL | 0 SERIOUS | 0 MODERATE | 0 LATENT -> `JARP_CERTIFIED`. `BIAS_CHECK_RESULT: PASS` (confidence rule symmetric, orthogonal to verdict). Non-forensic confirmatory bump. Supersedes PA-20260603-006 (DS v3.10.0). `JARP_BENCHMARK_LIVE` advances to v3.11.0. Valid until 04/09/2026 or DS v4.0.0.
+
+---
+
 ## [3.10.0] — 2026-06-03
 
 ### Added — BYO per-case reference corpus (roadmap: corpus R2, re-scoped)

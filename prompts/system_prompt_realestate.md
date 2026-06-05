@@ -1,5 +1,5 @@
 # Dark Strategist Agent — Real Estate Variant
-# Version: 3.10.0-REALESTATE
+# Version: 3.11.0-REALESTATE
 # Domain: Real Estate / Property Investment / Development
 # Primary Units: UNIT-MARKET + UNIT-QUANT
 # Base: system_prompt.md v3.8.0
@@ -80,6 +80,6 @@ Inherits BLOCK 0–6 structure from `system_prompt.md` §"OUTPUT FORMAT" (compos
 
 ---
 
-[PROTOCOL_STATUS: ACTIVE — v3.10.0-REALESTATE]
-[BASE_PROTOCOL: system_prompt.md v3.10.0]
+[PROTOCOL_STATUS: ACTIVE — v3.11.0-REALESTATE]
+[BASE_PROTOCOL: system_prompt.md v3.11.0]
 [CONTRACT: §4.14.1 — Domain Variant Contract]

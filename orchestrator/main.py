@@ -123,7 +123,7 @@ def calculate_tribunal_size(tribunal: bool, agents: int) -> tuple:
 
 def main():
     parser = argparse.ArgumentParser(
-        description="Dark Strategist Agent v3.10.0 — Tribunal Transversal"
+        description="Dark Strategist Agent v3.11.0 — Tribunal Transversal"
     )
 
     # Case-based args (v3.0 — recommended)
@@ -239,7 +239,7 @@ def main():
     mode_label = tribunal_label if args.tribunal else "SINGLE"
     ssm_label = f" + SSM ({args.ssm_scale})" if args.ssm else ""
     print(f"\n{'='*60}")
-    print(f"DARK STRATEGIST v3.10.0 — Tribunal Transversal")
+    print(f"DARK STRATEGIST v3.11.0 — Tribunal Transversal")
     print(f"Domain: {ctx.domain} | Regime: {ctx.regime}")
     print(f"Mode: {mode_label}{ssm_label}")
     print(f"{'='*60}\n")

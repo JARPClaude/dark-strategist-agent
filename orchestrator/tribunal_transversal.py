@@ -19,7 +19,7 @@ from pathlib import Path
 
 import anthropic
 
-from schema import RuntimeContext, AgentVerdictOutput, UnifiedVerdictOutput, Finding
+from schema import RuntimeContext, AgentVerdictOutput, UnifiedVerdictOutput, Finding, compute_confidence
 from prompt_engine import PromptEngine
 from budget_controller import BudgetController
 from sub_agent_spawner import SubAgentSpawner
@@ -236,7 +236,8 @@ class TribunalTransversal:
                 if text.startswith("json"):
                     text = text[4:]
             data = json.loads(text)
-            return UnifiedVerdictOutput(**data)
+            uvo = UnifiedVerdictOutput(**data)
+            return self._apply_confidence(uvo, all_outputs)
         except Exception as e:
             self._log(f"Synthesis failed: {e} — using deterministic fallback")
             return self._deterministic_synthesis(ctx, all_outputs)
@@ -267,7 +268,7 @@ class TribunalTransversal:
         else:
             verdict = "SOLID UNDER PRESSURE"
 
-        return UnifiedVerdictOutput(
+        uvo = UnifiedVerdictOutput(
             session_id=self.session_id,
             domain=ctx.domain,
             subscenario=ctx.subscenario,
@@ -282,8 +283,66 @@ class TribunalTransversal:
             confidence="MODERATE",
             verdict_reasoning="Deterministic synthesis — Claude synthesis call failed.",
         )
+        return self._apply_confidence(uvo, all_outputs)
 
     # ─── Helpers ──────────────────────────────────────────────────────────────
+
+    @staticmethod
+    def _norm_title(s) -> str:
+        return " ".join(str(s).lower().split())
+
+    def _apply_confidence(self, unified, all_outputs):
+        """
+        v3.11.0 -- recompute confidence deterministically (NON-BINDING; never
+        touches final_verdict). Grounds agents_consulted and multi_agent_confirmed
+        from cross-agent corroboration, then derives confidence via compute_confidence.
+        """
+        unified.agents_consulted = len(all_outputs)
+
+        # Cross-agent corroboration: (severity, normalized title) seen by >=2 distinct agents.
+        seen = {}
+        for i, out in enumerate(all_outputs):
+            agent = out.get("agent_id", "_idx%d" % i) if isinstance(out, dict) else "_idx%d" % i
+            findings = out.get("findings", []) if isinstance(out, dict) else []
+            local = set()
+            for f in findings:
+                if not isinstance(f, dict):
+                    continue
+                sev = (f.get("severity") or "").upper()
+                title = self._norm_title(f.get("title", ""))
+                if title:
+                    local.add((sev, title))
+            for key in local:
+                seen.setdefault(key, set()).add(agent)
+        corroborated = {k for k, agents in seen.items() if len(agents) >= 2}
+
+        # Deterministic multi_agent_confirmed (overrides upstream value for auditability).
+        unified.multi_agent_confirmed = sorted("%s: %s" % (sev, title) for (sev, title) in corroborated)
+
+        # Verdict-driving tier.
+        if unified.fatal_findings:
+            driving, tier_sev = unified.fatal_findings, "FATAL"
+        elif unified.serious_findings:
+            driving, tier_sev = unified.serious_findings, "SERIOUS"
+        elif unified.moderate_findings:
+            driving, tier_sev = unified.moderate_findings, "MODERATE"
+        elif unified.latent_findings:
+            driving, tier_sev = unified.latent_findings, "LATENT"
+        else:
+            driving, tier_sev = [], None
+
+        driver_corroborated = bool(tier_sev) and any(
+            (tier_sev, self._norm_title(getattr(f, "title", ""))) in corroborated for f in driving
+        )
+        unresolved = sum(1 for c in unified.conflicts_detected if "UNRESOLVED" in str(c).upper())
+
+        unified.confidence = compute_confidence(
+            agents_consulted=unified.agents_consulted,
+            driver_corroborated=driver_corroborated,
+            driver_finding_count=len(driving),
+            unresolved_conflicts=unresolved,
+        )
+        return unified
 
     def _agent_doc_context(self, document, query_text):
         #--- v3.8.0: RAG-assisted feed; non-breaking fallback to [:N] inside.
@@ -397,7 +456,7 @@ class TribunalTransversal:
         lines += [
             f"",
             f"VEREDICTO: {unified.final_verdict}",
-            f"Confidence: {unified.confidence}",
+            f"Confidence: {unified.confidence}  (auditability signal: corroboration/conflict, NOT a success probability or efficiency guarantee)",
             f"Reasoning:  {unified.verdict_reasoning}",
             f"{'='*60}",
         ]
@@ -437,7 +496,7 @@ class TribunalTransversal:
 
         return f"""
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-DARK STRATEGIST v3.10.0 — TRANSPARENCY REPORT
+DARK STRATEGIST v3.11.0 — TRANSPARENCY REPORT
 Session: DS-{self.session_id} | Duration: {round(duration,1)}s
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
@@ -479,7 +538,7 @@ PROSE QUALITY (stop-slop — advisory, score-only)
   Score: {slop['score']}/{slop['max']} (threshold {slop['threshold']}) → {slop['flag']}
   Dimensions: {slop['dimensions']}
 
-FINAL VERDICT: {unified.final_verdict} | Confidence: {unified.confidence}
+FINAL VERDICT: {unified.final_verdict} | Confidence: {unified.confidence} (non-binding; not a success/efficiency guarantee)
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 """
 

@@ -4,7 +4,7 @@
 
 > *"You have zero loyalty to any solution. Your only standard is truth under maximum pressure."*
 
-![Version](https://img.shields.io/badge/version-3.10.0-darkred)
+![Version](https://img.shields.io/badge/version-3.11.0-darkred)
 ![License](https://img.shields.io/badge/license-MIT-green)
 ![Status](https://img.shields.io/badge/status-ACTIVE-brightgreen)
 ![Domains](https://img.shields.io/badge/domains-20-blue)
@@ -202,13 +202,14 @@ python main.py --type startup --subscenario pitch \
 | v3.8.0 | RAG retrieval at document-feed layer — BM25 (R1 intra-document relevance replaces blind doc_window truncation; R2 optional jurisdictional corpus), non-breaking [:N] fallback | ✅ |
 | v3.9.0 | Interactive Wizard CLI — guided flag builder (synthesizes argv into the same parser); doc_top_k align (D-v38-01) | ✅ |
 | v3.10.0 | BYO per-case reference corpus — `--corpus` + wizard step + markitdown (any jurisdiction; repo holds no laws) + R2 token-overlap floor + pydantic declared | ✅ |
+| v3.11.0 | Deterministic auditable confidence — computed in both synthesis paths from cross-agent corroboration + unresolved clashes; NON-BINDING (never alters the FATAL→INVIABLE verdict) | ✅ |
 
 ---
 
 ## Protocol Status
 
 ```
-[PROTOCOL_STATUS: ACTIVE — v3.10.0]
+[PROTOCOL_STATUS: ACTIVE — v3.11.0]
 [PLANNER: GOAP A* — dynamic optimal planning]
 [TRIBUNAL: TRANSVERSAL — Rol + Forense layers]
 [SKILL: ADAPTIVE AUTONOMOUS DRIVE — active]

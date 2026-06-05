@@ -131,6 +131,39 @@ class UnifiedVerdictOutput(BaseModel):
         }
 
 
+def compute_confidence(
+    agents_consulted: int,
+    driver_corroborated: bool,
+    driver_finding_count: int,
+    unresolved_conflicts: int,
+) -> str:
+    """
+    Deterministic, auditable confidence for a unified verdict (v3.11.0).
+
+    NON-BINDING: this NEVER alters final_verdict (which stays severity-driven:
+    >=1 FATAL -> INVIABLE). It only reports how corroborated/contested the verdict
+    is. It is an auditability signal, NOT a probability of real-world success and
+    NOT an efficiency guarantee.
+
+    Rule:
+      LOW   if  <2 agents, OR the verdict hinges on a single uncorroborated
+            finding, OR >=2 unresolved clashes.
+      HIGH  if  >=3 agents AND 0 unresolved clashes AND the verdict-driving tier
+            is empty (clean) or multi-agent-confirmed.
+      MODERATE otherwise.
+    """
+    n = agents_consulted
+    if n < 2:
+        return "LOW"
+    if unresolved_conflicts >= 2:
+        return "LOW"
+    if driver_finding_count == 1 and not driver_corroborated:
+        return "LOW"
+    if n >= 3 and unresolved_conflicts == 0 and (driver_finding_count == 0 or driver_corroborated):
+        return "HIGH"
+    return "MODERATE"
+
+
 class RuntimeContext(BaseModel):
     """
     Runtime context object built by ContextBuilder.
