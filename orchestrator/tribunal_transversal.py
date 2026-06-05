@@ -19,7 +19,7 @@ from pathlib import Path
 
 import anthropic
 
-from schema import RuntimeContext, AgentVerdictOutput, UnifiedVerdictOutput, Finding, compute_confidence
+from schema import RuntimeContext, AgentVerdictOutput, UnifiedVerdictOutput, Finding, compute_confidence, should_escalate
 from prompt_engine import PromptEngine
 from budget_controller import BudgetController
 from sub_agent_spawner import SubAgentSpawner
@@ -94,6 +94,7 @@ class TribunalTransversal:
         self._log("Synthesizing all outputs...")
         all_outputs = rol_outputs + forense_outputs
         unified = self._synthesize(document, ctx, all_outputs)
+        unified, all_outputs = self._maybe_escalate(document, ctx, all_outputs, unified)
         self._transparency["afo"]["verdict_synthesized"] = True
 
         # ── SSM ────────────────────────────────────────────────────────────
@@ -291,6 +292,85 @@ class TribunalTransversal:
     def _norm_title(s) -> str:
         return " ".join(str(s).lower().split())
 
+    def _maybe_escalate(self, document, ctx, all_outputs, unified):
+        """
+        P1 (v3.12.0) -- confidence-gated escalation. If confidence is LOW and agent budget
+        remains, run a bounded extra forensic pass on the verdict-driving findings,
+        re-synthesize, and recompute confidence. NON-BINDING: never alters final_verdict
+        (severity-driven). Confidence may stay LOW (honest) if still uncorroborated.
+        Capped at tribunal.max_escalation_rounds.
+        """
+        tcfg = self.config.get("tribunal", {})
+        enabled = tcfg.get("escalation_enabled", True)
+        max_rounds = tcfg.get("max_escalation_rounds", 1)
+        max_esc_agents = tcfg.get("max_escalation_agents", 2)
+        esc = {"triggered": False, "rounds": 0,
+               "confidence_before": unified.confidence,
+               "confidence_after": unified.confidence, "reason": None}
+        rounds = 0
+        while should_escalate(unified.confidence, rounds, max_rounds,
+                              self.budget.remaining_agents(), enabled):
+            self._log("Confidence LOW -- escalation round %d (agents left: %d)"
+                      % (rounds + 1, self.budget.remaining_agents()))
+            extra = self._run_escalation_round(document, ctx, unified, rounds + 1, max_esc_agents)
+            if not extra:
+                esc["reason"] = "no agent budget for escalation"
+                break
+            all_outputs = all_outputs + extra
+            unified = self._synthesize(document, ctx, all_outputs)
+            rounds += 1
+        if rounds == 0 and esc["reason"] is None:
+            esc["reason"] = ("confidence not LOW -- no escalation needed"
+                             if unified.confidence != "LOW" else "escalation disabled or no budget")
+        esc.update({"triggered": rounds > 0, "rounds": rounds,
+                    "confidence_after": unified.confidence})
+        self._transparency["escalation"] = esc
+        return unified, all_outputs
+
+    def _run_escalation_round(self, document, ctx, unified, round_no, max_esc_agents):
+        """Bounded extra forensic pass over the verdict-driving findings. Distinct agent ids
+        (FOR-ESC-*) so cross-agent corroboration counts them as independent. Degrades
+        gracefully (errors captured) so offline/no-API runs never crash."""
+        n_esc = min(self.budget.remaining_agents(), max(0, int(max_esc_agents)))
+        roles = (ctx.forense_agents or [])[:n_esc]
+        if not roles:
+            return []
+        if unified.fatal_findings:
+            driving = unified.fatal_findings
+        elif unified.serious_findings:
+            driving = unified.serious_findings
+        elif unified.moderate_findings:
+            driving = unified.moderate_findings
+        else:
+            driving = unified.latent_findings
+        focus = " | ".join(getattr(f, "title", "") for f in driving[:5]) or "low-corroboration verdict"
+        directive = ("ESCALATION ROUND %d: confidence is LOW. Independently re-examine the "
+                     "verdict-driving findings and corroborate or refute them with evidence: %s"
+                     % (round_no, focus))
+        results = []
+        with ThreadPoolExecutor(max_workers=max(1, len(roles))) as executor:
+            futures = {}
+            for i, role in enumerate(roles):
+                agent_id = "FOR-ESC-%s" % str(i + 1).zfill(2)
+                prompt = self.engine.build_forense_prompt(
+                    agent_id, role, ctx, directive,
+                    handoff_window=self.config.get("tribunal", {}).get("handoff_window", 8000)
+                )
+                futures[executor.submit(self._call_agent, agent_id, "FORENSE", role, prompt, document)] = (agent_id, role)
+            for future in as_completed(futures):
+                agent_id, role = futures[future]
+                try:
+                    result = future.result(timeout=120)
+                    result["role"] = role
+                    result["escalation"] = True
+                    results.append(result)
+                    self._log("%s (escalation) -- verdict: %s" % (agent_id, result.get("preliminary_verdict", "N/A")))
+                except Exception as e:
+                    self._log("%s (escalation) failed: %s" % (agent_id, e))
+                    results.append({"agent_id": agent_id, "role": role,
+                                    "agent_type": "FORENSE", "error": str(e), "escalation": True})
+        return results
+
     def _apply_confidence(self, unified, all_outputs):
         """
         v3.11.0 -- recompute confidence deterministically (NON-BINDING; never
@@ -487,6 +567,7 @@ class TribunalTransversal:
             f"    {u}  ← SUB_AGENT_EXPANSION_RECOMMENDED dispatched"
             for u in sub_temp]) if sub_temp else "    None"
         budget = t.get("budget", {})
+        escalation = t.get("escalation", {})
         ssm_block = (
             f"\n  STATUS:  ACTIVATED | Scale: {t['ssm']['scale']} | "
             f"Social: {t['ssm'].get('social_verdict', 'See SSM report')}"
@@ -496,7 +577,7 @@ class TribunalTransversal:
 
         return f"""
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-DARK STRATEGIST v3.11.0 — TRANSPARENCY REPORT
+DARK STRATEGIST v3.12.0 — TRANSPARENCY REPORT
 Session: DS-{self.session_id} | Duration: {round(duration,1)}s
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
@@ -528,6 +609,10 @@ VERDICT SUMMARY
   Confirmed by 2+ agents: {len(unified.multi_agent_confirmed)}
   Conflicts resolved:     {len(unified.conflicts_detected)}
 
+CONFIDENCE (deterministic, NON-BINDING -- auditability signal, not success/efficiency)
+  Level:       {unified.confidence}
+  Escalation:  {'YES' if escalation.get('triggered') else 'NO'} | rounds: {escalation.get('rounds', 0)} | {escalation.get('confidence_before', 'N/A')} -> {escalation.get('confidence_after', 'N/A')}{(' | ' + str(escalation.get('reason'))) if escalation.get('reason') else ''}
+
 SIMULACIÓN SOCIAL MASIVA (SSM){ssm_block}
 
 BUDGET CONSUMED
@@ -552,6 +637,7 @@ FINAL VERDICT: {unified.final_verdict} | Confidence: {unified.confidence} (non-b
             "ssm": {"activated": False, "reason": None,
                     "scale": None, "social_verdict": None},
             "budget": {},
+            "escalation": {},
         }
 
     def _log(self, msg: str):

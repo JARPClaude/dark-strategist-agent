@@ -57,6 +57,9 @@ def load_config(config_path: str = "config.json") -> dict:
             "max_agents": 7,
             "max_calls_total": 40,
             "max_n2_per_n1": 3,
+            "escalation_enabled": True,
+            "max_escalation_rounds": 1,
+            "max_escalation_agents": 2,
             "doc_window": 4000,
             "parent_report_window": 1000,
             "alert_at_percent": 80
@@ -123,7 +126,7 @@ def calculate_tribunal_size(tribunal: bool, agents: int) -> tuple:
 
 def main():
     parser = argparse.ArgumentParser(
-        description="Dark Strategist Agent v3.11.0 — Tribunal Transversal"
+        description="Dark Strategist Agent v3.12.0 — Tribunal Transversal"
     )
 
     # Case-based args (v3.0 — recommended)
@@ -239,7 +242,7 @@ def main():
     mode_label = tribunal_label if args.tribunal else "SINGLE"
     ssm_label = f" + SSM ({args.ssm_scale})" if args.ssm else ""
     print(f"\n{'='*60}")
-    print(f"DARK STRATEGIST v3.11.0 — Tribunal Transversal")
+    print(f"DARK STRATEGIST v3.12.0 — Tribunal Transversal")
     print(f"Domain: {ctx.domain} | Regime: {ctx.regime}")
     print(f"Mode: {mode_label}{ssm_label}")
     print(f"{'='*60}\n")

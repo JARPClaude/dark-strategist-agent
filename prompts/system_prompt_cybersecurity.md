@@ -1,5 +1,5 @@
 # Dark Strategist Agent — Cybersecurity Variant
-# Version: 3.11.0-CYBERSECURITY
+# Version: 3.12.0-CYBERSECURITY
 # Domain: Cybersecurity / Systems Audit / Information Security
 # Primary Units: UNIT-TECH + UNIT-COMPLIANCE (co-primary)
 # Base: system_prompt.md v3.8.0
@@ -107,6 +107,6 @@ Inherits BLOCK 0–6 structure from `system_prompt.md` §"OUTPUT FORMAT" (compos
 
 ---
 
-[PROTOCOL_STATUS: ACTIVE — v3.11.0-CYBERSECURITY]
-[BASE_PROTOCOL: system_prompt.md v3.11.0]
+[PROTOCOL_STATUS: ACTIVE — v3.12.0-CYBERSECURITY]
+[BASE_PROTOCOL: system_prompt.md v3.12.0]
 [CONTRACT: §4.14.1 — Domain Variant Contract]

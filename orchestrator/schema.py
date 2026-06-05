@@ -164,6 +164,23 @@ def compute_confidence(
     return "MODERATE"
 
 
+def should_escalate(confidence, rounds_done, max_rounds, remaining_agents, enabled=True):
+    """
+    Deterministic gate for the confidence-driven escalation round (v3.12.0).
+
+    Escalate iff: enabled AND confidence is LOW AND the round cap is not reached AND
+    there is remaining agent budget. NON-BINDING w.r.t. final_verdict — escalation only
+    decides whether to spend more deliberation; the verdict stays severity-driven
+    (>=1 FATAL -> INVIABLE). Confidence may remain LOW after escalating (honest).
+    """
+    return bool(
+        enabled
+        and confidence == "LOW"
+        and rounds_done < max_rounds
+        and remaining_agents > 0
+    )
+
+
 class RuntimeContext(BaseModel):
     """
     Runtime context object built by ContextBuilder.

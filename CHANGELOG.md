@@ -5,6 +5,30 @@ Format: [VERSION] — DATE — Description
 
 ---
 
+## [3.12.0] — 2026-06-04
+
+### Added — Confidence-gated escalation (value-add P1)
+- `orchestrator/schema.py`: new `should_escalate(confidence, rounds_done, max_rounds, remaining_agents, enabled)` — pure deterministic gate. NON-BINDING: decides only whether to spend more deliberation; never alters `final_verdict` (severity-driven: >=1 FATAL -> INVIABLE).
+- `orchestrator/tribunal_transversal.py`: `_maybe_escalate` hooked after synthesis. When `confidence == LOW` and agent budget remains, runs a bounded extra forensic pass (`_run_escalation_round`, distinct `FOR-ESC-*` ids so cross-agent corroboration counts them as independent) on the verdict-driving findings, re-synthesizes, and recomputes confidence. Capped at `max_escalation_rounds`. Degrades gracefully (errors captured) so offline/no-API runs never crash.
+- Confidence may remain LOW after escalating (honest — never inflated). Builds directly on P3's deterministic confidence.
+- `orchestrator/main.py` + `config.example.json`: `escalation_enabled` (true), `max_escalation_rounds` (1), `max_escalation_agents` (2).
+- Transparency report surfaces a CONFIDENCE block (level + escalation status: triggered/rounds/before->after).
+
+### Tests
+- `orchestrator/test_escalation.py`: 10-case offline truth table for `should_escalate` (no API).
+
+### Versioning
+- Atomic §4.14.1 bump: base + router + 19 domain variants + README + CLAUDE product-face -> v3.12.0. Operator-visible orchestrator banners (main/wizard/transparency report) -> v3.12.0. Module/feature docstrings frozen at origin. No prompt/skill CONTENT, no roster (9 N2), no verdict-logic change.
+
+### Non-binding guarantee
+- Escalation is a deliberation-budget decision, not a verdict input (consistent with RULE LG07/F08; confidence NON-BINDING). The deterministic verdict (FATAL->INVIABLE) is untouched; regression confirms `e_monotonic_verdict` + `c_fallback_intact` green, and the gate's no-op paths never touch the synthesizer.
+
+### JARP_CERTIFIED: DS v3.12.0 — PA-20260604-004 ✅
+
+Level 1 — JARP DEEP delta-coverage 7-axis forensic audit of `dark-strategist-agent` v3.12.0 by `prompt-architect-agent` v1.3.0 (PA-20260527-002), over the v3.11.0 baseline (19/19 unchanged). Scope: v3.12.0 delta — confidence-gated escalation (`should_escalate` pure gate + `_maybe_escalate`/`_run_escalation_round` hooked after synthesis; bounded extra forensic round on LOW confidence, distinct `FOR-ESC-*` ids, re-synthesize + recompute; capped at `max_escalation_rounds`; budget-gated; graceful offline degradation), `test_escalation.py` added, escalation config keys, atomic §4.14.1 bump. RULE 08 self-audit L0 (PA-20260604-003) PASS first. Functional evidence on the real machine (post-bump): `test_escalation.py` 10/10 + `test_confidence.py` 10/10 + `smoke_test_e2e.py` OFFLINE GREEN (0 FAIL, 1 SKIP = `b_unified_output`, non-blocking) with `c_fallback_intact` + `e_monotonic_verdict` PASS. Verdict invariant verified: escalation gate no-op paths never invoke synthesis and never alter `final_verdict` (severity-driven). Forensic surface (19 variants + 6 skills + base + router CONTENT) byte-identical except stamps. Result: 0 CRITICAL | 0 SERIOUS | 0 MODERATE | 0 LATENT -> `JARP_CERTIFIED`. `BIAS_CHECK_RESULT: PASS` (escalation is a deliberation-budget decision, orthogonal to the verdict). Non-forensic confirmatory bump. Supersedes PA-20260604-002 (DS v3.11.0). `JARP_BENCHMARK_LIVE` advances to v3.12.0. Valid until 04/09/2026 or DS v4.0.0.
+
+---
+
 ## [3.11.0] — 2026-06-04
 
 ### Added — Deterministic auditable confidence (value-add P3)
