@@ -31,6 +31,17 @@ def _tokenize(text):
     return re.findall(r"[a-z0-9]+", (text or "").lower())
 
 
+def overlap_score(text_a, text_b):
+    """Count of DISTINCT tokens shared by two texts (deterministic).
+
+    Reuses the same alnum tokenization as BM25 retrieval. Used ONLY by the
+    signal-provenance attribution layer (v3.15.0): a heuristic auditability hint that
+    attributes a Finding to the external signal it most overlaps. NON-BINDING — it runs
+    post-verdict and NEVER enters the verdict path.
+    """
+    return len(set(_tokenize(text_a)) & set(_tokenize(text_b)))
+
+
 def chunk(document, size=1000, overlap=150):
     """Splits a document into overlapping windows, preferring paragraph/newline breaks."""
     if not document:

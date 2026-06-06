@@ -27,7 +27,7 @@ from sub_agent_spawner import SubAgentSpawner
 from notifier import SlackNotifier, GitHubNotifier
 from sheets_logger import SheetsLogger
 from ssm import SimulacionSocialMasiva
-from retriever import build_agent_context, load_corpus, load_corpus_files
+from retriever import build_agent_context, load_corpus, load_corpus_files, overlap_score
 
 
 class TribunalTransversal:
@@ -60,9 +60,20 @@ class TribunalTransversal:
         self._active_corpus = (load_corpus_files(_byo) if _byo
                                else load_corpus(getattr(ctx, "corpus", None)))
         #--- P4 (v3.14.0): external signals = distinct time-sensitive EVIDENCE channel (BYO only).
-        self._active_signals = load_corpus_files(getattr(ctx, "signals_paths", None))
+        #--- v3.15.0: keep a path-tagged view for provenance; the agent feed (_active_signals)
+        #--- is the SAME passage list, just projected -> byte-identical to the P4 feed.
+        _sig_paths = getattr(ctx, "signals_paths", None) or []
+        if isinstance(_sig_paths, str):
+            _sig_paths = [_sig_paths]
+        _tagged = []
+        for _p in _sig_paths:
+            for _passage in load_corpus_files(_p):
+                _tagged.append((_p, _passage))
+        self._active_signals_tagged = _tagged
+        self._active_signals = [_passage for _, _passage in _tagged]
         self._transparency["signals"] = {"active": bool(self._active_signals),
-                                         "count": len(self._active_signals)}
+                                         "count": len(self._active_signals),
+                                         "provenance": []}
         self._log(f"Tribunal Transversal initiated — {ctx.domain} / {ctx.subscenario}")
         self._log(f"Regime: {ctx.regime} | Tribunal: {ctx.tribunal_label}")
 
@@ -101,6 +112,10 @@ class TribunalTransversal:
         unified = self._synthesize(document, ctx, all_outputs)
         unified, all_outputs = self._maybe_escalate(document, ctx, all_outputs, unified)
         self._transparency["afo"]["verdict_synthesized"] = True
+        #--- Provenance (v3.15.0): post-verdict, NON-BINDING attribution of each finding to the
+        #--- external signal passage it most overlaps. Reads the FINAL verdict, writes only the
+        #--- report -> structurally cannot alter final_verdict (same independence as P4).
+        self._transparency["signals"]["provenance"] = self._attribute_signal_provenance(unified)
 
         # ── SSM ────────────────────────────────────────────────────────────
         ssm_report = ""
@@ -555,6 +570,41 @@ class TribunalTransversal:
         ]
         return "\n".join(lines)
 
+    def _attribute_signal_provenance(self, unified: UnifiedVerdictOutput) -> list:
+        """Deterministic, post-verdict provenance: attribute each finding to the external
+        signal passage it shares the most tokens with (v3.15.0).
+
+        NON-BINDING auditability hint, NOT causal proof and NEVER a verdict input. It reads
+        the already-final `unified` and returns plain records for the transparency report;
+        it mutates neither the verdict nor any Finding. Empty when there are no signals or
+        when the best overlap is below `rag.provenance_min_overlap` (default 3) — we prefer
+        NOT attributing over attributing on stopword noise.
+        """
+        tagged = getattr(self, "_active_signals_tagged", None) or []
+        if not tagged:
+            return []
+        min_ov = self.config.get("rag", {}).get("provenance_min_overlap", 3)
+        tiers = [("FATAL", unified.fatal_findings),
+                 ("SERIOUS", unified.serious_findings),
+                 ("MODERATE", unified.moderate_findings),
+                 ("LATENT", unified.latent_findings)]
+        out = []
+        for sev, findings in tiers:
+            for f in findings:
+                ftext = (f.evidence or "") + " " + (f.description or "")
+                best_i, best_sc = -1, 0
+                for i, (_path, passage) in enumerate(tagged):
+                    sc = overlap_score(ftext, passage)
+                    if sc > best_sc:
+                        best_sc, best_i = sc, i
+                if best_i >= 0 and best_sc >= min_ov:
+                    path, passage = tagged[best_i]
+                    snippet = " ".join((passage or "").split())[:80]
+                    out.append({"severity": sev, "title": f.title,
+                                "signal_index": best_i, "source": path,
+                                "overlap": best_sc, "snippet": snippet})
+        return out
+
     def _build_transparency_report(self, ctx: RuntimeContext, duration: float,
                                    ssm_reason: str,
                                    unified: UnifiedVerdictOutput) -> str:
@@ -581,6 +631,12 @@ class TribunalTransversal:
             for u in sub_temp]) if sub_temp else "    None"
         budget = t.get("budget", {})
         escalation = t.get("escalation", {})
+        _prov = t.get("signals", {}).get("provenance", []) or []
+        prov_lines = "\n".join([
+            f"    [{p['severity']}] {p['title'][:50]}  <- signal #{p['signal_index']} "
+            f"({p['source']}, overlap={p['overlap']})  \"{p['snippet']}\""
+            for p in _prov
+        ]) if _prov else "    none"
         ssm_block = (
             f"\n  STATUS:  ACTIVATED | Scale: {t['ssm']['scale']} | "
             f"Social: {t['ssm'].get('social_verdict', 'See SSM report')}"
@@ -590,7 +646,7 @@ class TribunalTransversal:
 
         return f"""
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-DARK STRATEGIST v3.14.0 — TRANSPARENCY REPORT
+DARK STRATEGIST v3.15.0 — TRANSPARENCY REPORT
 Session: DS-{self.session_id} | Duration: {round(duration,1)}s
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
@@ -622,6 +678,9 @@ VERDICT SUMMARY
   🔵 LATENT:   {len(unified.latent_findings)}
   Confirmed by 2+ agents: {len(unified.multi_agent_confirmed)}
   Conflicts resolved:     {len(unified.conflicts_detected)}
+
+SIGNAL PROVENANCE (v3.15.0 — heuristic, NON-BINDING; likely originating signal, not causal proof)
+{prov_lines}
 
 CONFIDENCE (deterministic, NON-BINDING -- auditability signal, not success/efficiency)
   Level:       {unified.confidence}

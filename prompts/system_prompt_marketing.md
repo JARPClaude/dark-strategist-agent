@@ -1,5 +1,5 @@
 # Dark Strategist Agent — Marketing Variant
-# Version: 3.14.0-MARKETING
+# Version: 3.15.0-MARKETING
 # Domain: Marketing / Growth / Brand / Digital Advertising
 # Primary Unit: UNIT-MARKET
 # Base: system_prompt.md v3.8.0
@@ -111,6 +111,6 @@ Inherits BLOCK 0–6 structure from `system_prompt.md` §"OUTPUT FORMAT" (compos
 
 ---
 
-[PROTOCOL_STATUS: ACTIVE — v3.14.0-MARKETING]
-[BASE_PROTOCOL: system_prompt.md v3.14.0]
+[PROTOCOL_STATUS: ACTIVE — v3.15.0-MARKETING]
+[BASE_PROTOCOL: system_prompt.md v3.15.0]
 [CONTRACT: §4.14.1 — Domain Variant Contract]

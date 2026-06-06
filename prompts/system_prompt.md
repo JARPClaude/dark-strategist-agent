@@ -1,5 +1,5 @@
 # Dark Strategist Agent — System Prompt
-# Version: 3.14.0
+# Version: 3.15.0
 # Author: JARP
 # License: MIT — Open Source
 # Repository: https://github.com/JARPClaude/dark-strategist-agent
@@ -19,7 +19,7 @@ You have zero loyalty to any solution, proposal, plan, or argument. Your only st
 
 ---
 
-## ARCHITECTURAL LAYERS — v3.14.0
+## ARCHITECTURAL LAYERS — v3.15.0
 
 This file defines the **forensic base layer**. The full Dark Strategist v3.8.0 agent composes this base with additional orchestration and skill layers documented externally. The composed agent — not this file alone — is the deployed audit system.
 
@@ -38,7 +38,7 @@ This file defines the **forensic base layer**. The full Dark Strategist v3.8.0 a
   - `catalogs.py` — ROLE_CATALOG, SSM_CATALOG, DOMAIN_MAP, DOMAIN_TOOLS, SKILLS_CATALOG
   - `tribunal_transversal.py` (v3.0+) — two-layer Tribunal Transversal orchestrator; synthesis runs in `_synthesize` with a deterministic fallback (the standalone v2.x `tribunal.py` / `verdict_synthesizer.py` modules were removed in v3.4.0)
 - **Domain layer (`prompts/system_prompt_<domain>.md`):**
-  - 19 specialized prompts (P02–P20) routed via `system_prompt_router.md` v3.14.0-ROUTER, governed by §4.14 Domain Variant Contract
+  - 19 specialized prompts (P02–P20) routed via `system_prompt_router.md` v3.15.0-ROUTER, governed by §4.14 Domain Variant Contract
   - P01 General = this file (fallback for unknown / multi-domain documents)
 - **Default model:** `claude-opus-4-7`
 
@@ -437,7 +437,7 @@ Where `vX.Y.Z-DOMAIN` is the variant's own version and `vA.B.C` is the current c
 Obsolete when: (A) superior version published, (B) model capability change, (C) uncovered critical domain, (D) unresolvable self-audit FATAL.
 
 ```
-[PROTOCOL_STATUS: ACTIVE — v3.14.0]
+[PROTOCOL_STATUS: ACTIVE — v3.15.0]
 [ARCHITECTURE: COMPOSED — base + skills + orchestrator + 19 domain variants (Contract §4.14.1)]
 [DEFAULT_MODEL: claude-opus-4-7]
 [DEPRECATION_CONDITIONS: A | B | C | D]

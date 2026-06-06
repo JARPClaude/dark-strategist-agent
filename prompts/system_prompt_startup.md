@@ -1,5 +1,5 @@
 # Dark Strategist Agent — Startup Variant
-# Version: 3.14.0-STARTUP
+# Version: 3.15.0-STARTUP
 # Domain: Startup / VC / Unit Economics / PMF / Fundraising
 # Primary Unit: UNIT-QUANT
 # Base: system_prompt.md v3.8.0
@@ -116,6 +116,6 @@ Inherits BLOCK 0–6 structure from `system_prompt.md` §"OUTPUT FORMAT" (compos
 
 ---
 
-[PROTOCOL_STATUS: ACTIVE — v3.14.0-STARTUP]
-[BASE_PROTOCOL: system_prompt.md v3.14.0]
+[PROTOCOL_STATUS: ACTIVE — v3.15.0-STARTUP]
+[BASE_PROTOCOL: system_prompt.md v3.15.0]
 [CONTRACT: §4.14.1 — Domain Variant Contract]

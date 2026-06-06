@@ -5,6 +5,28 @@ Format: [VERSION] — DATE — Description
 
 ---
 
+## [3.15.0] — 2026-06-06
+
+### Added — Signal-provenance attribution in the transparency report (value-add)
+- `orchestrator/retriever.py`: new pure helper `overlap_score(a, b)` — count of DISTINCT shared tokens using the same alnum tokenizer as BM25 retrieval. Used ONLY by the provenance layer; deterministic, no API, no network.
+- `orchestrator/tribunal_transversal.py`: signals are now loaded path-tagged (`_active_signals_tagged = [(source, passage)]`); the agent feed (`_active_signals`) is the SAME passage list projected, so the P4 feed stays byte-identical. New `_attribute_signal_provenance(unified)` attributes each consolidated Finding (evidence + description) to the external signal passage it most overlaps, above a configurable floor; results surface as a `SIGNAL PROVENANCE` block in the transparency report. Computed POST-verdict in `run()`.
+- `orchestrator/config.example.json`: `rag.provenance_min_overlap` (3) — attribution floor; below it a finding is left unattributed (prefer no attribution over stopword noise).
+
+### Tests
+- `orchestrator/test_provenance.py` (NEW): 12-check offline suite ($0) — overlap_score correctness (shared/disjoint/case), no-signals graceful empty, right-source attribution, floor honored + configurable, best-overlap wins, record shape (severity/source/snippet), multi-tier spread, and a GOLDEN independence check (attribution mutates neither `final_verdict` nor the findings).
+
+### Versioning
+- Atomic §4.14.1 bump: base + router + 19 domain variants + README + CLAUDE product-face -> v3.15.0 (bump_stamps). Operator-visible orchestrator banners (main x2 / wizard / transparency report) -> v3.15.0 (bump_manual). Module/feature docstrings frozen at origin. No prompt/skill CONTENT, no roster (9 N2), no verdict-logic change.
+
+### Non-binding guarantee
+- Provenance runs POST-verdict: it reads the already-final `unified` and writes only the transparency report; it touches neither `final_verdict` nor any `Finding`. The verdict stays severity-driven (>=1 FATAL -> INVIABLE; RULE LG07/F08). The golden check in `test_provenance.py` proves verdict + findings invariance; smoke `e_monotonic_verdict` + `c_fallback_intact` stay green. Attribution is a heuristic auditability hint ("likely originating signal"), explicitly NOT causal proof.
+
+### JARP_CERTIFIED: DS v3.15.0 — PA-20260606-004 ✅
+
+Level 1 — JARP DEEP delta-coverage 7-axis forensic audit of `dark-strategist-agent` v3.15.0 by `prompt-architect-agent` v1.3.0 (PA-20260527-002), over the v3.14.0 baseline (forensic surface unchanged). Scope: v3.15.0 delta — signal-provenance attribution (`overlap_score` pure helper; path-tagged signals load with byte-identical agent feed; `_attribute_signal_provenance` post-verdict token-overlap with configurable `rag.provenance_min_overlap` floor; `SIGNAL PROVENANCE` transparency-report block), `test_provenance.py` added, atomic §4.14.1 bump. RULE 08 self-audit L0 (PA-20260606-003) PASS first. Functional evidence on the real machine (post-apply): `test_provenance.py` 12/12 (incl. GOLDEN independence) + `test_signals.py` 11/11 + `test_archetype_lenses.py` 10/10 + `test_escalation.py` 10/10 + `test_confidence.py` 10/10 + `test_wizard.py` 7/7 + `smoke_test_e2e.py` OFFLINE GREEN (0 FAIL, 1 SKIP = `b_unified_output`, non-blocking) with the full `run()` building the transparency report clean. Verdict invariant verified: provenance reads the final verdict and writes only the report; `final_verdict` and findings unchanged (golden check); the verdict stays severity-driven. No real-person impersonation. Forensic surface (19 variants + 6 skills + base + router CONTENT) byte-identical except stamps. Result: 0 CRITICAL | 0 SERIOUS | 0 MODERATE | 0 LATENT -> `JARP_CERTIFIED`. `BIAS_CHECK_RESULT: PASS` (provenance is a post-verdict auditability hint, orthogonal to the verdict). Non-forensic feed/report-layer bump. Supersedes PA-20260606-002 (DS v3.14.0). `JARP_BENCHMARK_LIVE` advances to v3.15.0. Valid until 06/09/2026 or DS v4.0.0. WATCH: live signals injection + provenance through a real model not yet exercised (`b_unified_output` SKIP — no API key; same environmental gap as escalation/lenses/signals); non-blocking.
+
+---
+
 ## [3.14.0] — 2026-06-06
 
 ### Added — External-signals evidence channel (value-add P4)
