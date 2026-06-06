@@ -168,7 +168,8 @@ def load_corpus_files(paths, *, chunk_size=1000, chunk_overlap=150):
 
 def build_agent_context(document, query_text, *, window,
                         chunk_size=1000, chunk_overlap=150,
-                        doc_top_k=6, corpus=None, corpus_top_k=3):
+                        doc_top_k=6, corpus=None, corpus_top_k=3,
+                        signals=None, signals_top_k=3):
     """Assembles the context fed to an agent.
 
     Non-breaking contract:
@@ -182,7 +183,8 @@ def build_agent_context(document, query_text, *, window,
         return legacy
     fits = len(document) <= window
     has_corpus = bool(corpus)
-    if fits and not has_corpus:
+    has_signals = bool(signals)
+    if fits and not has_corpus and not has_signals:
         return legacy  #--- preserve byte-identical legacy path
 
     parts = []
@@ -205,6 +207,24 @@ def build_agent_context(document, query_text, *, window,
         cps = cr.query(query_text or document[:500], corpus_top_k, drop_zero_overlap=True) if cr.available else []
         if cps:
             block = "\n\n[JURISDICTIONAL CORPUS - REFERENCE GROUNDING]\n" + "\n\n".join(cps)
+            block = block[:budget]
+            parts.append(block)
+            budget -= len(block)
+
+    if has_signals and budget > 200:
+        #--- P4 (v3.14.0): external signals = time-sensitive EVIDENCE, a channel distinct
+        #--- from jurisdictional grounding. drop_zero_overlap keeps pure-noise passages out.
+        #--- The directive travels inside the block so it reaches the agent verbatim with NO
+        #--- prompt_engine change. NON-BINDING: signals may substantiate a Finding; they never
+        #--- set the verdict (severity rule governs).
+        sr = Retriever(signals)
+        sps = sr.query(query_text or document[:500], signals_top_k, drop_zero_overlap=True) if sr.available else []
+        if sps:
+            header = ("\n\n[EXTERNAL SIGNALS - TIME-SENSITIVE EVIDENCE]\n"
+                      "(External evidence. Weigh against the document's claims; a contradiction "
+                      "or gap here MAY substantiate a Finding under the normal severity rule. "
+                      "This is evidence, NOT a verdict input.)\n")
+            block = header + "\n\n".join(sps)
             parts.append(block[:budget])
 
     return "\n\n".join(parts)

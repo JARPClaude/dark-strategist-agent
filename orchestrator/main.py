@@ -126,7 +126,7 @@ def calculate_tribunal_size(tribunal: bool, agents: int) -> tuple:
 
 def main():
     parser = argparse.ArgumentParser(
-        description="Dark Strategist Agent v3.13.0 — Tribunal Transversal"
+        description="Dark Strategist Agent v3.14.0 — Tribunal Transversal"
     )
 
     # Case-based args (v3.0 — recommended)
@@ -150,6 +150,12 @@ def main():
                         help="Reference corpus file(s) for R2 grounding "
                              "(.jsonl/.txt/.md or PDF/DOCX/PPTX/XLSX/HTML via markitdown). "
                              "Any jurisdiction; nothing is pre-loaded.")
+
+    # BYO per-case external signals (v3.14.0) — operator-supplied time-sensitive evidence
+    parser.add_argument("--signals", type=str, nargs="*", default=None,
+                        help="External signal file(s) — time-sensitive EVIDENCE weighed "
+                             "against the document's claims (same formats as --corpus). "
+                             "Distinct channel from --corpus (which only grounds). NON-BINDING.")
 
     # Tribunal args
     parser.add_argument("--tribunal", action="store_true",
@@ -201,6 +207,7 @@ def main():
             "run_ssm": args.ssm,
             "ssm_scale": args.ssm_scale,
             "corpus_paths": args.corpus,
+            "signals_paths": args.signals,
         }
         document = f"[Document type: {args.type} | Subscenario: {args.subscenario}]"
     elif args.document:
@@ -220,6 +227,7 @@ def main():
             "run_ssm": args.ssm,
             "ssm_scale": args.ssm_scale,
             "corpus_paths": args.corpus,
+            "signals_paths": args.signals,
         }
     else:
         parser.print_help()
@@ -242,7 +250,7 @@ def main():
     mode_label = tribunal_label if args.tribunal else "SINGLE"
     ssm_label = f" + SSM ({args.ssm_scale})" if args.ssm else ""
     print(f"\n{'='*60}")
-    print(f"DARK STRATEGIST v3.13.0 — Tribunal Transversal")
+    print(f"DARK STRATEGIST v3.14.0 — Tribunal Transversal")
     print(f"Domain: {ctx.domain} | Regime: {ctx.regime}")
     print(f"Mode: {mode_label}{ssm_label}")
     print(f"{'='*60}\n")

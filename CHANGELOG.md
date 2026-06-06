@@ -5,6 +5,32 @@ Format: [VERSION] — DATE — Description
 
 ---
 
+## [3.14.0] — 2026-06-06
+
+### Added — External-signals evidence channel (value-add P4)
+- `orchestrator/retriever.py`: `build_agent_context` gains a `signals`/`signals_top_k` channel — a DISTINCT, separately-labelled feed `[EXTERNAL SIGNALS - TIME-SENSITIVE EVIDENCE]` injected after the `[JURISDICTIONAL CORPUS - REFERENCE GROUNDING]` block, budget-aware, with `drop_zero_overlap=True` (pure-noise passages never injected). The in-band directive states signals are EVIDENCE that MAY substantiate a Finding under the normal severity rule — NOT a verdict input — so the channel needs no `prompt_engine` change. Reuses `load_corpus_files` + the BM25 `Retriever` (no new infra, no network).
+- `orchestrator/schema.py`: `RuntimeContext.signals_paths` (BYO per-case; None = no signals). Distinct from `corpus_paths`: corpus GROUNDS, signals are time-sensitive EVIDENCE.
+- `orchestrator/main.py`: new `--signals <path...>` flag (same formats as `--corpus`) wired into both case dicts via `signals_paths`.
+- `orchestrator/context_builder.py`: passthrough `signals_paths`.
+- `orchestrator/tribunal_transversal.py`: loads signals via `load_corpus_files(ctx.signals_paths)`, feeds them into every agent's doc context, and surfaces an `Ext.signals` provenance line in the transparency report.
+- `orchestrator/wizard.py`: optional step 8 "Attach external signals?" -> synthesizes `--signals`, delegates to the same parser.
+- `orchestrator/config.example.json`: `rag.signals_top_k` (3) declared (code already defaulted).
+
+### Tests
+- `orchestrator/test_signals.py` (NEW): 11-check offline suite ($0) — legacy byte-identical degradation, distinct EXTERNAL-SIGNALS label, in-band non-binding directive, relevant-signal inclusion, zero-overlap rejection, corpus+signals coexistence + ordering, tiny-budget safety, channel separation, and a GOLDEN invented-causality check (>=1 FATAL -> INVIABLE, severity-driven and signal-independent).
+
+### Versioning
+- Atomic §4.14.1 bump: base + router + 19 domain variants + README + CLAUDE product-face -> v3.14.0. Operator-visible orchestrator banners (main x2 / wizard / transparency report) -> v3.14.0. Module/feature docstrings + lens catalog frozen at origin. No prompt/skill CONTENT, no roster (9 N2), no verdict-logic change.
+
+### Non-binding guarantee
+- Signals only alter `build_agent_context` (the text agents read). The verdict is computed from Findings in `_synthesize`/`_deterministic_synthesis`, which never see signals — so the channel is STRUCTURALLY incapable of altering `final_verdict` (severity-driven: >=1 FATAL -> INVIABLE; consistent with RULE LG07/F08). Regression confirms `e_monotonic_verdict` + `c_fallback_intact` green; the golden check proves verdict invariance.
+
+### JARP_CERTIFIED: DS v3.14.0 — PA-20260606-002 ✅
+
+Level 1 — JARP DEEP delta-coverage 7-axis forensic audit of `dark-strategist-agent` v3.14.0 by `prompt-architect-agent` v1.3.0 (PA-20260527-002), over the v3.13.0 baseline (19/19 unchanged). Scope: v3.14.0 delta — external-signals evidence channel (`build_agent_context` signals feed: distinct `[EXTERNAL SIGNALS]` label + in-band non-binding directive + `drop_zero_overlap`; `RuntimeContext.signals_paths`; `--signals` flag in both case dicts; ContextBuilder passthrough; tribunal load + feed + transparency provenance; wizard step 8; `rag.signals_top_k`), `test_signals.py` added, atomic §4.14.1 bump. RULE 08 self-audit L0 (PA-20260606-001) PASS first. Functional evidence on the real machine (post-apply): `test_signals.py` 11/11 + `smoke_test_e2e.py` OFFLINE GREEN (0 FAIL, 1 SKIP = `b_unified_output`, non-blocking) with `c_fallback_intact` + `e_monotonic_verdict` + `r2_byo_corpus` PASS; full pipeline imports clean. One robustness defect caught/fixed pre-cert — the v1 edit script wrote each edit from the original file snapshot, clobbering multi-edit files to the last edit only (NameError `has_signals`); fixed by chaining edits per file on the evolving text + re-applied clean (14 edits / 6 files). Verdict invariant verified: signals only shape the agent-facing context; the verdict path never sees signals (golden check); `final_verdict` stays severity-driven. No real-person impersonation. Forensic surface (19 variants + 6 skills + base + router CONTENT) byte-identical except stamps. Result: 0 CRITICAL | 0 SERIOUS | 0 MODERATE | 0 LATENT -> `JARP_CERTIFIED`. `BIAS_CHECK_RESULT: PASS` (signals are a deliberation-evidence enrichment, orthogonal to the verdict). Non-forensic feed-layer bump. Supersedes PA-20260605-002 (DS v3.13.0). `JARP_BENCHMARK_LIVE` advances to v3.14.0. Valid until 06/09/2026 or DS v4.0.0. WATCH: live signals injection through a real model not yet exercised (`b_unified_output` SKIP — no API key; same environmental gap as escalation/lenses); non-blocking.
+
+---
+
 ## [3.13.0] — 2026-06-05
 
 ### Added — Archetype lenses for the escalation round (value-add P2)

@@ -59,6 +59,10 @@ class TribunalTransversal:
         _byo = getattr(ctx, "corpus_paths", None)
         self._active_corpus = (load_corpus_files(_byo) if _byo
                                else load_corpus(getattr(ctx, "corpus", None)))
+        #--- P4 (v3.14.0): external signals = distinct time-sensitive EVIDENCE channel (BYO only).
+        self._active_signals = load_corpus_files(getattr(ctx, "signals_paths", None))
+        self._transparency["signals"] = {"active": bool(self._active_signals),
+                                         "count": len(self._active_signals)}
         self._log(f"Tribunal Transversal initiated — {ctx.domain} / {ctx.subscenario}")
         self._log(f"Regime: {ctx.regime} | Tribunal: {ctx.tribunal_label}")
 
@@ -442,6 +446,8 @@ class TribunalTransversal:
             doc_top_k=rag.get("doc_top_k", 6),
             corpus=self._active_corpus,
             corpus_top_k=rag.get("corpus_top_k", 3),
+            signals=getattr(self, "_active_signals", None),
+            signals_top_k=rag.get("signals_top_k", 3),
         )
 
     def _call_agent(self, agent_id: str, agent_type: str, role: str,
@@ -584,7 +590,7 @@ class TribunalTransversal:
 
         return f"""
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-DARK STRATEGIST v3.13.0 — TRANSPARENCY REPORT
+DARK STRATEGIST v3.14.0 — TRANSPARENCY REPORT
 Session: DS-{self.session_id} | Duration: {round(duration,1)}s
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
@@ -593,6 +599,7 @@ AGENTE FORENSE ORQUESTADOR (AFO)
   Regime:      {ctx.regime} — {ctx.regime_description}
   Tribunal:    {ctx.tribunal_label}
   Synthesized: YES — VEREDICTO FORENSE UNIFICADO
+  Ext.signals: {('ACTIVE — %d evidence passage(s) (non-binding)' % t['signals']['count']) if t.get('signals', {}).get('active') else 'none'}
 
 TRIBUNAL TRANSVERSAL — LAYER 1: AGENTES DE ROL
   (Simulated the domain environment)
@@ -645,6 +652,7 @@ FINAL VERDICT: {unified.final_verdict} | Confidence: {unified.confidence} (non-b
                     "scale": None, "social_verdict": None},
             "budget": {},
             "escalation": {},
+            "signals": {"active": False, "count": 0},
         }
 
     def _log(self, msg: str):

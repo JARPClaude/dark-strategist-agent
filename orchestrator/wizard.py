@@ -91,6 +91,10 @@ def build_command(answers: dict) -> list:
     if corpus:
         args.append("--corpus")
         args += [str(p) for p in corpus]  #--- BYO per-case reference texts (any jurisdiction)
+    signals = answers.get("signals") or []
+    if signals:
+        args.append("--signals")
+        args += [str(p) for p in signals]  #--- BYO per-case external signals (time-sensitive evidence)
     return args
 
 
@@ -146,7 +150,7 @@ def _ask_text(question: str, default: str | None = None) -> str:
 def run_wizard() -> tuple:
     """Drives the interactive flow. Returns (argv_list, should_run)."""
     print("=" * 60)
-    print("DARK STRATEGIST v3.13.0 — INTERACTIVE WIZARD")
+    print("DARK STRATEGIST v3.14.0 — INTERACTIVE WIZARD")
     print("Answer the prompts; I'll build the command for you.")
     print("=" * 60)
 
@@ -200,10 +204,20 @@ def run_wizard() -> tuple:
                 break
             corpus.append(p)
 
+    #--- 8. BYO per-case external signals (optional; time-sensitive evidence)
+    signals = []
+    if _ask_yes_no("Attach external signals (news/data/reports) as evidence?", default=False):
+        print("  Enter file paths one per line (.jsonl/.txt/.md or PDF/DOCX). Blank to finish.")
+        while True:
+            p = input("  path: ").strip()
+            if not p:
+                break
+            signals.append(p)
+
     answers = {
         "type": type_token, "subscenario": subscenario, "objective": objective,
         "regime": regime, "tribunal": tribunal, "agents": agents,
-        "ssm": ssm, "ssm_scale": ssm_scale, "corpus": corpus,
+        "ssm": ssm, "ssm_scale": ssm_scale, "corpus": corpus, "signals": signals,
     }
     argv = build_command(answers)
 

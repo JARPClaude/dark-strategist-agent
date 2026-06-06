@@ -25,7 +25,8 @@
     "chunk_size": 1000,
     "chunk_overlap": 150,
     "doc_top_k": 6,
-    "corpus_top_k": 3
+    "corpus_top_k": 3,
+    "signals_top_k": 3
   },
   "ssm": {
     "max_personas": 20,

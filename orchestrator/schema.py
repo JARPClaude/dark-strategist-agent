@@ -216,3 +216,7 @@ class RuntimeContext(BaseModel):
     corpus: str | None = Field(default=None)
     # BYO per-case reference corpus (v3.10.0) — operator-supplied file paths; None = no BYO
     corpus_paths: list[str] | None = Field(default=None)
+    # BYO per-case external signals (v3.14.0) — operator-supplied time-sensitive evidence
+    # file paths; None = no signals. Distinct channel from corpus: corpus GROUNDS,
+    # signals are EVIDENCE that may substantiate a Finding. NON-BINDING to the verdict.
+    signals_paths: list[str] | None = Field(default=None)

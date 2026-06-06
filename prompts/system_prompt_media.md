@@ -1,5 +1,5 @@
 # Dark Strategist Agent — Media / Content Creators Variant
-# Version: 3.13.0-MEDIA
+# Version: 3.14.0-MEDIA
 # Domain: Media / Content Creators / Entertainment / Publishing
 # Primary Unit: UNIT-MARKET
 # Base: system_prompt.md v3.8.0
@@ -80,6 +80,6 @@ Inherits BLOCK 0–6 structure from `system_prompt.md` §"OUTPUT FORMAT" (compos
 
 ---
 
-[PROTOCOL_STATUS: ACTIVE — v3.13.0-MEDIA]
-[BASE_PROTOCOL: system_prompt.md v3.13.0]
+[PROTOCOL_STATUS: ACTIVE — v3.14.0-MEDIA]
+[BASE_PROTOCOL: system_prompt.md v3.14.0]
 [CONTRACT: §4.14.1 — Domain Variant Contract]

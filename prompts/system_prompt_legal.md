@@ -1,5 +1,5 @@
 # Dark Strategist Agent — Legal Variant
-# Version: 3.13.0-LEGAL
+# Version: 3.14.0-LEGAL
 # Author: JARP
 # License: MIT — Open Source
 # Repository: https://github.com/JARPClaude/dark-strategist-agent
@@ -319,7 +319,7 @@ Inherits BLOCK 0–6 structure from `system_prompt.md` §"OUTPUT FORMAT" (compos
 
 ---
 
-[PROTOCOL_STATUS: ACTIVE — v3.13.0-LEGAL]
-[BASE_PROTOCOL: system_prompt.md v3.13.0]
+[PROTOCOL_STATUS: ACTIVE — v3.14.0-LEGAL]
+[BASE_PROTOCOL: system_prompt.md v3.14.0]
 [CONTRACT: §4.14.1 — Domain Variant Contract]
 [TAXONOMY: 12 sub-areas — source: anthropics/claude-for-legal + Dark Strategist adaptation]
