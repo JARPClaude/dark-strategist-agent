@@ -20,6 +20,7 @@ from pathlib import Path
 import anthropic
 
 from schema import RuntimeContext, AgentVerdictOutput, UnifiedVerdictOutput, Finding, compute_confidence, should_escalate
+from archetype_lenses import select_lenses, build_lens_directive
 from prompt_engine import PromptEngine
 from budget_controller import BudgetController
 from sub_agent_spawner import SubAgentSpawner
@@ -323,14 +324,18 @@ class TribunalTransversal:
             esc["reason"] = ("confidence not LOW -- no escalation needed"
                              if unified.confidence != "LOW" else "escalation disabled or no budget")
         esc.update({"triggered": rounds > 0, "rounds": rounds,
-                    "confidence_after": unified.confidence})
+                    "confidence_after": unified.confidence,
+                    "lenses": sorted({o.get("lens") for o in all_outputs
+                                      if isinstance(o, dict) and o.get("escalation") and o.get("lens")})})
         self._transparency["escalation"] = esc
         return unified, all_outputs
 
     def _run_escalation_round(self, document, ctx, unified, round_no, max_esc_agents):
-        """Bounded extra forensic pass over the verdict-driving findings. Distinct agent ids
-        (FOR-ESC-*) so cross-agent corroboration counts them as independent. Degrades
-        gracefully (errors captured) so offline/no-API runs never crash."""
+        """Bounded extra forensic pass over the verdict-driving findings. Each FOR-ESC-*
+        agent is driven by a distinct archetype lens (P2 -- abstract adversarial
+        perspectives, never real persons). Distinct agent ids (FOR-ESC-*) so cross-agent
+        corroboration counts them as independent. Degrades gracefully (errors captured,
+        lens optional) so offline/no-API runs never crash."""
         n_esc = min(self.budget.remaining_agents(), max(0, int(max_esc_agents)))
         roles = (ctx.forense_agents or [])[:n_esc]
         if not roles:
@@ -344,31 +349,33 @@ class TribunalTransversal:
         else:
             driving = unified.latent_findings
         focus = " | ".join(getattr(f, "title", "") for f in driving[:5]) or "low-corroboration verdict"
-        directive = ("ESCALATION ROUND %d: confidence is LOW. Independently re-examine the "
-                     "verdict-driving findings and corroborate or refute them with evidence: %s"
-                     % (round_no, focus))
+        lenses = select_lenses(len(roles))  #--- P2: one archetype lens per escalation agent (deterministic)
         results = []
         with ThreadPoolExecutor(max_workers=max(1, len(roles))) as executor:
             futures = {}
             for i, role in enumerate(roles):
                 agent_id = "FOR-ESC-%s" % str(i + 1).zfill(2)
+                lens = lenses[i] if i < len(lenses) else None
+                directive = build_lens_directive(lens, round_no, focus)
                 prompt = self.engine.build_forense_prompt(
                     agent_id, role, ctx, directive,
                     handoff_window=self.config.get("tribunal", {}).get("handoff_window", 8000)
                 )
-                futures[executor.submit(self._call_agent, agent_id, "FORENSE", role, prompt, document)] = (agent_id, role)
+                futures[executor.submit(self._call_agent, agent_id, "FORENSE", role, prompt, document)] = (agent_id, role, lens)
             for future in as_completed(futures):
-                agent_id, role = futures[future]
+                agent_id, role, lens = futures[future]
+                lens_id = (lens or {}).get("id")
                 try:
                     result = future.result(timeout=120)
                     result["role"] = role
                     result["escalation"] = True
+                    result["lens"] = lens_id
                     results.append(result)
-                    self._log("%s (escalation) -- verdict: %s" % (agent_id, result.get("preliminary_verdict", "N/A")))
+                    self._log("%s (escalation, lens=%s) -- verdict: %s" % (agent_id, lens_id, result.get("preliminary_verdict", "N/A")))
                 except Exception as e:
-                    self._log("%s (escalation) failed: %s" % (agent_id, e))
+                    self._log("%s (escalation, lens=%s) failed: %s" % (agent_id, lens_id, e))
                     results.append({"agent_id": agent_id, "role": role,
-                                    "agent_type": "FORENSE", "error": str(e), "escalation": True})
+                                    "agent_type": "FORENSE", "error": str(e), "escalation": True, "lens": lens_id})
         return results
 
     def _apply_confidence(self, unified, all_outputs):
@@ -577,7 +584,7 @@ class TribunalTransversal:
 
         return f"""
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-DARK STRATEGIST v3.12.0 — TRANSPARENCY REPORT
+DARK STRATEGIST v3.13.0 — TRANSPARENCY REPORT
 Session: DS-{self.session_id} | Duration: {round(duration,1)}s
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
@@ -611,7 +618,7 @@ VERDICT SUMMARY
 
 CONFIDENCE (deterministic, NON-BINDING -- auditability signal, not success/efficiency)
   Level:       {unified.confidence}
-  Escalation:  {'YES' if escalation.get('triggered') else 'NO'} | rounds: {escalation.get('rounds', 0)} | {escalation.get('confidence_before', 'N/A')} -> {escalation.get('confidence_after', 'N/A')}{(' | ' + str(escalation.get('reason'))) if escalation.get('reason') else ''}
+  Escalation:  {'YES' if escalation.get('triggered') else 'NO'} | rounds: {escalation.get('rounds', 0)} | {escalation.get('confidence_before', 'N/A')} -> {escalation.get('confidence_after', 'N/A')}{(' | ' + str(escalation.get('reason'))) if escalation.get('reason') else ''}{(' | lenses: ' + ', '.join(escalation.get('lenses') or [])) if escalation.get('lenses') else ''}
 
 SIMULACIÓN SOCIAL MASIVA (SSM){ssm_block}
 

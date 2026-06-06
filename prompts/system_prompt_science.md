@@ -1,5 +1,5 @@
 # Dark Strategist Agent — Scientific / R&D Variant
-# Version: 3.12.0-SCIENCE
+# Version: 3.13.0-SCIENCE
 # Domain: Scientific Research / R&D / Academic / Clinical
 # Primary Units: UNIT-QUANT + UNIT-PSYCH
 # Base: system_prompt.md v3.8.0
@@ -80,6 +80,6 @@ Inherits BLOCK 0–6 structure from `system_prompt.md` §"OUTPUT FORMAT" (compos
 
 ---
 
-[PROTOCOL_STATUS: ACTIVE — v3.12.0-SCIENCE]
-[BASE_PROTOCOL: system_prompt.md v3.12.0]
+[PROTOCOL_STATUS: ACTIVE — v3.13.0-SCIENCE]
+[BASE_PROTOCOL: system_prompt.md v3.13.0]
 [CONTRACT: §4.14.1 — Domain Variant Contract]

@@ -1,5 +1,5 @@
 # Dark Strategist Agent — Operations Variant
-# Version: 3.12.0-OPERATIONS
+# Version: 3.13.0-OPERATIONS
 # Domain: Operations / Process / Supply Chain / Logistics
 # Primary Unit: UNIT-TECH
 # Base: system_prompt.md v3.8.0
@@ -111,6 +111,6 @@ Inherits BLOCK 0–6 structure from `system_prompt.md` §"OUTPUT FORMAT" (compos
 
 ---
 
-[PROTOCOL_STATUS: ACTIVE — v3.12.0-OPERATIONS]
-[BASE_PROTOCOL: system_prompt.md v3.12.0]
+[PROTOCOL_STATUS: ACTIVE — v3.13.0-OPERATIONS]
+[BASE_PROTOCOL: system_prompt.md v3.13.0]
 [CONTRACT: §4.14.1 — Domain Variant Contract]

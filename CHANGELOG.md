@@ -5,6 +5,28 @@ Format: [VERSION] — DATE — Description
 
 ---
 
+## [3.13.0] — 2026-06-05
+
+### Added — Archetype lenses for the escalation round (value-add P2)
+- `orchestrator/archetype_lenses.py` (NEW): frozen catalog of 5 abstract adversarial lenses (FALSIFIER, FAILURE_MODE_HUNTER, EVIDENCE_AUDITOR, INCENTIVE_AUDITOR, SYSTEMIC_LENS) + pure helpers `select_lenses(n)` (deterministic; returns dict copies so the catalog can never be mutated by a caller) and `build_lens_directive(lens, round_no, focus)`. No API, no I/O. Lenses are ABSTRACT roles — never an impersonation of a real person (fabricated authority forbidden by design).
+- `orchestrator/tribunal_transversal.py`: `_run_escalation_round` now assigns one archetype lens per `FOR-ESC-*` agent (deterministic order; the first complementary pair — refute-first + extend-first — runs under the default `max_escalation_agents=2`). Each lens shapes HOW the agent re-examines the verdict-driving findings; `FOR-ESC-*` ids preserved so cross-agent corroboration counts them as independent. `result["lens"]` tagged; `_maybe_escalate` records applied lenses; the transparency report surfaces them. `build_lens_directive(None, …)` degrades to a neutral directive when agents exceed the catalog, so offline/no-API runs never crash.
+- Catalog + module docstring are content-based/frozen (do not bump every minor).
+
+### Tests
+- `orchestrator/test_archetype_lenses.py`: 10-check offline suite (catalog integrity, order contract, `select_lenses` cap/degenerate/coercion/determinism/isolation, `build_lens_directive` embedding + graceful degradation). No API.
+
+### Versioning
+- Atomic §4.14.1 bump: base + router + 19 domain variants + README + CLAUDE product-face -> v3.13.0. Operator-visible orchestrator banners (main x2 / wizard / transparency report) -> v3.13.0. Module/feature docstrings + lens catalog frozen at origin. No prompt/skill CONTENT, no roster (9 N2), no verdict-logic change.
+
+### Non-binding guarantee
+- Lenses change deliberation quality, never the verdict. Escalation remains a deliberation-budget decision (consistent with RULE LG07/F08); the deterministic verdict (FATAL->INVIABLE) is untouched. Regression confirms `e_monotonic_verdict` + `c_fallback_intact` green and the gate's no-op paths never touch the synthesizer.
+
+### JARP_CERTIFIED: DS v3.13.0 — PA-20260605-002 ✅
+
+Level 1 — JARP DEEP delta-coverage 7-axis forensic audit of `dark-strategist-agent` v3.13.0 by `prompt-architect-agent` v1.3.0 (PA-20260527-002), over the v3.12.0 baseline (19/19 unchanged). Scope: v3.13.0 delta — archetype lenses (`archetype_lenses.py` NEW: 5 abstract lenses + pure `select_lenses`/`build_lens_directive`; one lens per `FOR-ESC-*` agent in `_run_escalation_round`; `result["lens"]` + `_maybe_escalate` lens record + transparency surfacing; graceful None-lens degradation), `test_archetype_lenses.py` added, atomic §4.14.1 bump. RULE 08 self-audit L0 (PA-20260605-001) PASS first. Functional evidence on the real machine (post-apply): `test_archetype_lenses.py` 10/10 + `test_escalation.py` 10/10 + `test_confidence.py` 10/10 + `smoke_test_e2e.py` OFFLINE GREEN (0 FAIL, 1 SKIP = `b_unified_output`, non-blocking) with `c_fallback_intact` + `e_monotonic_verdict` PASS; full pipeline imports `tribunal`->`archetype_lenses` clean. Verdict invariant verified: lenses only shape escalation directives + tag provenance; `final_verdict` stays severity-driven; escalation gate no-op paths never invoke synthesis. No real-person impersonation in the catalog (abstract roles only). Forensic surface (19 variants + 6 skills + base + router CONTENT) byte-identical except stamps. Result: 0 CRITICAL | 0 SERIOUS | 0 MODERATE | 0 LATENT -> `JARP_CERTIFIED`. `BIAS_CHECK_RESULT: PASS` (lenses are a deliberation-quality enrichment, orthogonal to the verdict). Supersedes PA-20260604-004 (DS v3.12.0). `JARP_BENCHMARK_LIVE` advances to v3.13.0. Valid until 05/09/2026 or DS v4.0.0.
+
+---
+
 ## [3.12.0] — 2026-06-04
 
 ### Added — Confidence-gated escalation (value-add P1)
