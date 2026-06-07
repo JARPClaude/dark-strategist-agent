@@ -1,5 +1,5 @@
 # Dark Strategist Agent — Medical / Clinical Variant
-# Version: 3.15.0-MEDICAL
+# Version: 3.16.0-MEDICAL
 # Domain: Medical / Clinical / Healthcare / Pharmaceutical
 # Primary Units: UNIT-INQUISITOR (regulatory) + UNIT-QUANT (clinical statistics)
 # Base: system_prompt.md v3.8.0
@@ -113,6 +113,6 @@ Inherits BLOCK 0–6 structure from `system_prompt.md` §"OUTPUT FORMAT" (compos
 
 ---
 
-[PROTOCOL_STATUS: ACTIVE — v3.15.0-MEDICAL]
-[BASE_PROTOCOL: system_prompt.md v3.15.0]
+[PROTOCOL_STATUS: ACTIVE — v3.16.0-MEDICAL]
+[BASE_PROTOCOL: system_prompt.md v3.16.0]
 [CONTRACT: §4.14.1 — Domain Variant Contract]

@@ -4,7 +4,7 @@
 
 > *"You have zero loyalty to any solution. Your only standard is truth under maximum pressure."*
 
-![Version](https://img.shields.io/badge/version-3.15.0-darkred)
+![Version](https://img.shields.io/badge/version-3.16.0-darkred)
 ![License](https://img.shields.io/badge/license-MIT-green)
 ![Status](https://img.shields.io/badge/status-ACTIVE-brightgreen)
 ![Domains](https://img.shields.io/badge/domains-20-blue)
@@ -207,13 +207,14 @@ python main.py --type startup --subscenario pitch \
 | v3.13.0 | Archetype lenses for the escalation round — one abstract adversarial lens per FOR-ESC agent (refute-first + extend-first); no real-person impersonation; NON-BINDING (never alters the FATAL→INVIABLE verdict) | ✅ |
 | v3.14.0 | External-signals evidence channel — `--signals` feeds time-sensitive evidence as a distinct labelled channel after corpus (reuses BM25; in-band non-binding directive; drop-zero-overlap); signals may substantiate a Finding; NON-BINDING (never alters the FATAL→INVIABLE verdict) | ✅ |
 | v3.15.0 | Signal-provenance attribution in the transparency report — deterministic post-verdict token-overlap attributes each finding to the external signal it most overlaps (configurable floor `rag.provenance_min_overlap`; reuses the BM25 tokenizer); heuristic, NON-BINDING (reads the final verdict, writes only the report; never alters the FATAL→INVIABLE verdict) | ✅ |
+| v3.16.0 | Reputational-risk forensic lens (skill #7) - activates in Media (P11), Marketing (P16), Strategy (P19); 5 patterns (over-claim, broken-promise, stakeholder-betrayal, association-contamination, silence-in-crisis); 7 RULES + 7 Failure-Catalog rows; detection lens, severity bound by the Failure Catalog; NON-BINDING (never alters the FATAL->INVIABLE verdict) | ✅ |
 
 ---
 
 ## Protocol Status
 
 ```
-[PROTOCOL_STATUS: ACTIVE — v3.15.0]
+[PROTOCOL_STATUS: ACTIVE — v3.16.0]
 [PLANNER: GOAP A* — dynamic optimal planning]
 [TRIBUNAL: TRANSVERSAL — Rol + Forense layers]
 [SKILL: ADAPTIVE AUTONOMOUS DRIVE — active]

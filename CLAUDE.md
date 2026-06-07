@@ -1,11 +1,11 @@
 # CLAUDE.md — Dark Strategist Agent
-# Version: 3.15.0
+# Version: 3.16.0
 
 ## What is this repo
 
 `dark-strategist-agent` is THE SOVEREIGN ADVERSARY — a forensic audit agent and adversarial orchestrator.
 
-**Version:** 3.15.0 — Minor Release
+**Version:** 3.16.0 — Minor Release
 **License:** MIT — Open Source
 **Repository:** https://github.com/JARPClaude/dark-strategist-agent
 **Name:** dark-strategist-agent — immutable, does not change under any circumstance.
@@ -187,6 +187,7 @@ python main.py --type startup --subscenario series_a --objective "investor readi
 | v3.13.0 Archetype lenses for the escalation round (one abstract adversarial lens per FOR-ESC agent; refute-first + extend-first; NO real-person impersonation; NON-BINDING — never alters the FATAL→INVIABLE verdict) | ✅ |
 | v3.14.0 External-signals evidence channel (--signals; distinct [EXTERNAL SIGNALS] feed after corpus, in-band directive, BM25 reuse, drop-zero-overlap; signals = time-sensitive EVIDENCE that may substantiate a Finding; NON-BINDING — never alters the FATAL→INVIABLE verdict) | ✅ |
 | v3.15.0 Signal-provenance attribution in the transparency report (deterministic post-verdict token-overlap; attributes each finding to the external signal it most overlaps; configurable floor `rag.provenance_min_overlap`; heuristic, NON-BINDING — reads the final verdict, writes only the report, never alters the FATAL→INVIABLE verdict) | ✅ |
+| v3.16.0 Reputational-risk forensic lens (skill #7) into P11/P16/P19 - 5 patterns (over-claim, broken-promise, stakeholder-betrayal, association-contamination, silence-in-crisis), 7 RULES + 7 Failure-Catalog rows; detection lens, severity bound by the Failure Catalog, NON-BINDING - never alters the FATAL->INVIABLE verdict | ✅ |
 
 ---
 
@@ -200,4 +201,4 @@ python main.py --type startup --subscenario series_a --objective "investor readi
 6. New skill → `skills/[skill-name]/SKILL.md` + entry in SKILLS_CATALOG
 7. The name `dark-strategist-agent` does not change under any circumstance
 
-**ACTIVE — v3.15.0**
+**ACTIVE — v3.16.0**

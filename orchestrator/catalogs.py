@@ -544,4 +544,5 @@ SKILLS_CATALOG = {
     "verdict-verification":       "skills/verdict-verification/SKILL.md",
     "adaptive-autonomous-drive":  "skills/adaptive-autonomous-drive/SKILL.md",  # NEW v3.2.0
     "context-degradation":        "skills/context-degradation/SKILL.md",  # NEW v3.7.0
+    "reputational-risk":          "skills/reputational-risk/SKILL.md",  # NEW v3.16.0
 }

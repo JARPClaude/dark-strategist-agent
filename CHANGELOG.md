@@ -5,6 +5,32 @@ Format: [VERSION] — DATE — Description
 
 ---
 
+## [3.16.0] - 2026-06-06
+
+### Added - Reputational-risk forensic lens (skill #7, value-add P5)
+- `skills/reputational-risk/SKILL.md` (NEW): detection lens for five reputational patterns - misrepresentation/over-claim, broken-promise, stakeholder-betrayal, association-contamination, silence-in-crisis - each with detection + audit signals. Activates in Media (P11), Marketing (P16), Strategy (P19). Detection lens only: it names and detects; severity is bound by the variant Failure Catalog; it never computes or alters the verdict (`VERDICT_IMPACT: NONE`).
+- `orchestrator/catalogs.py`: `SKILLS_CATALOG` gains `reputational-risk` (registry-only path entry; no logic).
+- `prompts/system_prompt.md`: skill #7 added to the Skills-layer composition map.
+- `prompts/system_prompt_marketing.md`: RULE MK05 (broken-promise) + 1 Failure-Catalog row (SERIOUS). Over-claim reuses existing MK04 / unverifiable-claim rows (no duplication).
+- `prompts/system_prompt_media.md`: RULES M05 (silence-in-crisis) / M06 (association-contamination) / M07 (over-claim) + 3 Failure-Catalog rows.
+- `prompts/system_prompt_strategy.md`: RULES ST05 (stakeholder-betrayal) / ST06 (association-contamination) / ST07 (silence-in-crisis) + 3 Failure-Catalog rows.
+- Scope: v1.0.0 binds P11/P16/P19 only; Public Sector (P14) and Startup (P20) are deferred (the lens does not fire where no Failure-Catalog rows bind severity).
+
+### Tests
+- `orchestrator/test_reputational_risk.py` (NEW): 14-check offline suite ($0) - SKILL.md structure + five named patterns + `VERDICT_IMPACT: NONE`; `SKILLS_CATALOG` registration + path; activation-subset-binding (active P11/P16/P19 variants carry `[reputational-risk:]` tags); scope discipline (P14/P20 NOT bound); structural no-verdict-impact (markdown-only skill - `reputational` appears in orchestrator/*.py only in `catalogs.py`, never in verdict logic).
+
+### Versioning
+- Atomic 4.14.1 bump: base + router + 19 domain variants + README + CLAUDE product-face -> v3.16.0 (bump_stamps). Operator-visible orchestrator banners (main x2 / wizard / transparency report) -> v3.16.0 (bump_manual). SKILL.md frozen at v1.0.0; catalogs.py module docstring frozen at origin; feature-landing comments frozen. No verdict-logic change.
+
+### Non-binding guarantee
+- The reputational-risk skill is a markdown detection lens. It produces findings; severity is assigned ONLY by the P11/P16/P19 Failure Catalog rows, consistent with each variant's Severity Taxonomy; from there findings feed the deterministic monotonic verdict table like any other finding. The skill computes nothing and references no verdict path (structural guarantee - markdown cannot touch `final_verdict`). The verdict stays severity-driven (>=1 FATAL -> INVIABLE; RULE LG07/F08). Unlike the P1-P4 metadata family, reputational findings carry real catalog-bound severity and CAN sink a verdict - the correct forensic behavior.
+
+### JARP_CERTIFIED: DS v3.16.0 — PA-20260606-006 ✅
+
+Level 1 — JARP DEEP delta-coverage 7-axis forensic audit of `dark-strategist-agent` v3.16.0 by `prompt-architect-agent` v1.3.0 (PA-20260527-002), over the v3.15.0 baseline (verdict engine unchanged). Scope: v3.16.0 delta — reputational-risk forensic lens (skill #7): `skills/reputational-risk/SKILL.md` (5 patterns — over-claim, broken-promise, stakeholder-betrayal, association-contamination, silence-in-crisis); `SKILLS_CATALOG` registry entry; composition-map bullet in base; 7 domain RULES + 7 Failure-Catalog rows across P11 Media (M05/M06/M07) / P16 Marketing (MK05) / P19 Strategy (ST05/ST06/ST07); `test_reputational_risk.py` added; atomic §4.14.1 bump. RULE 08 self-audit L0 (PA-20260606-005) PASS first. Functional evidence on the real machine (post-apply): `test_reputational_risk.py` 14/14 + `test_provenance.py` 12/12 + `test_signals.py` 11/11 + `test_archetype_lenses.py` 10/10 + `test_escalation.py` 10/10 + `test_confidence.py` 10/10 + `test_wizard.py` 7/7 + `smoke_test_e2e.py` OFFLINE GREEN (0 FAIL, 1 SKIP = `b_unified_output`, non-blocking) with the full `run()` building the transparency report clean (banner bump verified non-breaking). Skill is a markdown detection lens: it names and detects; severity is bound ONLY by the P11/P16/P19 Failure Catalog (consistent with each Severity Taxonomy); it computes nothing and references no verdict path — structural no-verdict-impact (markdown cannot touch `final_verdict`; `reputational` absent from every orchestrator verdict module). Unlike the P1–P4 metadata family, reputational findings carry real catalog-bound severity and feed the deterministic monotonic table like any other finding; the verdict stays severity-driven (>=1 FATAL -> INVIABLE; RULE LG07/F08). Scope discipline: v1.0.0 binds P11/P16/P19 only; P14/P20 deferred (activation⊆binding enforced by test). No duplication: over-claim in Marketing reuses existing MK04. No real-person impersonation. Result: 0 CRITICAL | 0 SERIOUS | 0 MODERATE | 0 LATENT -> `JARP_CERTIFIED`. `BIAS_CHECK_RESULT: PASS` (abstract neutral forensic patterns). Non-forensic detection/feed-layer bump → CONFIRMATORY re-cert. Supersedes PA-20260606-004 (DS v3.15.0). `JARP_BENCHMARK_LIVE` advances to v3.16.0. Valid until 06/09/2026 or DS v4.0.0. WATCH: reputational lens through a real model not yet exercised live (`b_unified_output` SKIP — no API key; same environmental gap as escalation/lenses/signals/provenance); non-blocking.
+
+---
+
 ## [3.15.0] — 2026-06-06
 
 ### Added — Signal-provenance attribution in the transparency report (value-add)

@@ -1,5 +1,5 @@
 # Dark Strategist Agent — Router
-# Version: 3.15.0-ROUTER
+# Version: 3.16.0-ROUTER
 # Role: Domain detection + prompt selection + DOMAIN_EXPANSION_RECOMMENDED
 
 ---
@@ -153,6 +153,6 @@ R8 — Catalog completeness: any prompt physically present in `prompts/` MUST be
 
 ---
 
-[PROTOCOL_STATUS: ACTIVE — v3.15.0-ROUTER]
-[BASE_PROTOCOL: system_prompt.md v3.15.0]
-[CATALOG_VERSION: 3.15.0 — 19 domain prompts + 1 base (P01 General)]
+[PROTOCOL_STATUS: ACTIVE — v3.16.0-ROUTER]
+[BASE_PROTOCOL: system_prompt.md v3.16.0]
+[CATALOG_VERSION: 3.16.0 — 19 domain prompts + 1 base (P01 General)]
