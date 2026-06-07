@@ -1,0 +1,7 @@
+EXTERNAL SIGNALS — time-sensitive evidence weighed against the proposal's claims.
+Each line is an independent observation. NON-BINDING.
+
+2026-05-30 | Regulatory: A formal probe was opened into Veld Holdings over alleged sanctions violations and undisclosed beneficial ownership.
+2026-05-12 | Sector study: across 140 B2B SaaS pivots, "10x in 12 months" claims realized a 1.3x median over the same window; none reached 10x.
+2026-04-02 | Litigation: a customer-data breach class action was filed in-sector; non-disclosure of the incident was cited by the court as an aggravating factor.
+2026-03-18 | Labor: severance disputes rose after firms dissolved teams immediately before equity cliffs; several settled for the full unvested amount.

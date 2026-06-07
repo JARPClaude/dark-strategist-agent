@@ -43,6 +43,9 @@ Auditor PA-agent v1.3.0 (`PA-20260527-002`). Self-audit L0 (`PA-20260606-005`) P
 - **CERT EMITIDO:** `PA-20260606-006` — DS **v3.16.0 JARP_CERTIFIED**, **0/0/0/0**, BIAS_CHECK PASS. Válido hasta **06/09/2026 o v4.0.0**. **SUPERSEDES PA-20260606-004** (v3.15.0). Bump no-forense detección/feed-layer → CONFIRMATORY.
 - **Bump:** `bump_stamps.ps1` (23 files / 69 stamps) + `bump_manual_v3_16_0.py` (6 files, newline-aware CRLF, all-or-nothing, line-based roadmap inserts). Dry-run en clon pristino (sandbox) antes del apply. Disjunción/order-independence probada en vivo (README PROTOCOL_STATUS re-ancló 216→217 tras el insert del manual). One-shot BORRADO antes del commit de cert.
 
+### 4. LIVE-WATCH CERRADO (s30 post-cert) — y 3 hallazgos
+Corrida live real (key real; Strategy/P19; doc reputacional `_livewatch/strategy_acme_board_proposal.txt` + `_livewatch/signals_acme.txt`; `--tribunal --agents 5 --regime adversarial`). Resultado: 8 calls reales, **síntesis live SIN fallback → `b_unified_output` cerrado** (el único SKIP de cada cert), 4 ROL + 3 FOR live, N2 spawn (UNIT-INQUISITOR + UNIT-COMPLIANCE), **6 FATAL → INVIABLE** determinista, los 5 patrones reputacionales afloraron como findings con severidad catalog-bound, provenance atribuyó post-veredicto, escalación-gate corrió (MODERATE → no disparó), render limpio. **Las 6 capas no-vinculantes (confidence/escalación/lentes/señales/provenance/reputational) quedan saldadas live.** El live destapó 3 hallazgos que el offline/estructural NUNCA habría mostrado (ver backlog LW-1/2/3). Ninguno invalida el cert: veredicto determinista correcto; LW-2/LW-3 son metadata NON-BINDING.
+
 ---
 
 ## ⚠️⚠️ ESTADO DE CERTIFICACIÓN ⚠️⚠️
@@ -69,13 +72,17 @@ Auditor PA-agent v1.3.0 (`PA-20260527-002`). Self-audit L0 (`PA-20260606-005`) P
 | **RE-CERT v3.16.0** | ✅ CERRADA | v3.16.0 CERTIFICADO (PA-20260606-006) | 0/0/0/0. |
 | **P5 reputational-risk** | ✅ CERRADA (fásico 3+2) | Skill #7 markdown, P11/P16/P19 | 7 RULES + 7 rows; test 14/0/0. P14/P20 diferidos. |
 | **Drift toolkit (s29)** | ✅ CERRADA | JARP_TOOLKIT.md sincronizado en PHASE 0 s30 | Ambos canónicos ahora concuerdan. |
-| **clash/gate/señales/provenance/reputational LIVE** | 🟢 WATCH | `b_unified_output` SKIP | DNS/key ambiental. `fcc-server` NO en PATH. Lente reputational tampoco ejercitada live. No-bloqueante. |
+| **clash/gate/señales/provenance/reputational LIVE** | ✅ CERRADA (s30 post-cert) | `b_unified_output` cerrado vía corrida live real | Strategy/P19, 8 calls, síntesis live (no fallback), 6 FATAL→INVIABLE, reputational 5/5, provenance atribuyó, escalación-gate corrió. Destapó 3 follow-ups → backlog LW-1/2/3. |
 | **DSv34-SYNTH** | 🟢 ACEPTADA | Fallback determinista = sintetizador de producción | Sin cambio. |
 
 ### BACKLOG VALOR-AGREGADO — pendiente
+- **🔴 LW-1 (DEFECTO — prioridad alta, correctness):** domain resolver false-match por substring. `context_builder._resolve_domain` hace `keyword in subscenario`; la clave de 2 letras `"ma":"Financial"` (y `"ops"`, `"hr"`, `"sop"`) matchea cualquier stem que las contenga → docs con "transformation/marketing/management/summary" mis-rutean a **Financial** → carga el **variant equivocado** en auditorías reales (Failure Catalog + lentes forenses erróneos). Fix quirúrgico: match por **token/word-boundary**, u ordenar claves largas primero, o eliminar claves de 2 letras. Slice propio + re-cert CONFIRMATORY. Repro: `strategy_acme_transformation.txt`→Financial vs `strategy_acme_board_proposal.txt`→Strategy. **Supera en valor a P5-ext (correctness > cobertura).**
+- **🟠 LW-2 (mejora):** confidence corroboración frágil. `_apply_confidence` arma `multi_agent_confirmed` por `(severity, _norm_title)` sobre findings crudos de cada agente; los títulos divergen entre agentes Y el sintetizador reescribe los títulos unificados → consenso unánime registra `Confirmed by 2+: 0` → `driver_corroborated=False` → confianza sesgada a la baja (MODERATE pese a 3/3 FOR=INVIABLE). NON-BINDING (veredicto intacto). Mejora: corroborar por acuerdo de veredicto o similitud semántica, o que el sintetizador propague source-agent por finding. Slice propio.
+- **🟡 LW-3 (UX — quick):** provenance granularidad por formato de señales. `retriever.load_corpus_files` splitea `.txt` por línea en blanco (`\n\n`); señales en líneas consecutivas colapsan en 1 passage → atribución manda todo a "signal #1" (mecanismo correcto, input mal formateado). Fix: documentar "una señal por párrafo (línea en blanco entre entradas)" o splitear señales `.txt` por línea. Zero/low-code. Repro: `_livewatch/signals_acme.txt`.
 - **P5 extensión P14/P20** (candidato v3.17.0): extender reputational-risk a Public Sector (P14) + Startup (P20) — Activation v1.1.0 + Failure Catalog rows (prefijos PS/SU). Es el "3+2" diferido; evaluar si aporta valor real o si P11/P16/P19 ya cubre el grueso.
-- **Cerrar el live-WATCH:** ejercitar escalación+lentes+señales+provenance+**reputational** live. (a) `fcc-server` (:8082, free backend, $0) o (b) `ANTHROPIC_API_KEY` real para corrida no-cert. Casos offline ya verdes; falta live e2e.
 - **STANDING:** cada sesión, velar que el sistema sea mejor (más robusto/valioso/eficiente/valor agregado). Proponer mejoras proactivamente; nunca barato-dormido sobre valor real.
+
+> Nota inputs live-WATCH: `_livewatch/` (doc Strategy + señales) es **throwaway no-commiteado**. Borrable, o reutilizable para validar LW-3 (re-formatear señales con línea en blanco entre entradas → la atribución discrimina).
 
 ---
 
@@ -92,7 +99,7 @@ Auditor PA-agent v1.3.0 (`PA-20260527-002`). Self-audit L0 (`PA-20260606-005`) P
 - `tools/bump_stamps.ps1` (anchors PROTOCOL_STATUS/BASE_PROTOCOL/CATALOG_VERSION/-ROUTER/ARCHITECTURAL LAYERS/Version:/version:/VERSION; scope prompts+README+CLAUDE; NO CHANGELOG ni orchestrator/*.py). `gc.auto 0` activo.
 - `corpus/` vacío. `JURISDICTION_CORPUS_MAP = {}`. BYO `--corpus` + `--signals` activos.
 - **7 skills** (kac, ach, deception, verdict-verification, AAD, context-degradation, **reputational-risk**), **9 sub-agentes N2 permanentes**. **20 dominios P01–P20.**
-- `smoke_test_e2e.py` + `smoke_contract.txt` GITIGNORADOS (local-only).
+- `smoke_test_e2e.py` + `smoke_contract.txt` GITIGNORADOS (local-only). `_livewatch/` throwaway no-commiteado (inputs live-WATCH).
 
 ### Repo prompt-architect-agent
 - v1.3.0 (`PA-20260527-002`) ACTIVE. Auditor de la re-cert s30. Sin cambios.
@@ -101,7 +108,7 @@ Auditor PA-agent v1.3.0 (`PA-20260527-002`). Self-audit L0 (`PA-20260606-005`) P
 - header + #30 (Version/skills 7/CERT STATUS/Previous certs) + #16 + `.claude-init.md` #7 → v3.16.0/PA-20260606-006. PRIVADO.
 
 ### free-claude-code
-- Proxy de inferencia para corridas DS no-cert ($0). **`fcc-server` NO en PATH — instalar/configurar antes de usarlo.** Cert = Opus real sin proxy.
+- Proxy de inferencia para corridas DS no-cert ($0). **`fcc-server` NO en PATH — instalar/configurar antes de usarlo.** Cert = Opus real sin proxy. (live-WATCH s30 se cerró con key real, no fcc.)
 
 ---
 
@@ -114,7 +121,7 @@ Auditor PA-agent v1.3.0 (`PA-20260527-002`). Self-audit L0 (`PA-20260606-005`) P
    - `rank_bm25` + `pydantic` instalados. `gc.auto 0` activo.
 3. **PHASE 1 — Decisión:**
    - **(A) Trading hands-on** — **POSTERGADO 27 SESIONES (4–30).** Prioridad #1 en userPreferences. **NO re-confrontar.** Si s31 no elige A, asumir prioridad real ≠ escrita.
-   - **(B) Backlog valor-agregado** — P5 extensión P14/P20 (evaluar valor real vs scope ya suficiente); cerrar live-WATCH.
+   - **(B) Backlog valor-agregado** — **LW-1 domain resolver fix (prioridad alta, correctness)**; LW-2 confidence corroboración; LW-3 provenance granularidad (quick); P5 extensión P14/P20 (cobertura). **live-WATCH ya CERRADO en s30.**
    - **STANDING:** sistema más robusto/valioso/eficiente; nunca barato-dormido sobre valor real.
 4. Reportar phase por phase, esperar GO entre fases.
 
@@ -141,6 +148,8 @@ Auditor PA-agent v1.3.0 (`PA-20260527-002`). Self-audit L0 (`PA-20260606-005`) P
 - **No-duplicación de rows:** donde un patrón ya está cubierto (over-claim↔MK04), REUSAR la row existente.
 - **No-impacto de skill markdown = garantía ESTRUCTURAL** (markdown no puede tocar `final_verdict`), no golden runtime; el test asserta registro + activación⊆binding + ausencia en orchestrator verdict modules.
 - **bump_manual: inserts de roadmap LINE-BASED** (anclar por prefijo de línea único, no transcribir líneas largas) — evita fragilidad de anclas largas.
+- **El live e2e destapa lo que el offline/estructural no puede** (LW-1/2/3 surgieron solo con modelo real). Ejercitar live tras shippear capas no-vinculantes.
+- **Domain routing por substring es frágil** (LW-1): claves cortas (`ma`/`ops`/`hr`) producen false-matches; el ruteo correcto exige token/word-boundary. Para forzar dominio en `--document` mode, nombrar el archivo con un keyword inequívoco sin substring de clave corta.
 
 ---
 
@@ -156,8 +165,9 @@ MiroFish-ES, OASIS | n8n-mcp, claude-mem | claude-for-legal | servicios comercia
 - **jarp-toolkit / .claude-init (CANÓNICOS):** `...\jarp-toolkit\` (PRIVADO). **Verificar AMBOS concuerdan al cierre.**
 - **Push siempre vía GitHub Desktop / CLI.** Cuenta `JARPClaude`. **OneDrive en PAUSA para git pesado; `gc.auto 0` activo.**
 - **MCPs:** mi-filesystem, GitHub. Si mi-filesystem timeoutea: reiniciar Claude Desktop.
-- **PowerShell de JARP:** NO acepta `&&` (por separado o `;`). `del` de varios usa **COMAS**. `cd` antes de scripts (bump/one-shots desde RAÍZ; tests desde `orchestrator/`). bump_stamps.ps1 con params NOMBRADOS (`-OldVersion X -NewVersion Y [-Apply]`).
+- **PowerShell de JARP:** NO acepta `&&` (por separado o `;`). `del` de varios usa **COMAS**. env var = `$env:VAR="..."` (NO `set`, que es cmd). `cd` antes de scripts (bump/one-shots desde RAÍZ; tests desde `orchestrator/`). bump_stamps.ps1 con params NOMBRADOS (`-OldVersion X -NewVersion Y [-Apply]`).
 - **Método de edición:** stamps multi-archivo = `tools/bump_stamps.ps1`. Edits prosa/código/banner multi-archivo = **Ruta 3** o **script Python anclado all-or-nothing + NEWLINE-AWARE + ENCADENADO POR ARCHIVO + INSERTS LINE-BASED** (dry-run en clon pristino → --apply), a la RAÍZ. Edits pequeños/archivo nuevo = mi-filesystem directo (`create_directory` para subdirs nuevos; verificar con `list_directory`/read-back). `github:create_or_update_file` prohibido por defecto. NO ejecuto Python/PS en la máquina de JARP → JARP corre regresión y scripts.
+- **Correr DS contra modelo real (no-cert):** desde `orchestrator/`, setear backend en la MISMA shell ANTES — key real `$env:ANTHROPIC_API_KEY="sk-ant-..."` (NUNCA pedirla/pegarla en el chat) o fcc `$env:ANTHROPIC_BASE_URL="http://localhost:8082"` + key placeholder (DS instancia `Anthropic(api_key=…)` SIN `base_url` → respeta el env var, routing zero-code). `--document <file>` ingiere archivo real; el **dominio se infiere del STEM del filename** (substring → ver LW-1). `--type X --subscenario Y --objective Z` pinea dominio pero el doc es un stub (sin contenido real).
 - **Skill nueva = patrón:** `skills/<name>/SKILL.md` (frontmatter + patrones + Activación por dominio + binding al Failure Catalog + `[VERDICT_IMPACT: NONE]`) + `SKILLS_CATALOG` entry + bullet en base + RULES/rows en los variants activos + test estructural. Activación⊆binding. Severidad solo vía catálogo.
 - **Runtime no-vinculante:** `confidence` (P3) → `_maybe_escalate` (P1) → `_run_escalation_round`+lente (P2) → señales (P4) → provenance post-veredicto (s29). **Reputational (s30) NO es de esta familia:** es skill de detección con findings de severidad real catalog-bound.
 - **Smoke-test E2E (LOCAL, gitignorado):** `python smoke_test_e2e.py` → **12 PASS / 1 SKIP** offline. Tests: `test_reputational_risk` 14/0 · `test_provenance` 12/0 · `test_signals` 11/0 · `test_archetype_lenses/escalation/confidence` 10/0 c/u · `test_wizard` 7/7. `pip install rank_bm25 pydantic` antes.
@@ -170,6 +180,7 @@ MiroFish-ES, OASIS | n8n-mcp, claude-mem | claude-for-legal | servicios comercia
 feat: DS v3.16.0 — reputational-risk forensic lens (skill #7) into P11/P16/P19 — 5 patterns, detection lens, severity bound by Failure Catalog, NON-BINDING + JARP_CERTIFIED PA-20260606-006
 ```
 Incluye: `skills/reputational-risk/SKILL.md`, `orchestrator/{catalogs.py,test_reputational_risk.py,main.py,wizard.py,tribunal_transversal.py}`, `prompts/{system_prompt,system_prompt_media,system_prompt_marketing,system_prompt_strategy}.md` + 21 prompts (stamps), README, CLAUDE, CHANGELOG, `dark-strategist-continuity-prompt_v29.md`; `git rm dark-strategist-continuity-prompt_v28.md`. NO incluye el one-shot (borrado).
+Commits posteriores s30: `42a24f2` (remove v28), `6bbfcc3` (README Full Feature Set tabla → v3.16), + este registro live-WATCH/LW-1/2/3.
 **Repo jarp-toolkit:**
 ```
 docs: sync DS v3.16.0 / PA-20260606-006 (reputational-risk skill #7) — header + entry #30 (Version/skills 7/cert/superseded) + note #16 + .claude-init #7
@@ -199,4 +210,5 @@ docs: sync DS v3.16.0 / PA-20260606-006 (reputational-risk skill #7) — header 
 7. **Dry-run en clon pristino (sandbox) + apply en máquina real** — el clon es LF, la máquina CRLF; el motor newline-aware detecta/preserva por archivo. La disjunción bump_stamps/manual se probó en vivo (re-anclaje README 216→217).
 8. **One-shot borrado ANTES del commit** (mi-filesystem delete + list_directory verifica).
 9. **TRADING: 27 SESIONES POSTERGADO (4–30). NO re-confrontar.**
-10. **Live-WATCH abierto:** reputational + escalación/lentes/señales/provenance no ejercitados live. Instalar `fcc-server` o key real para cerrar.
+10. **Live-WATCH CERRADO (s30 post-cert)** con key real (no fcc — fcc sigue sin instalar). Cerró `b_unified_output` + ejercitó las 6 capas live (Strategy/P19, 6 FATAL→INVIABLE). El live destapó 3 hallazgos → **LW-1** (domain resolver substring bug — prioridad), **LW-2** (confidence corroboración frágil), **LW-3** (provenance granularidad por formato). El offline/estructural NUNCA los habría mostrado — ese es el valor del e2e live.
+11. **Para forzar dominio en `--document` mode:** el ruteo usa el STEM del filename por substring; nombrar el archivo con un keyword inequívoco SIN substrings de claves cortas (`ma`/`ops`/`hr`/`sop`). Ej.: `strategy_acme_board_proposal` → Strategy; `…transformation` → Financial (LW-1).
