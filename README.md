@@ -48,6 +48,12 @@ THE SOVEREIGN ADVERSARY is an AI agent that **systematically destroys** any solu
 | RAG document-feed — BM25 (R1 intra-document + R2 corpus), non-breaking [:N] fallback | ✅ v3.8 |
 | Interactive Wizard CLI (guided flag builder) | ✅ v3.9 |
 | BYO per-case reference corpus (`--corpus`, any jurisdiction) + R2 token-overlap floor | ✅ v3.10 |
+| Deterministic auditable confidence (both synthesis paths; NON-BINDING) | ✅ v3.11 |
+| Confidence-gated escalation round (bounded, capped; NON-BINDING) | ✅ v3.12 |
+| Archetype lenses for the escalation round (5 abstract lenses; NON-BINDING) | ✅ v3.13 |
+| External-signals evidence channel (`--signals`; distinct NON-BINDING feed) | ✅ v3.14 |
+| Signal-provenance attribution in the transparency report (post-verdict; NON-BINDING) | ✅ v3.15 |
+| Reputational-risk forensic lens (skill #7, P11/P16/P19) | ✅ v3.16 |
 
 ---
 
