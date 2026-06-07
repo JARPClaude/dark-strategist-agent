@@ -4,8 +4,14 @@ Builds and validates the RuntimeContext object for each case.
 Replaces manual flag passing with a structured, validated context.
 """
 
+import re
+
 from catalogs import ROLE_CATALOG, SSM_CATALOG, DOMAIN_MAP, REGIME_MAP, DEFAULT_REGIME, JURISDICTION_CORPUS_MAP
 from schema import RuntimeContext
+
+
+# Separator normalizer for boundary-aware domain resolution (LW-1 fix).
+_SEP = re.compile(r'[^a-z0-9]+')
 
 
 # ─── DOMAIN TOOLS ─────────────────────────────────────────────────────────────
@@ -103,16 +109,53 @@ class ContextBuilder:
         )
 
     def _resolve_domain(self, doc_type: str, subscenario: str) -> str:
-        """Resolves domain from type and subscenario."""
-        # Check type first
+        """
+        Resolves domain from type (exact match) then subscenario (boundary-aware,
+        most-specific-keyword wins, order-invariant).
+
+        LW-1 fix — TWO defects closed:
+        (1) substring bleed: the legacy resolver matched DOMAIN_MAP keys as raw
+            substrings, so 2-3 char abbreviation keys ("ma", "ops", "hr", "sop")
+            false-matched any stem merely containing those letters
+            (e.g. "transformation" -> Financial via "ma", "threshold" -> HR).
+        (2) order-dependence: the legacy resolver returned the FIRST substring
+            match in DOMAIN_MAP insertion order, so routing for multi-domain
+            stems was silently coupled to dict layout.
+
+        Resolution contract (deterministic, order-invariant):
+          - separators (_ - . spaces) are normalized so stems tokenize cleanly;
+          - keys are evaluated MOST-SPECIFIC FIRST: longest keyword wins, with an
+            alphabetical tie-break — independent of DOMAIN_MAP insertion order;
+          - short abbreviation keys (<=3 chars) match ONLY as whole tokens;
+          - compound / multi-word keys (e.g. "real_estate") match as a
+            normalized phrase;
+          - longer single-word keys match a whole token OR a token prefix, so
+            "cyber" still resolves "cybersecurity".
+        For genuinely ambiguous multi-domain stems, pin the domain via --type
+        (exact-type fast path below). No key is removed.
+        """
+        # Check type first (exact match — unchanged fast path)
         domain = DOMAIN_MAP.get(doc_type.lower())
         if domain:
             return domain
-        # Check subscenario keywords
-        subscenario_lower = subscenario.lower()
-        for keyword, mapped_domain in DOMAIN_MAP.items():
-            if keyword in subscenario_lower:
-                return mapped_domain
+        # Check subscenario keywords (boundary-aware, most-specific first)
+        norm = _SEP.sub(" ", subscenario.lower()).strip()
+        tokens = set(norm.split())
+        for keyword in sorted(DOMAIN_MAP, key=lambda k: (-len(k), k)):
+            mapped_domain = DOMAIN_MAP[keyword]
+            kw = _SEP.sub(" ", keyword.lower()).strip()
+            if len(kw.replace(" ", "")) <= 3:
+                # short abbreviation: whole-token match only (no substring bleed)
+                if kw in tokens:
+                    return mapped_domain
+            elif " " in kw:
+                # compound / multi-word key: normalized phrase match
+                if kw in norm:
+                    return mapped_domain
+            else:
+                # long single-word key: whole token or token prefix (forgiving)
+                if any(t == kw or t.startswith(kw) for t in tokens):
+                    return mapped_domain
         return "General"
 
     def _validate(self, case: dict):

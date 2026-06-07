@@ -5,6 +5,27 @@ Format: [VERSION] — DATE — Description
 
 ---
 
+## [3.17.0] - 2026-06-07
+
+### Fixed — Domain resolver false-match (LW-1, correctness)
+- `orchestrator/context_builder.py`: `_resolve_domain` matched DOMAIN_MAP keys as raw substrings of the subscenario, so 2-3 char abbreviation keys ("ma"/"ops"/"hr"/"sop") false-matched any stem merely containing those letters (e.g. "transformation" -> Financial via "ma", "threshold" -> HR via "hr"), mis-routing real documents to the wrong variant / Failure Catalog in --document mode (the subscenario is the filename stem). TWO defects closed: (1) substring bleed; (2) order-dependence — the legacy resolver returned the FIRST substring match in DOMAIN_MAP insertion order, silently coupling routing to dict layout.
+- New resolution contract (deterministic, order-invariant): separators (_ - . spaces) normalized; keys evaluated MOST-SPECIFIC FIRST (longest keyword, alphabetical tie-break); short abbreviation keys (<=3 chars) match WHOLE TOKENS only; compound/multi-word keys match as a normalized phrase; longer single-word keys match a whole token OR a token prefix ("cyber" still resolves "cybersecurity"). No key removed. Exact-type fast path unchanged.
+
+### Tests
+- `orchestrator/test_domain_resolver.py` (NEW): 23-check offline suite ($0) — LW-1 repro (transformation vs board_proposal), short-key bleed killed (no false Financial/HR/Operations), short keys still match as whole tokens (M&A/ops/hr/nda), long-key prefix tolerance preserved ("cyber"->Cybersecurity), compound/phrase keys (real_estate/series_a/market_entry), exact-type fast path, multi-domain collisions (most-specific wins), no-match -> General.
+
+### Versioning
+- Atomic §4.14.1 bump: base + router + 19 domain variants + README + CLAUDE product-face -> v3.17.0 (bump_stamps). Operator-visible orchestrator banners (main x2 / wizard / transparency report) -> v3.17.0 (bump_manual). Module docstrings frozen at origin (context_builder.py stays v3.0.0). No prompt/skill CONTENT, no roster (9 N2), no verdict-logic change.
+
+### Non-forensic guarantee
+- The fix lives entirely in the orchestrator routing layer (pre-verdict): it selects WHICH variant/Failure Catalog loads from the filename stem; it computes nothing on the verdict path. The forensic surface (19 variants + 7 skills + base + router CONTENT) is byte-identical except stamps. The deterministic verdict (>=1 FATAL -> INVIABLE) is untouched. Regression: `test_domain_resolver.py` 23/23 + `smoke_test_e2e.py` OFFLINE GREEN (0 FAIL, 1 SKIP = `b_unified_output`, non-blocking); every non-binding layer (confidence/escalation/lenses/signals/provenance/reputational) unchanged.
+
+### JARP_CERTIFIED: DS v3.17.0 — PA-20260607-002 ✅
+
+Level 1 — JARP DEEP delta-coverage 7-axis forensic audit of `dark-strategist-agent` v3.17.0 by `prompt-architect-agent` v1.3.0 (PA-20260527-002), over the v3.16.0 baseline (forensic surface unchanged). Scope: v3.17.0 delta — domain-resolver correctness fix (LW-1): `_resolve_domain` rewritten boundary-aware + most-specific-first + order-invariant (substring-bleed and order-dependence closed), `test_domain_resolver.py` added (23/23), atomic §4.14.1 bump (product-face + operator banners main x2 / wizard / transparency report -> v3.17.0; module docstrings frozen). RULE 08 self-audit L0 (PA-20260607-001) PASS first. Functional evidence on the real machine (post-apply + post-bump): `test_domain_resolver.py` 23/23 + `smoke_test_e2e.py` OFFLINE GREEN (0 FAIL, 1 SKIP = `b_unified_output`, non-blocking) with `c_fallback_intact` + `e_monotonic_verdict` (INVIABLE) + `r2_byo_corpus` PASS. The change lives entirely in the orchestrator routing layer (pre-verdict): it selects WHICH variant/Failure Catalog loads from the filename stem; it computes nothing on the verdict path (`_resolve_domain` is upstream of synthesis). Forensic surface (19 variants + 7 skills + base + router CONTENT) byte-identical except stamps; module docstrings frozen (context_builder.py stays v3.0.0). No real-person impersonation; no prompt/skill change. Result: 0 CRITICAL | 0 SERIOUS | 0 MODERATE | 0 LATENT -> `JARP_CERTIFIED`. `BIAS_CHECK_RESULT: PASS` (deterministic, order-invariant routing rule, orthogonal to the verdict). Non-forensic orchestrator-layer fix -> CONFIRMATORY re-cert. Supersedes PA-20260606-006 (DS v3.16.0). `JARP_BENCHMARK_LIVE` advances to v3.17.0. Valid until 07/09/2026 or DS v4.0.0.
+
+---
+
 ## [3.16.0] - 2026-06-06
 
 ### Added - Reputational-risk forensic lens (skill #7, value-add P5)
