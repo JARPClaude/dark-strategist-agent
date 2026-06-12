@@ -128,13 +128,18 @@ def load_corpus(corpus_id, base_dir="corpus"):
     return []
 
 
-def load_corpus_files(paths, *, chunk_size=1000, chunk_overlap=150):
+def load_corpus_files(paths, *, chunk_size=1000, chunk_overlap=150, txt_atomic_lines=False):
     """BYO per-case corpus: load arbitrary reference files into a passage list.
 
     Accepts a single path or a list. .jsonl/.txt parse as passages directly;
     other types (PDF/DOCX/PPTX/XLSX/HTML/MD/...) are converted to text via
     UNIT-INGEST (markitdown, lazy import) and chunked. Missing/unreadable files
     are skipped silently so the pipeline is never starved. Empty/None -> [].
+
+    txt_atomic_lines=True splits .txt by single newline (one passage per line) — used
+    by the signals channel so each time-sensitive observation is individually
+    addressable for provenance. Default False keeps the paragraph (\n\n) split so
+    multi-line corpus clauses stay ONE grounding passage (channel-specific; LW-3).
     """
     if not paths:
         return []
@@ -162,7 +167,13 @@ def load_corpus_files(paths, *, chunk_size=1000, chunk_overlap=150):
                             out.append(line)
             elif ext == ".txt":
                 with open(path, encoding="utf-8") as f:
-                    out.extend(p.strip() for p in f.read().split("\n\n"))
+                    txt = f.read()
+                #--- LW-3: signals channel needs one passage PER LINE (atomic time-sensitive
+                #--- items on consecutive lines). Corpus channel keeps the paragraph (\n\n)
+                #--- split, because a clause/law spanning consecutive lines must stay ONE
+                #--- passage for BM25 grounding. Per-channel via txt_atomic_lines; default = legacy.
+                segments = txt.split("\n") if txt_atomic_lines else txt.split("\n\n")
+                out.extend(p.strip() for p in segments)
             else:
                 #--- binary/markup -> UNIT-INGEST (markitdown) -> chunk.
                 try:

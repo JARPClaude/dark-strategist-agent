@@ -5,6 +5,28 @@ Format: [VERSION] — DATE — Description
 
 ---
 
+## [3.18.0] - 2026-06-11
+
+### Fixed — Signal-provenance granularity (LW-3, UX)
+- `orchestrator/retriever.py`: `load_corpus_files` gains `txt_atomic_lines` (default False). The signals channel now loads `.txt` ONE PASSAGE PER LINE, so time-sensitive observations on consecutive lines are individually addressable for provenance; the corpus channel keeps the paragraph (blank-line) split, because a clause/law spanning consecutive lines must stay ONE passage for BM25 grounding. Per-channel by construction — the corpus load path is byte-identical.
+- `orchestrator/tribunal_transversal.py`: the signals load loop now calls `load_corpus_files(_p, txt_atomic_lines=True)`; the corpus load `load_corpus_files(_byo)` is unchanged (default). Before the fix, signals on consecutive lines collapsed into a single passage and `_attribute_signal_provenance` mapped every finding to one signal index; now each finding attributes to its specific signal line.
+- Robustness: a loop-variable shadow in the first draft (`raw = f.read()` inside `for raw in paths`) was renamed to `txt` pre-cert — functionally inert today but a latent footgun, removed before ship.
+
+### Tests
+- `orchestrator/test_signals_granularity.py` (NEW): 6-check offline suite ($0) — default `.txt` collapses consecutive lines (legacy preserved); atomic mode = one passage per line; atomic drops blank lines; CORPUS guard (default paragraph/blank-line split keeps a multi-line clause as ONE passage); repro shape (header + blank + 4 consecutive signals: default 2 passages, atomic 6); and an e2e granularity check (two findings over two distinct signal lines attribute to DISTINCT `signal_index`).
+
+### Versioning
+- Operator-visible orchestrator banners (main x2 / wizard / transparency report) -> v3.18.0 (bump_manual). Product-face (base + router + 19 variants + README + CLAUDE) -> v3.18.0 (bump_stamps). Module docstrings frozen at origin (retriever.py stays v3.10.0; context_builder/tribunal v3.0.0); feature-landing refs frozen (tribunal provenance v3.15.0). No prompt/skill CONTENT, no roster (9 N2), no verdict-logic change.
+
+### Non-forensic guarantee
+- The fix lives entirely in the orchestrator signals-load + post-verdict report layer. The corpus grounding path is byte-identical (`smoke_test_e2e.py` `r2_byo_corpus` reports `legacy_byte_identical=True`). Provenance is deterministic and POST-verdict: it reads the already-final `unified` and writes only the transparency report — it touches neither `final_verdict` nor any `Finding`. The deterministic verdict (>=1 FATAL -> INVIABLE) is untouched. Regression: `test_signals_granularity.py` 6/6 (incl. live e2e distinct-index) + `test_provenance.py` 12/12 + `smoke_test_e2e.py` OFFLINE GREEN (0 FAIL, 1 SKIP = `b_unified_output`, non-blocking). Live load-level confirmation: a real `--signals` run reported `Ext.signals: ACTIVE — 6 evidence passage(s)` (atomic split active end-to-end; pre-fix would be 2).
+
+### JARP_CERTIFIED: DS v3.18.0 — PA-20260611-002 ✅
+
+Level 1 — JARP DEEP delta-coverage 7-axis forensic audit of `dark-strategist-agent` v3.18.0 by `prompt-architect-agent` v1.3.0 (PA-20260527-002), over the v3.17.0 baseline (forensic surface unchanged). Scope: v3.18.0 delta — signal-provenance granularity (LW-3): `load_corpus_files` `txt_atomic_lines` per-channel `.txt` split (signals per-line; corpus paragraph byte-identical), signals load loop wired with `txt_atomic_lines=True`, loop-variable shadow renamed pre-cert, `test_signals_granularity.py` added (6/6 incl. e2e distinct-index), atomic banner bump (operator banners main x2 / wizard / transparency report -> v3.18.0; module docstrings frozen). RULE 08 self-audit L0 (PA-20260611-001) PASS first. Functional evidence on the real machine (post-apply + post-bump): `test_signals_granularity.py` 6/6 + `test_provenance.py` 12/12 + `smoke_test_e2e.py` OFFLINE GREEN (0 FAIL, 1 SKIP = `b_unified_output`, non-blocking) with `c_fallback_intact` + `e_monotonic_verdict` (INVIABLE) + `r2_byo_corpus` (`legacy_byte_identical=True`) PASS; plus a live `--signals` run confirming `Ext.signals: ACTIVE — 6 evidence passage(s)` (atomic split active end-to-end). The change lives entirely in the orchestrator signals-load + post-verdict report layer: provenance reads the final `unified` and writes only the report; it computes nothing on the verdict path. Forensic surface (19 variants + 7 skills + base + router CONTENT) byte-identical except stamps; corpus grounding path byte-identical (`r2_byo_corpus`); module docstrings frozen (retriever.py stays v3.10.0). No real-person impersonation; no prompt/skill change. Result: 0 CRITICAL | 0 SERIOUS | 0 MODERATE | 0 LATENT -> `JARP_CERTIFIED`. `BIAS_CHECK_RESULT: PASS` (per-channel deterministic load + post-verdict auditability hint, orthogonal to the verdict). Non-forensic orchestrator-layer fix -> CONFIRMATORY re-cert. Supersedes PA-20260607-002 (DS v3.17.0). `JARP_BENCHMARK_LIVE` advances to v3.18.0. Valid until 11/09/2026 or DS v4.0.0. WATCH: `b_unified_output` SKIPs in a clean offline shell (no key) and, with a dummy key + offline proxy, PASSes via the deterministic-fallback shape (agents connection-error -> fallback -> valid UnifiedVerdictOutput); the live-model JSON shape remains unexercised — same standing environmental gap as v3.16/v3.17, non-blocking.
+
+---
+
 ## [3.17.0] - 2026-06-07
 
 ### Fixed — Domain resolver false-match (LW-1, correctness)

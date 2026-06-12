@@ -67,7 +67,9 @@ class TribunalTransversal:
             _sig_paths = [_sig_paths]
         _tagged = []
         for _p in _sig_paths:
-            for _passage in load_corpus_files(_p):
+            #--- LW-3: signals load per-line (txt_atomic_lines) so consecutive observations
+            #--- are individually addressable for provenance; corpus load stays paragraph-split.
+            for _passage in load_corpus_files(_p, txt_atomic_lines=True):
                 _tagged.append((_p, _passage))
         self._active_signals_tagged = _tagged
         self._active_signals = [_passage for _, _passage in _tagged]
@@ -646,7 +648,7 @@ class TribunalTransversal:
 
         return f"""
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-DARK STRATEGIST v3.17.0 — TRANSPARENCY REPORT
+DARK STRATEGIST v3.18.0 — TRANSPARENCY REPORT
 Session: DS-{self.session_id} | Duration: {round(duration,1)}s
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
