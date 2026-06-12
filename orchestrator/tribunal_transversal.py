@@ -404,30 +404,92 @@ class TribunalTransversal:
         v3.11.0 -- recompute confidence deterministically (NON-BINDING; never
         touches final_verdict). Grounds agents_consulted and multi_agent_confirmed
         from cross-agent corroboration, then derives confidence via compute_confidence.
+
+        LW-2: corroboration is similarity-based, not exact-title. Two independent agents
+        rarely word a finding's title identically, AND the synthesizer rewrites the unified
+        titles -- so exact (severity, title) matching recorded "Confirmed by 2+: 0" even
+        under unanimous consensus, biasing confidence LOW. We now match on title+evidence
+        token overlap (rag.corroboration_min_overlap, default 4) with same severity
+        required, keeping the legacy exact-title match as a floor (strict superset -> no
+        regression). driver_corroborated compares the SYNTHESIZER finding against the
+        corroborated RAW findings by the same similarity, crossing the synthesizer<->raw
+        title gap. Still NON-BINDING / deterministic / post-verdict: writes only
+        confidence + multi_agent_confirmed, never final_verdict or any Finding.
         """
         unified.agents_consulted = len(all_outputs)
+        min_ov = self.config.get("rag", {}).get("corroboration_min_overlap", 4)
 
-        # Cross-agent corroboration: (severity, normalized title) seen by >=2 distinct agents.
-        seen = {}
+        #--- LW-2: per-finding signal = title + evidence. Evidence anchors to the document
+        #--- (objective), discriminating "same defect" from shared title scaffolding
+        #--- ("missing X clause" vs "missing Y clause") far better than the title alone.
+        def _blob(title, evidence):
+            return ((title or "") + " " + (evidence or "")).strip()
+
+        def _similar(sev_a, t_a, b_a, sev_b, t_b, b_b):
+            #--- same severity required; legacy exact-title floor OR token-overlap >= min_ov.
+            if sev_a != sev_b:
+                return False
+            if t_a and t_a == t_b:
+                return True
+            return overlap_score(b_a, b_b) >= min_ov
+
+        #--- Raw findings with agent provenance (raw title space, from all_outputs).
+        raw = []  #--- (agent, sev, norm_title, blob)
         for i, out in enumerate(all_outputs):
             agent = out.get("agent_id", "_idx%d" % i) if isinstance(out, dict) else "_idx%d" % i
             findings = out.get("findings", []) if isinstance(out, dict) else []
-            local = set()
+            local = {}  #--- dedupe within one agent by (sev, norm_title); keep first blob
             for f in findings:
                 if not isinstance(f, dict):
                     continue
                 sev = (f.get("severity") or "").upper()
                 title = self._norm_title(f.get("title", ""))
-                if title:
-                    local.add((sev, title))
-            for key in local:
-                seen.setdefault(key, set()).add(agent)
-        corroborated = {k for k, agents in seen.items() if len(agents) >= 2}
+                if not title:
+                    continue
+                key = (sev, title)
+                if key not in local:
+                    local[key] = _blob(f.get("title", ""), f.get("evidence", ""))
+            for (sev, title), blob in local.items():
+                raw.append((agent, sev, title, blob))
 
-        # Deterministic multi_agent_confirmed (overrides upstream value for auditability).
-        unified.multi_agent_confirmed = sorted("%s: %s" % (sev, title) for (sev, title) in corroborated)
+        #--- Cross-agent corroboration: a raw finding is corroborated iff another agent has
+        #--- a similar one (same severity, exact-title OR overlap>=min_ov).
+        corroborated_idx = set()
+        for a in range(len(raw)):
+            ag_a, sev_a, t_a, b_a = raw[a]
+            for b in range(len(raw)):
+                if a == b:
+                    continue
+                ag_b, sev_b, t_b, b_b = raw[b]
+                if ag_a != ag_b and _similar(sev_a, t_a, b_a, sev_b, t_b, b_b):
+                    corroborated_idx.add(a)
+                    break
 
-        # Verdict-driving tier.
+        #--- multi_agent_confirmed (report-only; len() is what compute_confidence cares about).
+        #--- Greedy single-link clustering over corroborated raws -> one entry per distinct
+        #--- confirmed defect (deterministic: stable raw order, first member is representative;
+        #--- a new member joins a cluster if it is similar to ANY existing member).
+        clusters = []  #--- each: dict(sev, members:[(t,b)], agents:set, repr_title)
+        for a in sorted(corroborated_idx):
+            ag, sev, t, b = raw[a]
+            placed = False
+            for cl in clusters:
+                if cl["sev"] == sev and any(
+                    _similar(sev, t, b, sev, mt, mb) for (mt, mb) in cl["members"]
+                ):
+                    cl["members"].append((t, b))
+                    cl["agents"].add(ag)
+                    placed = True
+                    break
+            if not placed:
+                clusters.append({"sev": sev, "members": [(t, b)],
+                                 "agents": {ag}, "repr_title": t})
+        unified.multi_agent_confirmed = sorted(
+            "%s: %s" % (cl["sev"], cl["repr_title"])
+            for cl in clusters if len(cl["agents"]) >= 2
+        )
+
+        #--- Verdict-driving tier (synthesizer findings).
         if unified.fatal_findings:
             driving, tier_sev = unified.fatal_findings, "FATAL"
         elif unified.serious_findings:
@@ -439,9 +501,21 @@ class TribunalTransversal:
         else:
             driving, tier_sev = [], None
 
-        driver_corroborated = bool(tier_sev) and any(
-            (tier_sev, self._norm_title(getattr(f, "title", ""))) in corroborated for f in driving
-        )
+        #--- LW-2: cross the synthesizer<->raw gap. A driving (synthesizer) finding is
+        #--- corroborated if it is similar to ANY corroborated RAW finding of the same
+        #--- severity -> exact-title floor OR title+evidence overlap. The synthesizer
+        #--- rewrites titles but preserves evidence substance, so the blob bridges the gap.
+        corr_raw = [raw[a] for a in corroborated_idx]
+        driver_corroborated = False
+        if tier_sev:
+            for f in driving:
+                ft = self._norm_title(getattr(f, "title", ""))
+                fb = _blob(getattr(f, "title", ""), getattr(f, "evidence", ""))
+                if any(_similar(tier_sev, ft, fb, sev_r, t_r, b_r)
+                       for (_ag, sev_r, t_r, b_r) in corr_raw):
+                    driver_corroborated = True
+                    break
+
         unresolved = sum(1 for c in unified.conflicts_detected if "UNRESOLVED" in str(c).upper())
 
         unified.confidence = compute_confidence(
@@ -648,7 +722,7 @@ class TribunalTransversal:
 
         return f"""
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-DARK STRATEGIST v3.18.0 — TRANSPARENCY REPORT
+DARK STRATEGIST v3.19.0 — TRANSPARENCY REPORT
 Session: DS-{self.session_id} | Duration: {round(duration,1)}s
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 

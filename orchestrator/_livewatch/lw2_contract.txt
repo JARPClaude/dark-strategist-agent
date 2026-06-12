@@ -1,0 +1,40 @@
+SERVICE AGREEMENT
+
+This Service Agreement ("Agreement") is entered into between Vendor and Client
+for the provision of software development and consulting services.
+
+1. SERVICES. Vendor shall provide software development, integration, and ongoing
+technical consulting services as requested by Client from time to time. The scope,
+deliverables, and acceptance criteria shall be determined informally by the parties
+as work progresses.
+
+2. TERM. This Agreement commences on the effective date and shall continue in
+perpetuity. The Agreement renews automatically and contains no provision for
+termination, notice of cancellation, or exit by either party.
+
+3. FEES. Client shall pay Vendor the agreed fees. Any late payment shall accrue
+penalties at a rate to be determined by Vendor at its sole discretion, without
+limit or cap.
+
+4. LIABILITY. Client assumes full and unlimited liability for any and all damages,
+losses, claims, or expenses arising from or related to the services, regardless of
+cause, including Vendor's own negligence. No limitation of liability, cap, or
+exclusion of consequential damages applies to Client.
+
+5. INDEMNIFICATION. Client shall indemnify, defend, and hold harmless Vendor against
+all claims of any nature. Vendor assumes no reciprocal indemnification obligation
+toward Client.
+
+6. INTELLECTUAL PROPERTY. Ownership of work product, deliverables, source code, and
+derivative materials created under this Agreement is not specified. The parties shall
+resolve ownership questions if and when they arise.
+
+7. CONFIDENTIALITY AND DATA. The Agreement contains no confidentiality obligations
+and no provisions governing the handling, processing, or protection of personal or
+client data.
+
+8. GOVERNING LAW. This Agreement is silent as to governing law, jurisdiction, venue,
+and dispute resolution mechanism.
+
+9. ENTIRE AGREEMENT. This document constitutes the entire understanding between the
+parties and supersedes all prior discussions.
