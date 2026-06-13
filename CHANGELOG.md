@@ -5,6 +5,27 @@ Format: [VERSION] — DATE — Description
 
 ---
 
+## [3.20.0] - 2026-06-13
+
+### Fixed — Confidence false-positive on tribunal collapse (LW-5, correctness)
+- `orchestrator/tribunal_transversal.py`: `_apply_confidence` set `agents_consulted = len(all_outputs)`, counting agents that errored out (connection error / BUDGET_EXCEEDED / parse-fail — appended to `all_outputs` with an `"error"` key and no `findings`). On a 100% tribunal collapse (0 findings), `compute_confidence`'s clean-verdict HIGH branch (`driver_finding_count==0`) then reported HIGH confidence over zero analysis — a misleading auditability signal.
+- `agents_consulted` now counts only contributing agents (`isinstance(o, dict) and "error" not in o`). A fully-collapsed tribunal -> `agents_consulted=0` -> `n<2` -> LOW. Genuinely-clean verdicts from healthy agents still reach HIGH (the legitimate clean branch is preserved). Fix is 100% inside `_apply_confidence`; `compute_confidence` (schema.py), `Finding`, and `final_verdict` untouched.
+
+### Tests
+- `orchestrator/test_apply_confidence.py`: +3 cases (16->24 checks). C10 collapsed tribunal (5 errored, clean) -> LOW + `agents_consulted==0` + verdict intact; C11 partial coverage (2 healthy + 3 errored) -> MODERATE + `agents_consulted==2`; C12 no-regression (3 healthy corroborating + 2 errored) -> `agents_consulted==3`, corroboration intact, HIGH. `final_verdict` invariance asserted.
+
+### Versioning
+- Operator-visible orchestrator banners (main x2 / wizard / transparency report) -> v3.20.0 (bump_manual). Product-face (base + router + 19 variants + README + CLAUDE) -> v3.20.0 (bump_stamps). Module docstrings frozen at origin. No config knob added. No prompt/skill CONTENT, no roster (9 N2), no verdict-logic change.
+
+### Non-binding guarantee
+- Confidence remains metadata only. `_apply_confidence` writes only `confidence`, `agents_consulted`, `multi_agent_confirmed` — never `final_verdict` or any `Finding`. Regression: `test_apply_confidence.py` 24/24 + `test_confidence.py` 10/10 (compute_confidence untouched). LIVE collapse e2e (DS-36E093BE, dead-backend forced 100% tribunal collapse, $0 — 0/40 calls): 7 agents connection-error -> 0 contributing -> Confidence LOW (pre-fix would have reported HIGH on zero findings); verdict SOLID UNDER PRESSURE via deterministic fallback; confidence-gated escalation fired once (LOW), failed under the dead backend, and stopped — bounded and honest (the escalation short-circuit on zero coverage is logged as LW-6, out of scope).
+
+### JARP_CERTIFIED: DS v3.20.0 — PA-20260613-002 ✅
+
+Level 1 — JARP DEEP delta-coverage 7-axis forensic audit of `dark-strategist-agent` v3.20.0 by `prompt-architect-agent` v1.3.0 (PA-20260527-002), over the v3.19.0 baseline (forensic surface unchanged). Scope: v3.20.0 delta — confidence false-positive on tribunal collapse (LW-5): `_apply_confidence` now grounds `agents_consulted` on contributing (non-errored) agents only, so a 100% collapse yields LOW instead of HIGH over zero analysis; `test_apply_confidence.py` 16->24; atomic banner bump (operator banners main x2 / wizard / transparency report -> v3.20.0; module docstrings frozen). RULE 08 self-audit L0 (PA-20260613-001) PASS first. Functional evidence on the real machine (post-apply + post-bump): `test_apply_confidence.py` 24/24 + `test_confidence.py` 10/10 + LIVE collapse e2e (DS-36E093BE, $0, 0/40 calls): 7 agents connection-error -> Confidence LOW, deterministic-fallback verdict, escalation bounded. The change lives entirely in `_apply_confidence` (post-verdict metadata): writes only confidence/agents_consulted/multi_agent_confirmed; `compute_confidence`, `Finding`, `final_verdict` byte-identical/untouched. Forensic surface (19 variants + 7 skills + base + router CONTENT) byte-identical except stamps. No real-person impersonation; no prompt/skill change. Result: 0 CRITICAL | 0 SERIOUS | 0 MODERATE | 0 LATENT -> `JARP_CERTIFIED`. `BIAS_CHECK_RESULT: PASS` (deterministic agent-coverage rule, orthogonal to the verdict). Non-forensic orchestrator-layer fix -> CONFIRMATORY re-cert. Supersedes PA-20260612-002 (DS v3.19.0). `JARP_BENCHMARK_LIVE` advances to v3.20.0. Valid until 13/09/2026 or DS v4.0.0. Backlog: LW-5 CLOSED; LW-6 logged (escalation short-circuit when agent coverage is zero — escalating into a dead backend is bounded but wasteful); LW-4 (positional domain tie-break, optional); P5 extension P14/P20.
+
+---
+
 ## [3.19.0] - 2026-06-12
 
 ### Fixed — Confidence corroboration fragility (LW-2, correctness)

@@ -416,7 +416,14 @@ class TribunalTransversal:
         title gap. Still NON-BINDING / deterministic / post-verdict: writes only
         confidence + multi_agent_confirmed, never final_verdict or any Finding.
         """
-        unified.agents_consulted = len(all_outputs)
+        #--- LW-5: count only agents that actually contributed usable output. A fully-
+        #--- collapsed tribunal (every output carries "error", no findings) must NOT report
+        #--- HIGH confidence over zero analysis. compute_confidence's clean-verdict HIGH
+        #--- branch (driver_finding_count==0) is legitimate ONLY when healthy agents
+        #--- genuinely found nothing; errored agents were not "consulted". NON-BINDING:
+        #--- agents_consulted feeds confidence only, never final_verdict.
+        contributing = [o for o in all_outputs if isinstance(o, dict) and "error" not in o]
+        unified.agents_consulted = len(contributing)
         min_ov = self.config.get("rag", {}).get("corroboration_min_overlap", 4)
 
         #--- LW-2: per-finding signal = title + evidence. Evidence anchors to the document
@@ -722,7 +729,7 @@ class TribunalTransversal:
 
         return f"""
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-DARK STRATEGIST v3.19.0 — TRANSPARENCY REPORT
+DARK STRATEGIST v3.20.0 — TRANSPARENCY REPORT
 Session: DS-{self.session_id} | Duration: {round(duration,1)}s
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 

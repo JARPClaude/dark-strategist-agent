@@ -25,6 +25,11 @@ def _raw(agent, *findings):
                          for (s, t, e) in findings]}
 
 
+def _err(agent):
+    #--- LW-5: a collapsed agent carries "error" and no "findings".
+    return {"agent_id": agent, "error": "connection error"}
+
+
 def _uvo(verdict, **tiers):
     def mk(sev, items):
         return [Finding(severity=sev, title=t, description="", evidence=e, root_cause="")
@@ -141,6 +146,37 @@ def main():
              serious=[("A defect one", "aaa bbb ccc"), ("B defect two", "ddd eee fff")])
     tt._apply_confidence(u, ao)
     check("C9 multi-finding none corroborated -> MODERATE", u.confidence == "MODERATE")
+
+    #--- C10 (LW-5): fully-collapsed tribunal -- every agent errored, no findings.
+    #--- Pre-fix this reported HIGH (clean-verdict branch over zero analysis); now LOW.
+    ao = [_err("AF-01"), _err("AF-02"), _err("AF-03"), _err("AF-04"), _err("AF-05")]
+    u = _uvo("SOLID UNDER PRESSURE")
+    tt._apply_confidence(u, ao)
+    check("C10 collapsed tribunal -> LOW (not HIGH)", u.confidence == "LOW")
+    check("C10 agents_consulted excludes errored (0)", u.agents_consulted == 0)
+    check("C10 verdict intact", u.final_verdict == "SOLID UNDER PRESSURE")
+
+    #--- C11 (LW-5): partial coverage -- 2 healthy (no findings) + 3 errored, clean.
+    #--- agents_consulted=2 -> n<3 -> MODERATE (honest, not HIGH).
+    ao = [_raw("AF-01"), _raw("AF-02"),
+          _err("AF-03"), _err("AF-04"), _err("AF-05")]
+    u = _uvo("SOLID UNDER PRESSURE")
+    tt._apply_confidence(u, ao)
+    check("C11 partial coverage -> MODERATE", u.confidence == "MODERATE")
+    check("C11 agents_consulted=2 (errored excluded)", u.agents_consulted == 2)
+
+    #--- C12 (LW-5 no-regression): 3 healthy corroborating + 2 errored.
+    #--- Errored excluded from count (3 not 5) yet healthy corroboration + HIGH preserved.
+    ao = [_raw("AF-01", ("SERIOUS", "Missing termination clause", "sec 7")),
+          _raw("AF-02", ("SERIOUS", "Missing termination clause", "sec 7")),
+          _raw("AF-03", ("SERIOUS", "Missing termination clause", "sec 7")),
+          _err("AF-04"), _err("AF-05")]
+    u = _uvo("VIABLE WITH CRITICAL CORRECTIONS",
+             serious=[("Missing termination clause", "sec 7")])
+    tt._apply_confidence(u, ao)
+    check("C12 errored excluded -> agents_consulted=3", u.agents_consulted == 3)
+    check("C12 healthy corroboration intact (1 confirmed)", len(u.multi_agent_confirmed) == 1)
+    check("C12 driver corroborated -> HIGH", u.confidence == "HIGH")
 
     print("=" * 48)
     print("RESULT: %d FAIL / checks complete" % FAILS)
