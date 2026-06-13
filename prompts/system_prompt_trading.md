@@ -1,5 +1,5 @@
 # Dark Strategist Agent — Trading Variant
-# Version: 3.20.0-TRADING
+# Version: 3.21.0-TRADING
 # Author: JARP
 # License: MIT — Open Source
 # Repository: https://github.com/JARPClaude/dark-strategist-agent
@@ -297,7 +297,7 @@ Breaking point:  [AUM or condition where strategy becomes counterproductive]
 
 ---
 
-[PROTOCOL_STATUS: ACTIVE — v3.20.0-TRADING]
-[BASE_PROTOCOL: system_prompt.md v3.20.0]
+[PROTOCOL_STATUS: ACTIVE — v3.21.0-TRADING]
+[BASE_PROTOCOL: system_prompt.md v3.21.0]
 [CONTRACT: §4.14.1 — Domain Variant Contract]
 [DEPRECATION_CONDITIONS: A | B | C | D]

@@ -331,7 +331,8 @@ class TribunalTransversal:
                "confidence_after": unified.confidence, "reason": None}
         rounds = 0
         while should_escalate(unified.confidence, rounds, max_rounds,
-                              self.budget.remaining_agents(), enabled):
+                              self.budget.remaining_agents(), enabled,
+                              agent_coverage=unified.agents_consulted):
             self._log("Confidence LOW -- escalation round %d (agents left: %d)"
                       % (rounds + 1, self.budget.remaining_agents()))
             extra = self._run_escalation_round(document, ctx, unified, rounds + 1, max_esc_agents)
@@ -342,8 +343,13 @@ class TribunalTransversal:
             unified = self._synthesize(document, ctx, all_outputs)
             rounds += 1
         if rounds == 0 and esc["reason"] is None:
-            esc["reason"] = ("confidence not LOW -- no escalation needed"
-                             if unified.confidence != "LOW" else "escalation disabled or no budget")
+            #--- LW-6: distinguish zero-coverage collapse from disabled/no-budget (honest reason).
+            if unified.confidence != "LOW":
+                esc["reason"] = "confidence not LOW -- no escalation needed"
+            elif unified.agents_consulted == 0:
+                esc["reason"] = "zero agent coverage -- escalation cannot help (tribunal collapse)"
+            else:
+                esc["reason"] = "escalation disabled or no budget"
         esc.update({"triggered": rounds > 0, "rounds": rounds,
                     "confidence_after": unified.confidence,
                     "lenses": sorted({o.get("lens") for o in all_outputs
@@ -729,7 +735,7 @@ class TribunalTransversal:
 
         return f"""
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-DARK STRATEGIST v3.20.0 — TRANSPARENCY REPORT
+DARK STRATEGIST v3.21.0 — TRANSPARENCY REPORT
 Session: DS-{self.session_id} | Duration: {round(duration,1)}s
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 

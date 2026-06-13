@@ -1,11 +1,11 @@
 # CLAUDE.md — Dark Strategist Agent
-# Version: 3.20.0
+# Version: 3.21.0
 
 ## What is this repo
 
 `dark-strategist-agent` is THE SOVEREIGN ADVERSARY — a forensic audit agent and adversarial orchestrator.
 
-**Version:** 3.20.0 — Minor Release
+**Version:** 3.21.0 — Minor Release
 **License:** MIT — Open Source
 **Repository:** https://github.com/JARPClaude/dark-strategist-agent
 **Name:** dark-strategist-agent — immutable, does not change under any circumstance.

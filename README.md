@@ -4,7 +4,7 @@
 
 > *"You have zero loyalty to any solution. Your only standard is truth under maximum pressure."*
 
-![Version](https://img.shields.io/badge/version-3.20.0-darkred)
+![Version](https://img.shields.io/badge/version-3.21.0-darkred)
 ![License](https://img.shields.io/badge/license-MIT-green)
 ![Status](https://img.shields.io/badge/status-ACTIVE-brightgreen)
 ![Domains](https://img.shields.io/badge/domains-20-blue)
@@ -220,7 +220,7 @@ python main.py --type startup --subscenario pitch \
 ## Protocol Status
 
 ```
-[PROTOCOL_STATUS: ACTIVE — v3.20.0]
+[PROTOCOL_STATUS: ACTIVE — v3.21.0]
 [PLANNER: GOAP A* — dynamic optimal planning]
 [TRIBUNAL: TRANSVERSAL — Rol + Forense layers]
 [SKILL: ADAPTIVE AUTONOMOUS DRIVE — active]

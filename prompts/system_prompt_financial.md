@@ -1,5 +1,5 @@
 # Dark Strategist Agent — Financial Analysis Variant
-# Version: 3.20.0-FINANCIAL
+# Version: 3.21.0-FINANCIAL
 # Domain: Financial Analysis / M&A / Valuation / Investment
 # Primary Unit: UNIT-QUANT
 # Forensic Matrix: knowledge-work-plugins finance lenses (variance-analysis 4 decompositions, reconciliation, sox-testing/audit-support, financial-statements) — see docs/legal_finance_forensic_matrix.md
@@ -143,6 +143,6 @@ Inherits BLOCK 0–6 structure from `system_prompt.md` §"OUTPUT FORMAT" (compos
 
 ---
 
-[PROTOCOL_STATUS: ACTIVE — v3.20.0-FINANCIAL]
-[BASE_PROTOCOL: system_prompt.md v3.20.0]
+[PROTOCOL_STATUS: ACTIVE — v3.21.0-FINANCIAL]
+[BASE_PROTOCOL: system_prompt.md v3.21.0]
 [CONTRACT: §4.14.1 — Domain Variant Contract]

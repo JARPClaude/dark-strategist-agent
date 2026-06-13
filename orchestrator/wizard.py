@@ -150,7 +150,7 @@ def _ask_text(question: str, default: str | None = None) -> str:
 def run_wizard() -> tuple:
     """Drives the interactive flow. Returns (argv_list, should_run)."""
     print("=" * 60)
-    print("DARK STRATEGIST v3.20.0 — INTERACTIVE WIZARD")
+    print("DARK STRATEGIST v3.21.0 — INTERACTIVE WIZARD")
     print("Answer the prompts; I'll build the command for you.")
     print("=" * 60)
 

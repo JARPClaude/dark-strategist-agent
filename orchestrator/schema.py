@@ -164,7 +164,8 @@ def compute_confidence(
     return "MODERATE"
 
 
-def should_escalate(confidence, rounds_done, max_rounds, remaining_agents, enabled=True):
+def should_escalate(confidence, rounds_done, max_rounds, remaining_agents,
+                    enabled=True, agent_coverage=None):
     """
     Deterministic gate for the confidence-driven escalation round (v3.12.0).
 
@@ -172,7 +173,18 @@ def should_escalate(confidence, rounds_done, max_rounds, remaining_agents, enabl
     there is remaining agent budget. NON-BINDING w.r.t. final_verdict — escalation only
     decides whether to spend more deliberation; the verdict stays severity-driven
     (>=1 FATAL -> INVIABLE). Confidence may remain LOW after escalating (honest).
+
+    LW-6 (v3.21.0): zero agent coverage (a full tribunal collapse - every agent
+    errored, agents_consulted==0) is NOT low corroboration; it is no analysis.
+    Escalation cannot help when no agent contributed, since routing more agents to
+    the same failed path only wastes the round -> short-circuit to False when
+    agent_coverage is known and <=0. agent_coverage=None means coverage unknown ->
+    no gate (backward-compatible). The discriminator is coverage==0, NOT confidence
+    and NOT a <2 threshold (which would wrongly suppress the legitimate
+    escalate-to-corroborate case at coverage 1). Still NON-BINDING re final_verdict.
     """
+    if agent_coverage is not None and agent_coverage <= 0:
+        return False
     return bool(
         enabled
         and confidence == "LOW"

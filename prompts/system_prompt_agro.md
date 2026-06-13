@@ -1,5 +1,5 @@
 # Dark Strategist Agent — Agriculture / Livestock / Extractive Variant
-# Version: 3.20.0-AGRO
+# Version: 3.21.0-AGRO
 # Domain: Agriculture / Livestock / Aquaculture / Mining / Forestry
 # Primary Unit: UNIT-BIO
 # Base: system_prompt.md v3.8.0
@@ -98,6 +98,6 @@ Inherits BLOCK 0–6 structure from `system_prompt.md` §"OUTPUT FORMAT" (compos
 
 ---
 
-[PROTOCOL_STATUS: ACTIVE — v3.20.0-AGRO]
-[BASE_PROTOCOL: system_prompt.md v3.20.0]
+[PROTOCOL_STATUS: ACTIVE — v3.21.0-AGRO]
+[BASE_PROTOCOL: system_prompt.md v3.21.0]
 [CONTRACT: §4.14.1 — Domain Variant Contract]

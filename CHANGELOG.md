@@ -5,6 +5,29 @@ Format: [VERSION] — DATE — Description
 
 ---
 
+## [3.21.0] - 2026-06-13
+
+### Fixed - Escalation short-circuit on zero agent coverage (LW-6, efficiency)
+- `orchestrator/schema.py`: `should_escalate` gains an optional `agent_coverage` parameter. A full tribunal collapse (every agent errored - connection error / BUDGET_EXCEEDED / parse-fail - so `agents_consulted==0`, the LW-5 signal) yields LOW confidence, but escalation cannot help: routing more `FOR-ESC-*` agents through the same failed path only wastes the round. The gate now short-circuits to False when `agent_coverage` is known and `<=0`.
+- The discriminator is COVERAGE==0, NOT confidence and NOT a `<2` threshold - coverage 1 (a single healthy agent with an uncorroborated finding) must still escalate to seek a corroborating second agent (the v3.12.0 escalate-to-corroborate intent). `agent_coverage=None` = coverage unknown -> no gate (backward-compatible).
+- `orchestrator/tribunal_transversal.py`: `_maybe_escalate` passes `agent_coverage=unified.agents_consulted` into the gate; the transparency `reason` now distinguishes a zero-coverage collapse ("zero agent coverage -- escalation cannot help (tribunal collapse)") from disabled/no-budget, so the report is honest about WHY no escalation ran.
+- NON-BINDING: `final_verdict`, `Finding`, `compute_confidence`, and `_apply_confidence` are untouched. Escalation remains a deliberation-budget decision.
+
+### Tests
+- `orchestrator/test_escalation.py`: 10 -> 14 cases. The 10 legacy 5-arg tuples are unchanged (default `agent_coverage=None` -> no gate; backward-compat). +4 coverage cases: coverage 0 -> False (THE LW-6 case - short-circuit despite LOW + budget + room); coverage 1 -> True (escalate-to-corroborate preserved); coverage 2 -> True; coverage None -> True (unknown -> no gate).
+
+### Versioning
+- Operator-visible orchestrator banners (main x2 / wizard / transparency report) -> v3.21.0. Product-face (base + router + 19 variants + README + CLAUDE) -> v3.21.0 (bump_stamps). Module docstrings frozen at origin (schema/tribunal v3.0.0; main/wizard v3.10.0). No config knob added (reuses `agents_consulted`; `escalation_enabled`/`max_escalation_rounds` already exist). No prompt/skill CONTENT, no roster (9 N2), no verdict-logic change.
+
+### Non-binding guarantee
+- The fix lives in the escalation gate (`should_escalate`) + its caller's reason string: it changes only WHETHER a deliberation round runs and the transparency reason - never the verdict. `final_verdict` / `Finding` / `compute_confidence` byte-identical. Regression: `test_escalation.py` 14/14 + `test_apply_confidence.py` 24/24 + `test_confidence.py` 10/10.
+
+### JARP_CERTIFIED: DS v3.21.0 — PA-20260613-004 ✅
+
+Level 1 — JARP DEEP delta-coverage 7-axis forensic audit of `dark-strategist-agent` v3.21.0 by `prompt-architect-agent` v1.3.0 (PA-20260527-002), over the v3.20.0 baseline (forensic surface unchanged). Scope: v3.21.0 delta — escalation short-circuit on zero agent coverage (LW-6): `should_escalate` gains `agent_coverage`; a 100% tribunal collapse (`agents_consulted==0`, the LW-5 signal) no longer escalates into the same failed path — the gate short-circuits to False, discriminating COVERAGE==0 from low corroboration (coverage 1 still escalates to corroborate, v3.12.0 intent preserved); `_maybe_escalate` threads `agent_coverage=unified.agents_consulted` and emits an honest zero-coverage reason; `test_escalation.py` 10->14; atomic banner bump (operator banners main x2 / wizard / transparency report -> v3.21.0; module docstrings frozen). RULE 08 self-audit L0 (PA-20260613-003) PASS first. Functional evidence on the real machine (post-apply + post-bump): `test_escalation.py` 14/14 + `test_apply_confidence.py` 24/24 + `test_confidence.py` 10/10 + LIVE zero-coverage collapse e2e (DS-66E01BF0, dead-backend forced 100% collapse, $0 — 0/40 calls): 10 agents connection-error -> 0 contributing -> Confidence LOW -> Escalation NO | rounds 0 | reason "zero agent coverage -- escalation cannot help (tribunal collapse)" (the LW-6 delta; the v3.20.0 baseline DS-36E093BE escalated one wasted round here); verdict SOLID UNDER PRESSURE via deterministic fallback. The change lives entirely in the escalation gate + its caller's reason string: it changes only WHETHER a deliberation round runs and the transparency reason; `compute_confidence`, `Finding`, `final_verdict`, and `_apply_confidence` byte-identical/untouched. Forensic surface (19 variants + 7 skills + base + router CONTENT) byte-identical except stamps. No real-person impersonation; no prompt/skill change. Result: 0 CRITICAL | 0 SERIOUS | 0 MODERATE | 0 LATENT -> `JARP_CERTIFIED`. `BIAS_CHECK_RESULT: PASS` (deterministic coverage-zero gate, orthogonal to the verdict). Non-forensic orchestrator-layer fix -> CONFIRMATORY re-cert. Supersedes PA-20260613-002 (DS v3.20.0). `JARP_BENCHMARK_LIVE` advances to v3.21.0. Valid until 13/09/2026 or DS v4.0.0. Backlog: LW-6 CLOSED; LW-4 (positional domain tie-break, optional/discardable); P5 extension P14/P20 (dubious value).
+
+---
+
 ## [3.20.0] - 2026-06-13
 
 ### Fixed — Confidence false-positive on tribunal collapse (LW-5, correctness)
