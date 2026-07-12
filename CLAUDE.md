@@ -1,11 +1,11 @@
 # CLAUDE.md — Dark Strategist Agent
-# Version: 3.21.0
+# Version: 3.22.0
 
 ## What is this repo
 
 `dark-strategist-agent` is THE SOVEREIGN ADVERSARY — a forensic audit agent and adversarial orchestrator.
 
-**Version:** 3.21.0 — Minor Release
+**Version:** 3.22.0 — Minor Release
 **License:** MIT — Open Source
 **Repository:** https://github.com/JARPClaude/dark-strategist-agent
 **Name:** dark-strategist-agent — immutable, does not change under any circumstance.
@@ -51,7 +51,7 @@ TRANSPARENCY REPORT
 | **Human Resources domain (P18)** | UNIT-COMPLIANCE primary. Rules HR1-HR4. Pay equity + labor law. |
 | **Strategy domain (P19)** | UNIT-MARKET primary. Rules ST1-ST4. Competitive + assumption audit. |
 | **Startup domain (P20)** | UNIT-QUANT primary. Rules SU1-SU5. PMF + unit economics. |
-| **SKILLS_CATALOG** | New section in catalogs.py registering all 6 active skills. |
+| **SKILLS_CATALOG** | New section in catalogs.py registering all 7 active skills. |
 
 ---
 
@@ -101,7 +101,8 @@ dark-strategist-agent/
     ├── deception-detection/SKILL.md
     ├── verdict-verification/SKILL.md
     ├── adaptive-autonomous-drive/SKILL.md  ← NEW v3.2.0
-    └── context-degradation/SKILL.md  ← NEW v3.7.0
+    ├── context-degradation/SKILL.md  ← NEW v3.7.0
+    └── reputational-risk/SKILL.md  ← NEW v3.16.0
 ```
 
 ---
@@ -116,6 +117,7 @@ dark-strategist-agent/
 | `verdict-verification` | Mandatory gate before any VERDICT block | v2.6.0 |
 | `adaptive-autonomous-drive` | Autonomous goal generation and expansion | v3.2.0 |
 | `context-degradation` | Context-degradation lens for LLM/RAG/agentic audits (P04/P07) | v1.0.0 |
+| `reputational-risk` | Reputational-pattern detection lens (P11/P16/P19) | v1.0.0 |
 
 ---
 
@@ -188,6 +190,12 @@ python main.py --type startup --subscenario series_a --objective "investor readi
 | v3.14.0 External-signals evidence channel (--signals; distinct [EXTERNAL SIGNALS] feed after corpus, in-band directive, BM25 reuse, drop-zero-overlap; signals = time-sensitive EVIDENCE that may substantiate a Finding; NON-BINDING — never alters the FATAL→INVIABLE verdict) | ✅ |
 | v3.15.0 Signal-provenance attribution in the transparency report (deterministic post-verdict token-overlap; attributes each finding to the external signal it most overlaps; configurable floor `rag.provenance_min_overlap`; heuristic, NON-BINDING — reads the final verdict, writes only the report, never alters the FATAL→INVIABLE verdict) | ✅ |
 | v3.16.0 Reputational-risk forensic lens (skill #7) into P11/P16/P19 - 5 patterns (over-claim, broken-promise, stakeholder-betrayal, association-contamination, silence-in-crisis), 7 RULES + 7 Failure-Catalog rows; detection lens, severity bound by the Failure Catalog, NON-BINDING - never alters the FATAL->INVIABLE verdict | ✅ |
+| v3.17.0 Domain-resolver correctness (LW-1) — boundary-aware, most-specific-first, order-invariant; killed substring-bleed + order-dependence in --document routing | ✅ |
+| v3.18.0 Signal-provenance granularity (LW-3) — per-line .txt signals load (consecutive observations individually attributable); corpus paragraph-split byte-identical | ✅ |
+| v3.19.0 Confidence-corroboration robustness (LW-2) — title+evidence overlap, same-severity, legacy exact-title floor, synthesizer/raw bridge; NON-BINDING | ✅ |
+| v3.20.0 Confidence floor on tribunal collapse (LW-5) — agents_consulted counts contributors only (100% collapse → LOW, not HIGH); NON-BINDING | ✅ |
+| v3.21.0 Escalation short-circuit on zero agent coverage (LW-6) — should_escalate gains agent_coverage; coverage 0 no longer escalates into the dead path, coverage 1 still escalates to corroborate; NON-BINDING | ✅ |
+| v3.22.0 AI Product Liability coverage in L07 — consumer-facing AI (minors/mental-health/crisis/failure-to-warn): RULE LG08 + 7 Failure-Catalog rows + WAR ROOM UNIT-PSYCH; verdict engine unchanged | ✅ |
 
 ---
 
@@ -201,4 +209,4 @@ python main.py --type startup --subscenario series_a --objective "investor readi
 6. New skill → `skills/[skill-name]/SKILL.md` + entry in SKILLS_CATALOG
 7. The name `dark-strategist-agent` does not change under any circumstance
 
-**ACTIVE — v3.16.0**
+**ACTIVE — v3.22.0**

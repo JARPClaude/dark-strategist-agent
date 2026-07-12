@@ -5,6 +5,39 @@ Format: [VERSION] — DATE — Description
 
 ---
 
+## [3.22.0] - 2026-07-11
+
+### Added — AI Product Liability coverage in L07 (Legal variant, forensic surface)
+- `prompts/system_prompt_legal.md` — L07 AI Governance expanded from enterprise/IP/vendor scope to consumer-facing AI product liability (minors, mental health, crisis, failure-to-warn):
+  - L07 taxonomy row broadened: Document Types += consumer-facing AI product ToS / safety policies, companion / chatbot AI; Primary Risk += end-user harm liability (minors, mental health, crisis), failure-to-warn.
+  - Auto-detect signals += minor, age verification, parental consent, mental health, emotional dependency, crisis protocol, self-harm, companion AI, chatbot safety.
+  - RULE LG08 (NEW): consumer-facing AI product reachable by minors without documented age-gating / parental consent -> automatic FATAL.
+  - RULE LG09 (NEW): user-facing AI without a crisis-escalation protocol for self-harm / suicide signals -> automatic FATAL (irreversible harm, jurisdiction-independent, parallel to LG08).
+  - L07 Failure Catalog += 7 rows (2 FATAL: minors-no-age-gating [LG08], self-harm/suicide crisis-handling [LG09]; + 5 SERIOUS: emotional-dependency, mental-health disclosure, AI-nature disclosure, content-safety for vulnerable users, audit trail). Monotonic order (4 FATAL grouped -> 8 SERIOUS).
+  - WAR ROOM L07 secondary += UNIT-PSYCH (companion / mental-health surface needs the behavioral unit).
+- Severity model: two irreversible end-user harm vectors are unconditional auto-FATAL hard gates, jurisdiction-independent — minors reachability (RULE LG08) and self-harm / suicide crisis-handling absence (RULE LG09, NEW). The other 5 new rows (emotional-dependency, mental-health disclosure, AI-nature disclosure, content-safety, audit-trail) are SERIOUS governance/disclosure gaps. The v3.2.2 L07 GEOFENCE precautionary +1 is RETIRED: it blanket-escalated every L07 SERIOUS to FATAL whenever the jurisdiction lacked AI regulation (its default trigger), contradicting the no-blanket-inflation intent; the catastrophic vectors it should have caught are now base-FATAL via LG08/LG09, so no precautionary tier-shift remains. No blanket-FATAL inflation.
+
+### Forensic-surface change (NOT confirmatory)
+- This bump changes prompt CONTENT (1 of the 19 domain variants). Re-cert is FULL 7-axis JARP DEEP over the L07 delta — NOT a confirmatory orchestrator-layer re-cert. Verdict engine unchanged (deterministic >=1 FATAL -> INVIABLE); the new rows feed the monotonic table like any other catalog row; Severity x Likelihood stays NON-BINDING (RULE LG07).
+
+### Versioning
+- Atomic §4.14.1 bump: base + router + 19 domain variants + README + CLAUDE product-face -> v3.22.0 (bump_stamps). Operator-visible orchestrator banners (main x2 / wizard / transparency report) -> v3.22.0 (bump_manual). Module docstrings frozen at origin (schema/tribunal v3.0.0; main/wizard v3.10.0). No orchestrator logic change, no roster change (9 N2), no skill change (7), no domain-count change (20).
+
+### Scope discipline
+- Taxonomy stays 12 legal sub-areas (no new L13 — the gap was uncovered CONTENT within L07, not a missing sub-area). Change is entirely within the Legal variant's L07 catalog/rules/signals + its WAR ROOM row.
+
+### JARP_CERTIFIED: DS v3.22.0 — PA-20260711-002 ✅
+
+Level 1 — JARP DEEP SUBSTANTIVE 7-axis forensic audit of `dark-strategist-agent` v3.22.0 by `prompt-architect-agent` v1.3.0 (PA-20260527-002), over the v3.21.0 baseline. Scope: v3.22.0 delta — AI Product Liability coverage in L07 (forensic surface): L07 taxonomy + auto-detect signals broadened (signal `minor` -> `minors`, kills the "minority" substring-bleed); RULE LG08 (consumer-facing AI reachable by minors without documented age-gating / parental consent -> automatic FATAL) + RULE LG09 (user-facing AI without a self-harm / suicide crisis-escalation protocol -> automatic FATAL); L07 Failure Catalog +7 rows (4 FATAL grouped -> 8 SERIOUS, monotonic); WAR ROOM L07 secondary += UNIT-PSYCH; RETIREMENT of the v3.2.2 L07 GEOFENCE precautionary +1 (it blanket-escalated every L07 SERIOUS to FATAL whenever the jurisdiction lacked AI regulation — its default trigger — contradicting the no-blanket-inflation intent), RULE LG06 repurposed to state the harm vectors are base-FATAL and no L07 precautionary tier-shift exists. RULE 08 self-audit L0 (PA-20260711-001) PASS first. NOT confirmatory — the forensic prompt surface changed (1 of 19 variants: L07 catalog/rules/geofence bind severity and drive verdicts).
+
+Three findings caught + resolved pre-cert: SERIOUS-1 (A4 Severity-Mapping / A6 coherence — the crisis-escalation catalog row was SERIOUS, contradicting the variant's FATAL "catastrophic exposure" definition; an interim narrowed-precautionary fix left its FATAL status regulation-dependent, incoherent for a jurisdiction-independent death-risk -> resolved by base-FATAL RULE LG09 + retirement of the precautionary); LATENT-1 (A3 — signal "minor" substring-bleed into "minority" -> "minors"); LATENT-3 (A6 — verified no dangling reference to the retired precautionary in docs/legal_finance_forensic_matrix.md or base). WAR ROOM L07 3-secondary (UNIT-TECH + UNIT-COMPLIANCE + UNIT-PSYCH) accepted as design (fits max_n2_per_n1=3; companion / mental-health surface).
+
+Functional evidence on the real machine (post-apply + post-bump): `test_escalation.py` 14/14 + `test_apply_confidence.py` 24/24 + `test_confidence.py` 10/10 + `smoke_test_e2e.py` OFFLINE GREEN (0 FAIL, 1 SKIP = `b_unified_output`, no API key) with `e_monotonic_verdict` (>=1 FATAL -> INVIABLE) + `c_fallback_intact` + `r2_byo_corpus` PASS — the new FATAL rules feed the deterministic monotonic table like any other catalog row; the verdict engine is byte-identical. `final_verdict` / `Finding` / `compute_confidence` / `_apply_confidence` untouched; no orchestrator/roster (9 N2)/skill (7)/domain-count (20) change. No real-person impersonation.
+
+Result: 0 CRITICAL | 0 SERIOUS | 0 MODERATE | 0 LATENT -> `JARP_CERTIFIED`. `BIAS_CHECK_RESULT: PASS` (child-safety and self-harm hard gates are jurisdiction-independent catastrophic-harm rules; the SERIOUS governance rows are not blanket-inflated). SUBSTANTIVE re-cert. Supersedes PA-20260613-004 (DS v3.21.0). `JARP_BENCHMARK_LIVE` advances to v3.22.0. Valid until 09/10/2026 or DS v4.0.0. WATCH: the live L07 audit is not yet exercised (`b_unified_output` SKIP — no API key); non-blocking, same environmental gap as prior releases; recommend a live L07 e2e (minors / self-harm gap -> INVIABLE) to clear it. Backlog: L07 AIPL CLOSED; LW-4 (positional domain tie-break, optional/discardable); P5 extension P14/P20 (dubious).
+
+---
+
 ## [3.21.0] - 2026-06-13
 
 ### Fixed - Escalation short-circuit on zero agent coverage (LW-6, efficiency)

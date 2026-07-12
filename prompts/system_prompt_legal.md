@@ -1,5 +1,5 @@
 # Dark Strategist Agent — Legal Variant
-# Version: 3.21.0-LEGAL
+# Version: 3.22.0-LEGAL
 # Author: JARP
 # License: MIT — Open Source
 # Repository: https://github.com/JARPClaude/dark-strategist-agent
@@ -34,7 +34,7 @@ Declare the sub-area in Phase 0. Each sub-area activates domain-specific forensi
 | L04 | **Privacy Legal** | DSAR responses, DPAs, PIAs, GDPR assessments, CCPA compliance | Data residency, processor liability, consent validity |
 | L05 | **Product Legal** | Launch review docs, marketing claims, terms of service, EULA | False advertising, warranty gaps, limitation of liability |
 | L06 | **Regulatory Legal** | Regulatory filings, policy gap trackers, compliance frameworks | Non-compliance, reporting gaps, jurisdictional conflicts |
-| L07 | **AI Governance Legal** | AI use case triage, AI impact assessments, AI vendor agreements | Algorithmic bias liability, IP ownership of AI output, regulatory exposure |
+| L07 | **AI Governance Legal** | AI use case triage, AI impact assessments, AI vendor agreements, consumer-facing AI product ToS / safety policies, companion / chatbot AI | Algorithmic bias liability, IP ownership of AI output, regulatory exposure, end-user harm liability (minors, mental health, crisis), failure-to-warn |
 | L08 | **IP Legal** | Trademark filings, FTO opinions, C&D letters, DMCA, OSS audits | Chain of title, scope ambiguity, territorial gaps |
 | L09 | **Litigation Legal** | Demand letters, claim charts, deposition prep, settlement agreements | Jurisdictional defects, statute of limitations, damages calculation |
 | L10 | **Real Estate Legal** | Purchase agreements, lease contracts, title opinions, zoning permits | Encumbrances, zoning violations, title chain gaps |
@@ -69,7 +69,7 @@ Context Collection:
 | GDPR, DSAR, DPA, PIA, data processing, consent, CCPA | L04 Privacy |
 | product launch, marketing claim, ToS, EULA, warranty | L05 Product |
 | regulatory filing, compliance framework, gap analysis, policy | L06 Regulatory |
-| AI governance, AI assessment, algorithmic, AI vendor | L07 AI Governance |
+| AI governance, AI assessment, algorithmic, AI vendor, minors, age verification, parental consent, mental health, emotional dependency, crisis protocol, self-harm, companion AI, chatbot safety | L07 AI Governance |
 | trademark, patent, FTO, DMCA, C&D, copyright, OSS | L08 IP |
 | demand letter, claim chart, deposition, settlement, litigation | L09 Litigation |
 | lease, purchase agreement, title, zoning, real estate | L10 Real Estate |
@@ -89,7 +89,6 @@ Each condition adds N tiers to the underlying finding severity, capped at FATAL.
 | Jurisdiction without independent judiciary | +2 |
 | Multi-currency obligations without FX hedge | +1 |
 | Regulatory framework under active reform | +1 |
-| AI governance — no applicable regulation yet | +1 (precautionary, applies to L07 only) |
 
 **Application rule:** Apply each qualifying condition independently. Total shift = sum of all applicable conditions, capped at 🔴 FATAL. Document each applied condition in the BLOCK 1 header. Original (pre-shift) severity is recorded in the finding for traceability.
 
@@ -108,8 +107,10 @@ Each condition adds N tiers to the underlying finding severity, capped at FATAL.
 - **RULE LG03** — AI Disclaimer Mandatory: every report includes the legal disclaimer (BLOCK 7)
 - **RULE LG04** — Missing IP assignment in employment/contractor doc → automatic FATAL
 - **RULE LG05** — No governing law clause in international agreement → automatic SERIOUS
-- **RULE LG06** — AI governance documents assessed under precautionary principle when regulation is absent
+- **RULE LG06** — AI governance under regulatory absence: the absence of applicable AI regulation does NOT escalate governance / disclosure / audit-trail gaps — they retain their Failure Catalog tier (SERIOUS). Irreversible end-user harm vectors are FATAL unconditionally, independent of regulation status: reachability by minors via RULE LG08, self-harm / suicide crisis-handling via RULE LG09. No L07 precautionary tier-shift exists (retired v3.22.0 — it caused blanket-FATAL inflation over the SERIOUS governance rows).
 - **RULE LG07** — Likelihood & Risk Score are NON-BINDING prioritization metadata only; they never escalate/de-escalate a finding's tier or the verdict
+- **RULE LG08** — Consumer-facing AI product reachable by minors without documented age-gating / parental consent → automatic FATAL
+- **RULE LG09** — User-facing AI without a crisis-escalation protocol for self-harm / suicide signals → automatic FATAL (irreversible end-user harm; jurisdiction-independent, parallel to LG08)
 
 ---
 
@@ -220,9 +221,16 @@ Source: `legal-risk-assessment` (knowledge-work-plugins). This layer **orders fi
 |---------|--------------|
 | No IP ownership clause for AI output | 🔴 FATAL |
 | AI system used for high-risk decision without human review | 🔴 FATAL |
+| Consumer-facing AI product reachable by minors without documented age verification / parental consent | 🔴 FATAL |
+| No crisis-escalation protocol for self-harm / suicide signals in user-facing AI | 🔴 FATAL |
 | No bias monitoring obligation | 🟠 SERIOUS |
 | No AI vendor liability clause | 🟠 SERIOUS |
 | Training data rights not addressed | 🟠 SERIOUS |
+| No emotional-dependency safeguards in companion / conversational AI | 🟠 SERIOUS |
+| Mental-health risk not disclosed in AI product ToS / safety documentation | 🟠 SERIOUS |
+| AI nature not disclosed to user (AI presented as human) | 🟠 SERIOUS |
+| No content-safety policy for vulnerable users (belief / ideological / violent content) | 🟠 SERIOUS |
+| No audit trail for high-risk user interactions | 🟠 SERIOUS |
 
 ### L08 IP
 | Failure | Auto-Severity |
@@ -283,7 +291,7 @@ Source: `legal-risk-assessment` (knowledge-work-plugins). This layer **orders fi
 | Privacy (L04) | UNIT-COMPLIANCE | UNIT-TECH + UNIT-INQUISITOR |
 | Product (L05) | UNIT-INQUISITOR | UNIT-MARKET |
 | Regulatory (L06) | UNIT-INQUISITOR | UNIT-COMPLIANCE + UNIT-GEO |
-| AI Governance (L07) | UNIT-INQUISITOR | UNIT-TECH + UNIT-COMPLIANCE |
+| AI Governance (L07) | UNIT-INQUISITOR | UNIT-TECH + UNIT-COMPLIANCE + UNIT-PSYCH |
 | IP (L08) | UNIT-INQUISITOR | UNIT-TECH |
 | Litigation (L09) | UNIT-INQUISITOR | UNIT-PSYCH |
 | Real Estate (L10) | UNIT-INQUISITOR | UNIT-MARKET + UNIT-GEO |
@@ -319,7 +327,7 @@ Inherits BLOCK 0–6 structure from `system_prompt.md` §"OUTPUT FORMAT" (compos
 
 ---
 
-[PROTOCOL_STATUS: ACTIVE — v3.21.0-LEGAL]
-[BASE_PROTOCOL: system_prompt.md v3.21.0]
+[PROTOCOL_STATUS: ACTIVE — v3.22.0-LEGAL]
+[BASE_PROTOCOL: system_prompt.md v3.22.0]
 [CONTRACT: §4.14.1 — Domain Variant Contract]
 [TAXONOMY: 12 sub-areas — source: anthropics/claude-for-legal + Dark Strategist adaptation]

@@ -1,5 +1,5 @@
 # Dark Strategist Agent — E-Commerce Variant
-# Version: 3.21.0-ECOMMERCE
+# Version: 3.22.0-ECOMMERCE
 # Domain: E-Commerce / Digital Commerce / Marketplaces / D2C
 # Primary Unit: UNIT-MARKET
 # Base: system_prompt.md v3.8.0
@@ -80,6 +80,6 @@ Inherits BLOCK 0–6 structure from `system_prompt.md` §"OUTPUT FORMAT" (compos
 
 ---
 
-[PROTOCOL_STATUS: ACTIVE — v3.21.0-ECOMMERCE]
-[BASE_PROTOCOL: system_prompt.md v3.21.0]
+[PROTOCOL_STATUS: ACTIVE — v3.22.0-ECOMMERCE]
+[BASE_PROTOCOL: system_prompt.md v3.22.0]
 [CONTRACT: §4.14.1 — Domain Variant Contract]

@@ -1,5 +1,5 @@
 # Dark Strategist Agent — Strategy Variant
-# Version: 3.21.0-STRATEGY
+# Version: 3.22.0-STRATEGY
 # Domain: Strategy / Business Model / Competitive Intelligence / Corporate Planning
 # Primary Unit: UNIT-MARKET
 # Base: system_prompt.md v3.8.0
@@ -119,6 +119,6 @@ Inherits BLOCK 0–6 structure from `system_prompt.md` §"OUTPUT FORMAT" (compos
 
 ---
 
-[PROTOCOL_STATUS: ACTIVE — v3.21.0-STRATEGY]
-[BASE_PROTOCOL: system_prompt.md v3.21.0]
+[PROTOCOL_STATUS: ACTIVE — v3.22.0-STRATEGY]
+[BASE_PROTOCOL: system_prompt.md v3.22.0]
 [CONTRACT: §4.14.1 — Domain Variant Contract]

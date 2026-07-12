@@ -4,11 +4,11 @@
 
 > *"You have zero loyalty to any solution. Your only standard is truth under maximum pressure."*
 
-![Version](https://img.shields.io/badge/version-3.21.0-darkred)
+![Version](https://img.shields.io/badge/version-3.22.0-darkred)
 ![License](https://img.shields.io/badge/license-MIT-green)
 ![Status](https://img.shields.io/badge/status-ACTIVE-brightgreen)
 ![Domains](https://img.shields.io/badge/domains-20-blue)
-![Skills](https://img.shields.io/badge/skills-6-orange)
+![Skills](https://img.shields.io/badge/skills-7-orange)
 ![Tribunal](https://img.shields.io/badge/tribunal-transversal-black)
 ![SSM](https://img.shields.io/badge/SSM-active-purple)
 ![GOAP](https://img.shields.io/badge/GOAP-A*_planner-orange)
@@ -54,6 +54,12 @@ THE SOVEREIGN ADVERSARY is an AI agent that **systematically destroys** any solu
 | External-signals evidence channel (`--signals`; distinct NON-BINDING feed) | ✅ v3.14 |
 | Signal-provenance attribution in the transparency report (post-verdict; NON-BINDING) | ✅ v3.15 |
 | Reputational-risk forensic lens (skill #7, P11/P16/P19) | ✅ v3.16 |
+| Domain-resolver correctness fix (LW-1) — boundary-aware, most-specific-first, order-invariant | ✅ v3.17 |
+| Signal-provenance granularity (LW-3) — per-line .txt signals load | ✅ v3.18 |
+| Confidence-corroboration robustness (LW-2) — title+evidence overlap, synthesizer/raw bridge | ✅ v3.19 |
+| Confidence floor on tribunal collapse (LW-5) — agents_consulted counts contributors only | ✅ v3.20 |
+| Escalation short-circuit on zero agent coverage (LW-6) | ✅ v3.21 |
+| AI Product Liability coverage in L07 — minors/mental-health/crisis, RULE LG08 + 7 catalog rows | ✅ v3.22 |
 
 ---
 
@@ -89,6 +95,7 @@ Final report — deeper, higher coverage, no gaps left unaddressed
 | `verdict-verification` | Mandatory gate before any VERDICT block |
 | `adaptive-autonomous-drive` | Autonomous goal generation and gap expansion |
 | `context-degradation` | LLM/RAG/agentic context-degradation audit lens (P04/P07) |
+| `reputational-risk` | Reputational-pattern detection lens (P11/P16/P19) |
 
 ---
 
@@ -214,18 +221,24 @@ python main.py --type startup --subscenario pitch \
 | v3.14.0 | External-signals evidence channel — `--signals` feeds time-sensitive evidence as a distinct labelled channel after corpus (reuses BM25; in-band non-binding directive; drop-zero-overlap); signals may substantiate a Finding; NON-BINDING (never alters the FATAL→INVIABLE verdict) | ✅ |
 | v3.15.0 | Signal-provenance attribution in the transparency report — deterministic post-verdict token-overlap attributes each finding to the external signal it most overlaps (configurable floor `rag.provenance_min_overlap`; reuses the BM25 tokenizer); heuristic, NON-BINDING (reads the final verdict, writes only the report; never alters the FATAL→INVIABLE verdict) | ✅ |
 | v3.16.0 | Reputational-risk forensic lens (skill #7) - activates in Media (P11), Marketing (P16), Strategy (P19); 5 patterns (over-claim, broken-promise, stakeholder-betrayal, association-contamination, silence-in-crisis); 7 RULES + 7 Failure-Catalog rows; detection lens, severity bound by the Failure Catalog; NON-BINDING (never alters the FATAL->INVIABLE verdict) | ✅ |
+| v3.17.0 | Domain-resolver correctness (LW-1) — boundary-aware, most-specific-first, order-invariant; killed substring-bleed + order-dependence in --document routing | ✅ |
+| v3.18.0 | Signal-provenance granularity (LW-3) — per-line .txt signals load (consecutive observations individually attributable); corpus paragraph-split byte-identical | ✅ |
+| v3.19.0 | Confidence-corroboration robustness (LW-2) — title+evidence overlap, same-severity, legacy exact-title floor + synthesizer/raw bridge; NON-BINDING | ✅ |
+| v3.20.0 | Confidence floor on tribunal collapse (LW-5) — agents_consulted counts contributing agents only (100% collapse → LOW, not HIGH); NON-BINDING | ✅ |
+| v3.21.0 | Escalation short-circuit on zero agent coverage (LW-6) — should_escalate gains agent_coverage; coverage 0 no longer escalates into the dead path, coverage 1 still escalates to corroborate; NON-BINDING | ✅ |
+| v3.22.0 | AI Product Liability coverage in L07 — consumer-facing AI (minors / mental health / crisis / failure-to-warn): RULE LG08 (minors no age-gating → FATAL) + 7 Failure-Catalog rows + WAR ROOM UNIT-PSYCH; verdict engine unchanged | ✅ |
 
 ---
 
 ## Protocol Status
 
 ```
-[PROTOCOL_STATUS: ACTIVE — v3.21.0]
+[PROTOCOL_STATUS: ACTIVE — v3.22.0]
 [PLANNER: GOAP A* — dynamic optimal planning]
 [TRIBUNAL: TRANSVERSAL — Rol + Forense layers]
 [SKILL: ADAPTIVE AUTONOMOUS DRIVE — active]
 [DOMAINS: 20 total — P01 to P20]
-[SKILLS: 6 active]
+[SKILLS: 7 active]
 [SSM: ACTIVE — MICRO/MESO/MACRO]
 [TRANSPARENCY_REPORT: ACTIVE — every session]
 [NOTIFICATION_CHANNELS: SLACK + GITHUB + SHEETS]

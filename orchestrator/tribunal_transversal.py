@@ -735,7 +735,7 @@ class TribunalTransversal:
 
         return f"""
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-DARK STRATEGIST v3.21.0 — TRANSPARENCY REPORT
+DARK STRATEGIST v3.22.0 — TRANSPARENCY REPORT
 Session: DS-{self.session_id} | Duration: {round(duration,1)}s
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
