@@ -110,7 +110,7 @@ class UnifiedVerdictOutput(BaseModel):
 
     # Final verdict
     final_verdict: str = Field(
-        description="INVIABLE | VIABLE WITH CRITICAL CORRECTIONS | VIABLE WITH ADJUSTMENTS | SOLID UNDER PRESSURE"
+        description="INVIABLE | VIABLE WITH CRITICAL CORRECTIONS | VIABLE WITH ADJUSTMENTS | SOLID UNDER PRESSURE | INDETERMINATE — TRIBUNAL COLLAPSE"
     )
     confidence: str = Field(description="HIGH | MODERATE | LOW")
     verdict_reasoning: str = Field(description="Why this verdict — 2-3 sentences max")

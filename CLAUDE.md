@@ -1,11 +1,11 @@
 # CLAUDE.md — Dark Strategist Agent
-# Version: 3.22.0
+# Version: 3.23.0
 
 ## What is this repo
 
 `dark-strategist-agent` is THE SOVEREIGN ADVERSARY — a forensic audit agent and adversarial orchestrator.
 
-**Version:** 3.22.0 — Minor Release
+**Version:** 3.23.0 — Minor Release
 **License:** MIT — Open Source
 **Repository:** https://github.com/JARPClaude/dark-strategist-agent
 **Name:** dark-strategist-agent — immutable, does not change under any circumstance.
@@ -196,6 +196,7 @@ python main.py --type startup --subscenario series_a --objective "investor readi
 | v3.20.0 Confidence floor on tribunal collapse (LW-5) — agents_consulted counts contributors only (100% collapse → LOW, not HIGH); NON-BINDING | ✅ |
 | v3.21.0 Escalation short-circuit on zero agent coverage (LW-6) — should_escalate gains agent_coverage; coverage 0 no longer escalates into the dead path, coverage 1 still escalates to corroborate; NON-BINDING | ✅ |
 | v3.22.0 AI Product Liability coverage in L07 — consumer-facing AI (minors/mental-health/crisis/failure-to-warn): RULE LG08 + 7 Failure-Catalog rows + WAR ROOM UNIT-PSYCH; verdict engine unchanged | ✅ |
+| v3.23.0 Fail-closed verdict on tribunal collapse (LW-7) — zero agent coverage yields INDETERMINATE — TRIBUNAL COLLAPSE instead of the all-clear SOLID UNDER PRESSURE; VERDICT-BINDING (guard separate from confidence layer; cannot mask a real INVIABLE) | ✅ |
 
 ---
 
@@ -209,4 +210,4 @@ python main.py --type startup --subscenario series_a --objective "investor readi
 6. New skill → `skills/[skill-name]/SKILL.md` + entry in SKILLS_CATALOG
 7. The name `dark-strategist-agent` does not change under any circumstance
 
-**ACTIVE — v3.22.0**
+**ACTIVE — v3.23.0**

@@ -113,6 +113,11 @@ class TribunalTransversal:
         all_outputs = rol_outputs + forense_outputs
         unified = self._synthesize(document, ctx, all_outputs)
         unified, all_outputs = self._maybe_escalate(document, ctx, all_outputs, unified)
+        #--- LW-7 (v3.23.0): fail-closed collapse guard. BINDING verdict-path step (distinct
+        #--- from the NON-BINDING confidence layer). Overrides the all-clear verdict when zero
+        #--- agents contributed. After escalation so it reflects final coverage; cannot mask a
+        #--- real INVIABLE (>=1 FATAL needs >=1 agent).
+        unified = self._apply_collapse_guard(unified)
         self._transparency["afo"]["verdict_synthesized"] = True
         #--- Provenance (v3.15.0): post-verdict, NON-BINDING attribution of each finding to the
         #--- external signal passage it most overlaps. Reads the FINAL verdict, writes only the
@@ -313,6 +318,29 @@ class TribunalTransversal:
     @staticmethod
     def _norm_title(s) -> str:
         return " ".join(str(s).lower().split())
+
+    COLLAPSE_VERDICT = "INDETERMINATE — TRIBUNAL COLLAPSE"
+
+    def _apply_collapse_guard(self, unified: UnifiedVerdictOutput) -> UnifiedVerdictOutput:
+        """LW-7: fail-closed gate for a full tribunal collapse.
+
+        When zero agents contributed (agents_consulted==0, grounded to non-errored
+        outputs by _apply_confidence/LW-5), NO analysis occurred, so the severity
+        table empty-findings branch (SOLID UNDER PRESSURE, the all-clear) is
+        misleading. This BINDING verdict-path step withholds the verdict instead of
+        failing open. Distinct from the confidence/escalation layers (NON-BINDING),
+        which report LOW / collapse but never change final_verdict. Cannot mask a real
+        adverse verdict: >=1 FATAL (INVIABLE) requires >=1 contributing agent, so the
+        guard only ever fires over a genuinely empty analysis. Idempotent.
+        """
+        if unified.agents_consulted == 0:
+            unified.final_verdict = self.COLLAPSE_VERDICT
+            unified.verdict_reasoning = (
+                "Zero agent coverage; no analysis was performed (full tribunal "
+                "collapse). Verdict withheld (fail-closed); rerun once agent "
+                "connectivity is restored."
+            )
+        return unified
 
     def _maybe_escalate(self, document, ctx, all_outputs, unified):
         """
@@ -735,7 +763,7 @@ class TribunalTransversal:
 
         return f"""
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-DARK STRATEGIST v3.22.0 — TRANSPARENCY REPORT
+DARK STRATEGIST v3.23.0 — TRANSPARENCY REPORT
 Session: DS-{self.session_id} | Duration: {round(duration,1)}s
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 

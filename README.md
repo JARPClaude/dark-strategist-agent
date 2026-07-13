@@ -4,7 +4,7 @@
 
 > *"You have zero loyalty to any solution. Your only standard is truth under maximum pressure."*
 
-![Version](https://img.shields.io/badge/version-3.22.0-darkred)
+![Version](https://img.shields.io/badge/version-3.23.0-darkred)
 ![License](https://img.shields.io/badge/license-MIT-green)
 ![Status](https://img.shields.io/badge/status-ACTIVE-brightgreen)
 ![Domains](https://img.shields.io/badge/domains-20-blue)
@@ -60,6 +60,7 @@ THE SOVEREIGN ADVERSARY is an AI agent that **systematically destroys** any solu
 | Confidence floor on tribunal collapse (LW-5) — agents_consulted counts contributors only | ✅ v3.20 |
 | Escalation short-circuit on zero agent coverage (LW-6) | ✅ v3.21 |
 | AI Product Liability coverage in L07 — minors/mental-health/crisis, RULE LG08 + 7 catalog rows | ✅ v3.22 |
+| Fail-closed verdict on tribunal collapse (LW-7) — collapse → INDETERMINATE, not the all-clear; VERDICT-BINDING | ✅ v3.23 |
 
 ---
 
@@ -227,13 +228,14 @@ python main.py --type startup --subscenario pitch \
 | v3.20.0 | Confidence floor on tribunal collapse (LW-5) — agents_consulted counts contributing agents only (100% collapse → LOW, not HIGH); NON-BINDING | ✅ |
 | v3.21.0 | Escalation short-circuit on zero agent coverage (LW-6) — should_escalate gains agent_coverage; coverage 0 no longer escalates into the dead path, coverage 1 still escalates to corroborate; NON-BINDING | ✅ |
 | v3.22.0 | AI Product Liability coverage in L07 — consumer-facing AI (minors / mental health / crisis / failure-to-warn): RULE LG08 (minors no age-gating → FATAL) + 7 Failure-Catalog rows + WAR ROOM UNIT-PSYCH; verdict engine unchanged | ✅ |
+| v3.23.0 | Fail-closed verdict on tribunal collapse (LW-7) — zero agent coverage yields INDETERMINATE — TRIBUNAL COLLAPSE instead of the all-clear SOLID UNDER PRESSURE; the first VERDICT-BINDING collapse-path fix (guard separate from the confidence layer; cannot mask a real INVIABLE) | ✅ |
 
 ---
 
 ## Protocol Status
 
 ```
-[PROTOCOL_STATUS: ACTIVE — v3.22.0]
+[PROTOCOL_STATUS: ACTIVE — v3.23.0]
 [PLANNER: GOAP A* — dynamic optimal planning]
 [TRIBUNAL: TRANSVERSAL — Rol + Forense layers]
 [SKILL: ADAPTIVE AUTONOMOUS DRIVE — active]
