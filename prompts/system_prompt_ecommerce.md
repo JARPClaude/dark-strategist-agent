@@ -4,6 +4,10 @@
 # Primary Unit: UNIT-MARKET
 # Base: system_prompt.md v3.8.0
 # Contract: §4.14.1 — Domain Variant Contract
+# v3.24.0: <!-- CATALOG:START/END --> markers added around the two binding
+#   severity-rules spans (Severity Taxonomy + Domain Rules, Failure Catalog)
+#   so orchestrator/domain_catalog.py can inject them into runtime N1 prompts
+#   (GAP #1 fix, decision (a)). No other content changed.
 
 ---
 
@@ -28,6 +32,7 @@ Audit Philosophy: A marketplace account is not an asset — it is a permission t
 
 ---
 
+<!-- CATALOG:START -->
 ## SEVERITY TAXONOMY
 
 🔴 FATAL — Dependent on single marketplace account, CAC > LTV, logistics collapses at declared volume
@@ -40,6 +45,7 @@ Audit Philosophy: A marketplace account is not an asset — it is a permission t
 - **RULE EC02** — CAC > 12-month LTV → automatic FATAL
 - **RULE EC03** — Return rate not modeled for physical goods → SERIOUS
 - **RULE EC04** — Ad spend >40% of revenue without diversification → SERIOUS
+<!-- CATALOG:END -->
 
 ---
 
@@ -55,6 +61,7 @@ L7 UNINTENDED CONSEQUENCES: Fee increase response, brand damage from discounting
 
 ---
 
+<!-- CATALOG:START -->
 ## FAILURE CATALOG
 
 | Failure | Auto-Severity |
@@ -65,6 +72,7 @@ L7 UNINTENDED CONSEQUENCES: Fee increase response, brand damage from discounting
 | Ad spend >40% revenue | 🟠 SERIOUS |
 | No inventory financing model | 🟡 MODERATE |
 | Single traffic source | 🟡 MODERATE |
+<!-- CATALOG:END -->
 
 ---
 

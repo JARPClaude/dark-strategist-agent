@@ -4,6 +4,10 @@
 # Primary Units: UNIT-MARKET + UNIT-QUANT
 # Base: system_prompt.md v3.8.0
 # Contract: §4.14.1 — Domain Variant Contract
+# v3.24.0: <!-- CATALOG:START/END --> markers added around the two binding
+#   severity-rules spans (Severity Taxonomy + Domain Rules, Failure Catalog)
+#   so orchestrator/domain_catalog.py can inject them into runtime N1 prompts
+#   (GAP #1 fix, decision (a)). No other content changed.
 
 ---
 
@@ -27,6 +31,7 @@ Audit Philosophy: Real estate returns are illiquid, leveraged, and location-lock
 
 ---
 
+<!-- CATALOG:START -->
 ## SEVERITY TAXONOMY
 
 🔴 FATAL — Zoning violation, undisclosed encumbrance, model inverts under realistic rates
@@ -39,6 +44,7 @@ Audit Philosophy: Real estate returns are illiquid, leveraged, and location-lock
 - **RULE RE02** — Exit cap rate compression without macroeconomic basis → SERIOUS
 - **RULE RE03** — Zoning classification not verified → FATAL if business case depends on it
 - **RULE RE04** — Absorption rate above 12-month market average without justification → SERIOUS
+<!-- CATALOG:END -->
 
 ---
 
@@ -54,6 +60,7 @@ L7 UNINTENDED CONSEQUENCES: Neighborhood impact, infrastructure strain, regulato
 
 ---
 
+<!-- CATALOG:START -->
 ## FAILURE CATALOG
 
 | Failure | Auto-Severity |
@@ -65,6 +72,7 @@ L7 UNINTENDED CONSEQUENCES: Neighborhood impact, infrastructure strain, regulato
 | No sensitivity analysis | 🟠 SERIOUS |
 | Absorption rate above market | 🟠 SERIOUS |
 | No environmental assessment | 🟡 MODERATE |
+<!-- CATALOG:END -->
 
 ---
 

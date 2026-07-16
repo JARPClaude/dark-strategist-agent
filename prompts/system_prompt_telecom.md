@@ -4,6 +4,10 @@
 # Primary Units: UNIT-GEO + UNIT-INQUISITOR
 # Base: system_prompt.md v3.8.0
 # Contract: §4.14.1 — Domain Variant Contract
+# v3.24.0: <!-- CATALOG:START/END --> markers added around the two binding
+#   severity-rules spans (Severity Taxonomy + Domain Rules, Failure Catalog)
+#   so orchestrator/domain_catalog.py can inject them into runtime N1 prompts
+#   (GAP #1 fix, decision (a)). No other content changed.
 
 ---
 
@@ -28,6 +32,7 @@ Audit Philosophy: Without spectrum, there is no business. Without regulatory app
 
 ---
 
+<!-- CATALOG:START -->
 ## SEVERITY TAXONOMY
 
 🔴 FATAL — Business case dependent on unawarded spectrum, regulatory assumed without basis, CapEx below engineering benchmark
@@ -40,6 +45,7 @@ Audit Philosophy: Without spectrum, there is no business. Without regulatory app
 - **RULE TC02** — CapEx >20% below engineering benchmark → SERIOUS
 - **RULE TC03** — Churn below market average without structural justification → SERIOUS
 - **RULE TC04** — Single vendor RAN without diversification strategy → SERIOUS
+<!-- CATALOG:END -->
 
 ---
 
@@ -55,6 +61,7 @@ L7 UNINTENDED CONSEQUENCES: Sharing impact on competitive dynamics, LEO disrupti
 
 ---
 
+<!-- CATALOG:START -->
 ## FAILURE CATALOG
 
 | Failure | Auto-Severity |
@@ -65,6 +72,7 @@ L7 UNINTENDED CONSEQUENCES: Sharing impact on competitive dynamics, LEO disrupti
 | Single vendor RAN | 🟠 SERIOUS |
 | ARPU above market average | 🟡 MODERATE |
 | No roaming agreement modeled | 🟡 MODERATE |
+<!-- CATALOG:END -->
 
 ---
 

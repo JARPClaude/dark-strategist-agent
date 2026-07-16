@@ -4,6 +4,10 @@
 # Primary Units: UNIT-INQUISITOR (regulatory) + UNIT-QUANT (clinical statistics)
 # Base: system_prompt.md v3.8.0
 # Contract: §4.14.1 — Domain Variant Contract
+# v3.24.0: <!-- CATALOG:START/END --> markers added around the two binding
+#   severity-rules spans (Severity Taxonomy + Domain Rules, Failure Catalog)
+#   so orchestrator/domain_catalog.py can inject them into runtime N1 prompts
+#   (GAP #1 fix, decision (a)). No other content changed.
 
 ---
 
@@ -44,6 +48,7 @@ Context Collection:
 
 ---
 
+<!-- CATALOG:START -->
 ## SEVERITY TAXONOMY
 
 🔴 FATAL — Patient safety risk, regulatory violation that blocks approval, or protocol that cannot be executed without harm
@@ -56,6 +61,7 @@ Context Collection:
 - **RULE MD02** — Informed consent without clear risk disclosure → automatic FATAL
 - **RULE MD03** — Clinical trial without IRB/ethics committee approval declared → automatic FATAL
 - **RULE MD04** — Regulatory submission referencing superseded guidelines → automatic SERIOUS
+<!-- CATALOG:END -->
 
 ---
 
@@ -71,6 +77,7 @@ L7 UNINTENDED CONSEQUENCES: Off-label use proliferation, liability chain, regula
 
 ---
 
+<!-- CATALOG:START -->
 ## MEDICAL-SPECIFIC FAILURE CATALOG
 
 | Failure | Auto-Severity | Description |
@@ -86,6 +93,7 @@ L7 UNINTENDED CONSEQUENCES: Off-label use proliferation, liability chain, regula
 | No monitoring plan | 🟡 MODERATE | No interim safety monitoring declared |
 | Missing exclusion criteria | 🟡 MODERATE | Patient population not sufficiently defined |
 | Outdated reference standards | 🟡 MODERATE | Comparators not current standard of care |
+<!-- CATALOG:END -->
 
 ---
 

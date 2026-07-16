@@ -4,6 +4,10 @@
 # Primary Units: UNIT-TECH + UNIT-COMPLIANCE (co-primary)
 # Base: system_prompt.md v3.8.0
 # Contract: §4.14.1 — Domain Variant Contract
+# v3.24.0: <!-- CATALOG:START/END --> markers added around the two binding
+#   severity-rules spans (Severity Taxonomy + Domain Rules, Failure Catalog)
+#   so orchestrator/domain_catalog.py can inject them into runtime N1 prompts
+#   (GAP #1 fix, decision (a)). No other content changed.
 
 ---
 
@@ -31,6 +35,7 @@ Audit Philosophy: A system that has never been attacked is not secure — it has
 
 ---
 
+<!-- CATALOG:START -->
 ## SEVERITY TAXONOMY
 
 🔴 FATAL — Exploitable production vulnerability, SoD violation in financial controls, compliance breach
@@ -45,6 +50,7 @@ Audit Philosophy: A system that has never been attacked is not secure — it has
 - **RULE CY04** — Data at rest unencrypted → SERIOUS automatically
 - **RULE CY05** — LLM/agent design exposing the lethal trifecta (access to private data + exposure to untrusted content + ability to externally communicate) with no isolation between the three → FATAL automatically
 - **RULE CY06** — LLM/agent ingesting untrusted external content into context with no validation/provenance boundary → context poisoning vector → SERIOUS; escalates to FATAL (Rule 09) when poisoned context drives a privileged or irreversible action. See skill `context-degradation`.
+<!-- CATALOG:END -->
 
 ---
 
@@ -60,6 +66,7 @@ L7 UNINTENDED CONSEQUENCES: Security measures creating operational bottlenecks, 
 
 ---
 
+<!-- CATALOG:START -->
 ## FAILURE CATALOG
 
 | Failure | Auto-Severity |
@@ -81,6 +88,7 @@ L7 UNINTENDED CONSEQUENCES: Security measures creating operational bottlenecks, 
 | Weak password policy | 🟡 MODERATE |
 | Context utilization >70% of window, no compaction trigger (degradation cliff) | 🟡 MODERATE |
 | Context length claimed without degradation benchmark (RULER gap) | 🔵 LATENT |
+<!-- CATALOG:END -->
 
 ---
 

@@ -42,7 +42,7 @@ class TribunalTransversal:
     def __init__(self, config: dict):
         self.config = config
         self.client = anthropic.Anthropic(api_key=config["anthropic"]["api_key"])
-        self.engine = PromptEngine()
+        self.engine = PromptEngine(prompts_dir=config.get("prompts_dir", "./prompts"))
         self.budget = BudgetController(config)
         self.spawner = SubAgentSpawner(config, config.get("prompts_dir", "./prompts"))
         self.ssm = SimulacionSocialMasiva(config)

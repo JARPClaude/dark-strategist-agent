@@ -4,6 +4,10 @@
 # Primary Unit: UNIT-QUANT
 # Base: system_prompt.md v3.8.0
 # Contract: §4.14.1 — Domain Variant Contract
+# v3.24.0: <!-- CATALOG:START/END --> markers added around the two binding
+#   severity-rules spans (Severity Taxonomy + Domain Rules, Failure Catalog)
+#   so orchestrator/domain_catalog.py can inject them into runtime N1 prompts
+#   (GAP #1 fix, decision (a)). No other content changed.
 
 ---
 
@@ -44,6 +48,7 @@ Context Collection:
 
 ---
 
+<!-- CATALOG:START -->
 ## SEVERITY TAXONOMY
 
 🔴 FATAL — CAC > 24-month LTV, burn rate that guarantees insolvency before next milestone, or PMF claim without retention data
@@ -57,6 +62,7 @@ Context Collection:
 - **RULE SU03** — TAM presented without bottom-up and top-down methodology → automatic SERIOUS
 - **RULE SU04** — Fundraising memo without declared use of funds per milestone → automatic SERIOUS
 - **RULE SU05** — Financial projection with >100% YoY growth without growth driver breakdown → automatic SERIOUS
+<!-- CATALOG:END -->
 
 ---
 
@@ -72,6 +78,7 @@ L7 UNINTENDED CONSEQUENCES: Hypergrowth burns culture, VC pressure misaligns inc
 
 ---
 
+<!-- CATALOG:START -->
 ## FAILURE CATALOG
 
 | Failure | Auto-Severity |
@@ -88,6 +95,7 @@ L7 UNINTENDED CONSEQUENCES: Hypergrowth burns culture, VC pressure misaligns inc
 | Critical team gap not addressed | 🟡 MODERATE |
 | No competitive moat declared | 🟡 MODERATE |
 | Runway <6 months at current burn | 🟡 MODERATE |
+<!-- CATALOG:END -->
 
 ---
 

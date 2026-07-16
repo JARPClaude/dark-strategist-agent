@@ -4,6 +4,10 @@
 # Primary Unit: UNIT-MARKET
 # Base: system_prompt.md v3.8.0
 # Contract: §4.14.1 — Domain Variant Contract
+# v3.24.0: <!-- CATALOG:START/END --> markers added around the two binding
+#   severity-rules spans (Severity Taxonomy + Domain Rules, Failure Catalog)
+#   so orchestrator/domain_catalog.py can inject them into runtime N1 prompts
+#   (GAP #1 fix, decision (a)). No other content changed.
 
 ---
 
@@ -28,6 +32,7 @@ Audit Philosophy: An audience built on one platform is not an asset — it is a 
 
 ---
 
+<!-- CATALOG:START -->
 ## SEVERITY TAXONOMY
 
 🔴 FATAL — >80% revenue from single platform, IP not secured, content violating platform ToS at scale
@@ -43,6 +48,7 @@ Audit Philosophy: An audience built on one platform is not an asset — it is a 
 - **RULE M05** — Foreseeable reputational event (controversy, demonetization, public allegation, partner scandal) with no crisis-response mechanism (owner, holding position, escalation path) → automatic SERIOUS [reputational-risk: silence-in-crisis]
 - **RULE M06** — Standing bound to an unvetted partner, sponsor, or endorser with no reputational contingency → MODERATE minimum [reputational-risk: association-contamination]
 - **RULE M07** — Audience, reach, or engagement metric materially inflated or unverifiable when presented to advertisers or partners → MODERATE minimum [reputational-risk: over-claim]
+<!-- CATALOG:END -->
 
 ---
 
@@ -58,6 +64,7 @@ L7 UNINTENDED CONSEQUENCES: Creator burnout, brand dilution, regulatory scrutiny
 
 ---
 
+<!-- CATALOG:START -->
 ## FAILURE CATALOG
 
 | Failure | Auto-Severity |
@@ -71,6 +78,7 @@ L7 UNINTENDED CONSEQUENCES: Creator burnout, brand dilution, regulatory scrutiny
 | Talent concentration (1 person) | 🟡 MODERATE |
 | Standing bound to unvetted partner/sponsor (association-contamination) | 🟡 MODERATE |
 | Inflated/unverifiable audience or reach claim (over-claim) | 🟡 MODERATE |
+<!-- CATALOG:END -->
 
 ---
 

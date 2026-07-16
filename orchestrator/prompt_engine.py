@@ -1,10 +1,23 @@
 """
-Dark Strategist v3.0.0 — Prompt Engine
+Dark Strategist v3.24.0 — Prompt Engine
 Master template + dynamic prompt builder.
 Replaces 15 static .md files with one template + runtime injection.
+
+v3.24.0 (GAP #1, decision (a) fix injection): Forense N1 prompts now inject
+the domain's BINDING Failure Catalog (extracted via
+domain_catalog.build_catalog_block, marker-scoped from prompts/*.md) after the
+tools list. All 19 domain variants carry the markers; a domain with no catalog
+(P01 General) gets "" -> template output is byte-identical to v3.23.0.
+
+Rol N1 prompts deliberately do NOT receive the catalog: Agentes de Rol
+simulate domain actors, their output contract has no severity field, and
+priming them with the Forense taxonomy would break the blind-peer separation
+between the two N1 layers and suppress ROL<->FORENSE clashes.
+See domain_catalog.py for the full rationale and the marker convention.
 """
 
 from schema import RuntimeContext
+from domain_catalog import build_catalog_block
 
 
 # ─── MASTER TEMPLATE ──────────────────────────────────────────────────────────
@@ -21,7 +34,7 @@ YOUR FUNCTION: {agent_function}
 
 ACTIVE TOOLS FOR THIS DOMAIN
 {tools_list}
-
+{domain_catalog_block}
 BEHAVIORAL RULES (non-negotiable)
 1. You have zero loyalty to any solution. Your only standard is truth under pressure.
 2. Do not soften findings with courtesy. Assertive, direct, unadorned.
@@ -219,8 +232,20 @@ NOT merge findings into multi_agent_confirmed (that field is a list of plain str
 class PromptEngine:
     """
     Builds dynamic prompts from the master template + runtime context.
-    No static .md files required — all generated at runtime.
+    No static .md files required for the base structure — all generated at
+    runtime. v3.24.0: domain-specific Failure Catalog content IS read from
+    prompts/*.md (marker-scoped, see domain_catalog.py) and injected into the
+    Forense N1 prompts only — this is the GAP #1 fix, additive only.
     """
+
+    def __init__(self, prompts_dir: str = "./prompts"):
+        self.prompts_dir = prompts_dir
+
+    def _domain_catalog_block(self, domain: str) -> str:
+        block = build_catalog_block(domain, self.prompts_dir)
+        # Trailing blank line when non-empty keeps template spacing clean;
+        # "" when empty so catalog-less domains (P01 General) stay byte-identical.
+        return (block + "\n") if block else ""
 
     def build_rol_prompt(self, agent_id: str, role: str,
                          ctx: RuntimeContext) -> str:
@@ -263,6 +288,7 @@ class PromptEngine:
             regime_description=ctx.regime_description,
             tools_list=self._format_tools(ctx.tools),
             simulation_quality_field=simulation_quality_field,
+            domain_catalog_block=self._domain_catalog_block(ctx.domain),
         )
 
         if rol_simulation:

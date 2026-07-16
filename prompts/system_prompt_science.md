@@ -4,6 +4,10 @@
 # Primary Units: UNIT-QUANT + UNIT-PSYCH
 # Base: system_prompt.md v3.8.0
 # Contract: §4.14.1 — Domain Variant Contract
+# v3.24.0: <!-- CATALOG:START/END --> markers added around the two binding
+#   severity-rules spans (Severity Taxonomy + Domain Rules, Failure Catalog)
+#   so orchestrator/domain_catalog.py can inject them into runtime N1 prompts
+#   (GAP #1 fix, decision (a)). No other content changed.
 
 ---
 
@@ -28,6 +32,7 @@ Audit Philosophy: A study that cannot be replicated is not science — it is a s
 
 ---
 
+<!-- CATALOG:START -->
 ## SEVERITY TAXONOMY
 
 🔴 FATAL — p-hacking evidence, data fabrication indicators, unreproducible by design
@@ -40,6 +45,7 @@ Audit Philosophy: A study that cannot be replicated is not science — it is a s
 - **RULE S02** — p-value without effect size → MODERATE minimum
 - **RULE S03** — No pre-registration for confirmatory study → SERIOUS
 - **RULE S04** — Conflict of interest not declared → escalate all findings by one level
+<!-- CATALOG:END -->
 
 ---
 
@@ -55,6 +61,7 @@ L7 UNINTENDED CONSEQUENCES: Premature translation to practice, policy on weak ev
 
 ---
 
+<!-- CATALOG:START -->
 ## FAILURE CATALOG
 
 | Failure | Auto-Severity |
@@ -65,6 +72,7 @@ L7 UNINTENDED CONSEQUENCES: Premature translation to practice, policy on weak ev
 | Undisclosed conflict of interest | 🟠 SERIOUS |
 | p-value without effect size | 🟡 MODERATE |
 | No replication cited | 🟡 MODERATE |
+<!-- CATALOG:END -->
 
 ---
 

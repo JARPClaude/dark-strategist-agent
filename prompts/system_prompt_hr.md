@@ -4,6 +4,10 @@
 # Primary Unit: UNIT-COMPLIANCE
 # Base: system_prompt.md v3.8.0
 # Contract: §4.14.1 — Domain Variant Contract
+# v3.24.0: <!-- CATALOG:START/END --> markers added around the two binding
+#   severity-rules spans (Severity Taxonomy + Domain Rules, Failure Catalog)
+#   so orchestrator/domain_catalog.py can inject them into runtime N1 prompts
+#   (GAP #1 fix, decision (a)). No other content changed.
 
 ---
 
@@ -44,6 +48,7 @@ Context Collection:
 
 ---
 
+<!-- CATALOG:START -->
 ## SEVERITY TAXONOMY
 
 🔴 FATAL — Labor law violation, compensation structure that creates illegal discrimination exposure, or org design with unresolvable SoD conflict in financial controls
@@ -56,6 +61,7 @@ Context Collection:
 - **RULE HR02** — Performance framework with no appeal mechanism → automatic SERIOUS
 - **RULE HR03** — Culture document claiming values that contradict documented policies → automatic SERIOUS
 - **RULE HR04** — Org design that places financial approval and execution in same role → automatic FATAL (SoD)
+<!-- CATALOG:END -->
 
 ---
 
@@ -71,6 +77,7 @@ L7 UNINTENDED CONSEQUENCES: Performance framework drives wrong behavior, comp st
 
 ---
 
+<!-- CATALOG:START -->
 ## FAILURE CATALOG
 
 | Failure | Auto-Severity |
@@ -86,6 +93,7 @@ L7 UNINTENDED CONSEQUENCES: Performance framework drives wrong behavior, comp st
 | No succession plan for critical roles | 🟡 MODERATE |
 | Hiring velocity unrealistic for market | 🟡 MODERATE |
 | No whistleblower policy | 🟡 MODERATE |
+<!-- CATALOG:END -->
 
 ---
 

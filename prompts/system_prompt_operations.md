@@ -4,6 +4,10 @@
 # Primary Unit: UNIT-TECH
 # Base: system_prompt.md v3.8.0
 # Contract: §4.14.1 — Domain Variant Contract
+# v3.24.0: <!-- CATALOG:START/END --> markers added around the two binding
+#   severity-rules spans (Severity Taxonomy + Domain Rules, Failure Catalog)
+#   so orchestrator/domain_catalog.py can inject them into runtime N1 prompts
+#   (GAP #1 fix, decision (a)). No other content changed.
 
 ---
 
@@ -44,6 +48,7 @@ Context Collection:
 
 ---
 
+<!-- CATALOG:START -->
 ## SEVERITY TAXONOMY
 
 🔴 FATAL — Single point of failure without mitigation, SOP that cannot be executed as written, or supply chain with >80% concentration in one supplier
@@ -56,6 +61,7 @@ Context Collection:
 - **RULE OP02** — SOP with undefined step owner in critical path → automatic SERIOUS
 - **RULE OP03** — Scaling plan that assumes linear cost growth → automatic SERIOUS
 - **RULE OP04** — Process with no exception handling documented → MODERATE minimum
+<!-- CATALOG:END -->
 
 ---
 
@@ -71,6 +77,7 @@ L7 UNINTENDED CONSEQUENCES: Scaling creates new bottlenecks, outsourcing creates
 
 ---
 
+<!-- CATALOG:START -->
 ## FAILURE CATALOG
 
 | Failure | Auto-Severity |
@@ -85,6 +92,7 @@ L7 UNINTENDED CONSEQUENCES: Scaling creates new bottlenecks, outsourcing creates
 | Lead time 20%+ below industry benchmark | 🟡 MODERATE |
 | No exception handling documented | 🟡 MODERATE |
 | Key person dependency in critical path | 🟡 MODERATE |
+<!-- CATALOG:END -->
 
 ---
 

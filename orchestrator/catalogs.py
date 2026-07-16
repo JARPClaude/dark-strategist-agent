@@ -453,6 +453,30 @@ DOMAIN_MAP = {
     "seed": "Startup", "series_a": "Startup", "runway": "Startup",
 }
 
+# ─── DOMAIN PROPMT FILE ───────────────────────────────────────────────────────
+
+DOMAIN_PROMPT_FILE = {
+    "Trading":          "system_prompt_trading.md",
+    "Legal":            "system_prompt_legal.md",
+    "Financial":        "system_prompt_financial.md",
+    "Cloud":            "system_prompt_cloud.md",
+    "Code":             "system_prompt_code.md",
+    "Cybersecurity":    "system_prompt_cybersecurity.md",
+    "Agriculture":      "system_prompt_agro.md",
+    "Real Estate":      "system_prompt_realestate.md",
+    "Science":          "system_prompt_science.md",
+    "Medical":          "system_prompt_medical.md",
+    "Media":            "system_prompt_media.md",
+    "E-Commerce":       "system_prompt_ecommerce.md",
+    "Telecom":          "system_prompt_telecom.md",
+    "Public Sector":    "system_prompt_publicsector.md",
+    "Marketing":        "system_prompt_marketing.md",
+    "Operations":       "system_prompt_operations.md",
+    "Human Resources":  "system_prompt_hr.md",
+    "Strategy":         "system_prompt_strategy.md",
+    "Startup":          "system_prompt_startup.md",
+    # "General": no dedicated catalog file (system_prompt.md not migrated).
+}
 
 # ─── REGIME MAP ───────────────────────────────────────────────────────────────
 

@@ -9,6 +9,11 @@
 # Forensic Matrix: knowledge-work-plugins legal lenses (triage-nda, review-contract, compliance-check, legal-risk-assessment, vendor-check) — see docs/legal_finance_forensic_matrix.md
 # Base: system_prompt.md v3.8.0
 # Contract: §4.14.1 — Domain Variant Contract
+# v3.24.0: <!-- CATALOG:START/END --> markers added around the two binding
+#   severity-rules spans (GEOFENCE+Domain Rules, Sub-Area Failure Catalogs) so
+#   orchestrator/domain_catalog.py can inject them into the runtime N1 prompts
+#   (GAP #1 pilot fix, decision (a)). No other content in this file changed —
+#   diff is exactly 4 added marker lines.
 
 ---
 
@@ -78,6 +83,7 @@ Context Collection:
 
 ---
 
+<!-- CATALOG:START -->
 ## GEOFENCE LEGAL — SEVERITY CALIBRATION (MONOTONIC)
 
 Each condition adds N tiers to the underlying finding severity, capped at FATAL. Tier order: 🔵 LATENT → 🟡 MODERATE → 🟠 SERIOUS → 🔴 FATAL.
@@ -111,6 +117,7 @@ Each condition adds N tiers to the underlying finding severity, capped at FATAL.
 - **RULE LG07** — Likelihood & Risk Score are NON-BINDING prioritization metadata only; they never escalate/de-escalate a finding's tier or the verdict
 - **RULE LG08** — Consumer-facing AI product reachable by minors without documented age-gating / parental consent → automatic FATAL
 - **RULE LG09** — User-facing AI without a crisis-escalation protocol for self-harm / suicide signals → automatic FATAL (irreversible end-user harm; jurisdiction-independent, parallel to LG08)
+<!-- CATALOG:END -->
 
 ---
 
@@ -147,6 +154,7 @@ Source: `legal-risk-assessment` (knowledge-work-plugins). This layer **orders fi
 
 ---
 
+<!-- CATALOG:START -->
 ## SUB-AREA FAILURE CATALOGS
 
 ### L01 Commercial Legal
@@ -280,6 +288,7 @@ Source: `legal-risk-assessment` (knowledge-work-plugins). This layer **orders fi
 | Missing mandatory public disclosure / transparency filing | 🟠 SERIOUS |
 | Government termination-for-convenience without compensation defined | 🟠 SERIOUS |
 | Performance bond / guarantee terms ambiguous | 🟡 MODERATE |
+<!-- CATALOG:END -->
 
 ## WAR ROOM — LEGAL ORCHESTRATION
 

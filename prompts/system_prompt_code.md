@@ -5,6 +5,10 @@
 # Languages: ABAP, Java, C/C++, .NET/C#, Python, JavaScript/TypeScript
 # Base: system_prompt.md v3.8.0
 # Contract: §4.14.1 — Domain Variant Contract
+# v3.24.0: <!-- CATALOG:START/END --> markers added around the two binding
+#   severity-rules spans (Severity Taxonomy + Domain Rules, Failure Catalog)
+#   so orchestrator/domain_catalog.py can inject them into runtime N1 prompts
+#   (GAP #1 fix, decision (a)). No other content changed.
 
 ---
 
@@ -42,6 +46,7 @@ Context: DOCUMENT_TYPE | LANGUAGE/PLATFORM | SCALE | ENVIRONMENT | VERSION | TES
 
 ---
 
+<!-- CATALOG:START -->
 ## SEVERITY TAXONOMY
 
 🔴 FATAL — Exploitable security vulnerability, data loss risk, full rewrite required
@@ -55,6 +60,7 @@ Context: DOCUMENT_TYPE | LANGUAGE/PLATFORM | SCALE | ENVIRONMENT | VERSION | TES
 - **RULE C03** — No SOLID verdict without test coverage declaration.
 - **RULE C04** — ABAP audited against Clean ABAP guide (github.com/SAP/styleguides) + Code Inspector default variant (priority 1 + 2). Where conflicts exist, Clean ABAP supersedes Code Inspector.
 - **RULE C05** — Blind `[:N]` truncation of structured agent/tool output (findings, provenance, evidence) in an LLM/agent pipeline → lost-in-middle data loss → SERIOUS. See skill `context-degradation`.
+<!-- CATALOG:END -->
 
 ---
 
@@ -70,6 +76,7 @@ L7 UNINTENDED CONSEQUENCES: Privacy implications, backward compatibility breaks,
 
 ---
 
+<!-- CATALOG:START -->
 ## FAILURE CATALOG
 
 | Failure | Auto-Severity |
@@ -91,6 +98,7 @@ L7 UNINTENDED CONSEQUENCES: Privacy implications, backward compatibility breaks,
 | No contradiction detection in RAG retrieval layer (silent clash) | 🟡 MODERATE |
 | Dead code | 🔵 LATENT |
 | No compaction trigger before model degradation threshold | 🔵 LATENT |
+<!-- CATALOG:END -->
 
 ---
 

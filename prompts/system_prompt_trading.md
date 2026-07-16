@@ -8,6 +8,10 @@
 # Domain: Algorithmic Trading — Backtests, Strategies, Systems, Fund Proposals
 # Base: system_prompt.md v3.8.0 + domain calibration for CAPITAL MARKETS / TRADING
 # Contract: §4.14.1 — Domain Variant Contract
+# v3.24.0: <!-- CATALOG:START/END --> markers added around the two binding
+#   severity-rules spans (Severity Taxonomy + Rule 09, Failure Catalog table)
+#   so orchestrator/domain_catalog.py can inject them into runtime N1 prompts
+#   (GAP #1 fix, decision (a)). No other content changed.
 
 ---
 
@@ -94,6 +98,7 @@ If any criterion fails:
 
 ---
 
+<!-- CATALOG:START -->
 ## SEVERITY TAXONOMY
 
 **ES/EN Equivalence Map:**
@@ -107,6 +112,7 @@ If any criterion fails:
 ### Rule 09 — Transversal Escalation (Trading Edition)
 - 🔵 LATENT in a single instrument that triggers systemic portfolio collapse → 🔴 FATAL
 - 🟡 MODERATE execution assumption that compounds to >20% equity impact → 🟠 SERIOUS
+<!-- CATALOG:END -->
 
 ---
 
@@ -164,6 +170,7 @@ If any criterion fails:
 
 ---
 
+<!-- CATALOG:START -->
 ## TRADING-SPECIFIC FAILURE CATALOG
 
 These are the most common failure modes. Any detected failure maps to a finding automatically.
@@ -184,6 +191,7 @@ These are the most common failure modes. Any detected failure maps to a finding 
 | **Parameter instability** | L4 | 🟡 MODERATE | Small parameter change causes large performance change |
 | **No benchmark** | L5 | 🔵 LATENT | Performance not compared to Buy & Hold or index |
 | **Capacity neglect** | L7 | 🔵 LATENT | No analysis of strategy capacity at scale |
+<!-- CATALOG:END -->
 
 ---
 

@@ -5,6 +5,10 @@
 # Forensic Matrix: knowledge-work-plugins finance lenses (variance-analysis 4 decompositions, reconciliation, sox-testing/audit-support, financial-statements) — see docs/legal_finance_forensic_matrix.md
 # Base: system_prompt.md v3.8.0
 # Contract: §4.14.1 — Domain Variant Contract
+# v3.24.0: <!-- CATALOG:START/END --> markers added (3 spans: Severity Taxonomy
+#   + Domain Rules, Variance Decomposition Lenses, Failure Catalog) so
+#   orchestrator/domain_catalog.py can inject them into runtime N1 prompts
+#   (GAP #1 fix, decision (a)). No other content changed.
 
 ---
 
@@ -39,6 +43,7 @@ Context: DOCUMENT_TYPE | CURRENCY & JURISDICTION | TIME_HORIZON | CAPITAL_AT_RIS
 
 ---
 
+<!-- CATALOG:START -->
 ## SEVERITY TAXONOMY
 
 🔴 FATAL — Model error invalidating conclusion, undisclosed material liability, fraud indicator
@@ -58,6 +63,7 @@ Context: DOCUMENT_TYPE | CURRENCY & JURISDICTION | TIME_HORIZON | CAPITAL_AT_RIS
 - **RULE F06** — Variance analysis without a declared materiality threshold = MODERATE (cannot distinguish signal from noise).
 - **RULE F07** — SOX deficiency severity maps natively to the binding tier: material weakness → 🔴 FATAL, significant deficiency → 🟠 SERIOUS, control deficiency → 🟡 MODERATE.
 - **RULE F08** — Likelihood & Risk Score are NON-BINDING prioritization metadata only (mirrors Legal LG07); they never alter tier or verdict.
+<!-- CATALOG:END -->
 
 ---
 
@@ -73,6 +79,7 @@ L7 UNINTENDED CONSEQUENCES: Tax implications, regulatory capital, market signal 
 
 ---
 
+<!-- CATALOG:START -->
 ## VARIANCE DECOMPOSITION LENSES (FORENSIC)
 
 Source: `variance-analysis` (knowledge-work-plugins). Every material variance MUST be decomposed into drivers; an undecomposed material variance is an analytical omission (RULE F05).
@@ -83,6 +90,7 @@ Source: `variance-analysis` (knowledge-work-plugins). Every material variance MU
 4. **Spend Category** — split fixed vs volume-driven costs; isolates discretionary overruns from scaling costs.
 
 **Forensic use:** if the document reports a variance above its materiality threshold but does not attribute it to these drivers, emit a SERIOUS finding (unexplained variance = concealment surface).
+<!-- CATALOG:END -->
 
 ---
 
@@ -92,6 +100,7 @@ Mirrors the Legal variant for cross-domain consistency. **Orders findings within
 
 ---
 
+<!-- CATALOG:START -->
 ## FAILURE CATALOG
 
 | Failure | Auto-Severity |
@@ -117,6 +126,7 @@ Mirrors the Legal variant for cross-domain consistency. **Orders findings within
 | Reconciling items without aging / categorization | 🟡 MODERATE |
 | SOX control deficiency | 🟡 MODERATE |
 | Variance analysis without declared materiality threshold | 🟡 MODERATE |
+<!-- CATALOG:END -->
 
 ---
 

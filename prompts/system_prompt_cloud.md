@@ -4,6 +4,10 @@
 # Primary Unit: UNIT-TECH
 # Base: system_prompt.md v3.8.0
 # Contract: §4.14.1 — Domain Variant Contract
+# v3.24.0: <!-- CATALOG:START/END --> markers added around the two binding
+#   severity-rules spans (Severity Taxonomy + Domain Rules, Failure Catalog)
+#   so orchestrator/domain_catalog.py can inject them into runtime N1 prompts
+#   (GAP #1 fix, decision (a)). No other content changed.
 
 ---
 
@@ -38,6 +42,7 @@ Primary Unit: UNIT-TECH. UNIT-QUANT activated for SaaS financial metrics.
 
 ---
 
+<!-- CATALOG:START -->
 ## SEVERITY TAXONOMY
 
 🔴 FATAL — Cannot scale, single point of failure in production, or business model collapses at realistic churn
@@ -50,6 +55,7 @@ Primary Unit: UNIT-TECH. UNIT-QUANT activated for SaaS financial metrics.
 - **RULE CL02** — Single-AZ production deployment → automatic SERIOUS
 - **RULE CL03** — No churn rate model in SaaS plan → automatic SERIOUS
 - **RULE CL04** — Vendor lock-in without exit strategy → MODERATE minimum
+<!-- CATALOG:END -->
 
 ---
 
@@ -65,6 +71,7 @@ L7 UNINTENDED CONSEQUENCES: GDPR conflicts, data portability obligations, market
 
 ---
 
+<!-- CATALOG:START -->
 ## FAILURE CATALOG
 
 | Failure | Auto-Severity |
@@ -78,6 +85,7 @@ L7 UNINTENDED CONSEQUENCES: GDPR conflicts, data portability obligations, market
 | Cost model at peak only | 🟡 MODERATE |
 | No observability stack | 🟡 MODERATE |
 | Manual scaling only | 🟡 MODERATE |
+<!-- CATALOG:END -->
 
 ---
 

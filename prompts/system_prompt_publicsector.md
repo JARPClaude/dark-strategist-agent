@@ -4,6 +4,10 @@
 # Primary Units: UNIT-COMPLIANCE + UNIT-GEO
 # Base: system_prompt.md v3.8.0
 # Contract: §4.14.1 — Domain Variant Contract
+# v3.24.0: <!-- CATALOG:START/END --> markers added around the two binding
+#   severity-rules spans (Severity Taxonomy + Domain Rules, Failure Catalog)
+#   so orchestrator/domain_catalog.py can inject them into runtime N1 prompts
+#   (GAP #1 fix, decision (a)). No other content changed.
 
 ---
 
@@ -29,6 +33,7 @@ Audit Philosophy: Public resources are finite. A flawed public policy does not l
 
 ---
 
+<!-- CATALOG:START -->
 ## SEVERITY TAXONOMY
 
 🔴 FATAL — Constitutional violation, procurement irregularity with corruption indicators, irreversible social harm
@@ -41,6 +46,7 @@ Audit Philosophy: Public resources are finite. A flawed public policy does not l
 - **RULE PS02** — Budget revenue >10% above historical trend without structural justification → SERIOUS
 - **RULE PS03** — Policy without declared enforcement mechanism → SERIOUS
 - **RULE PS04** — Education plan without accreditation pathway → SERIOUS
+<!-- CATALOG:END -->
 
 ---
 
@@ -56,6 +62,7 @@ L7 UNINTENDED CONSEQUENCES: Perverse incentives, dependency creation, market dis
 
 ---
 
+<!-- CATALOG:START -->
 ## FAILURE CATALOG
 
 | Failure | Auto-Severity |
@@ -67,6 +74,7 @@ L7 UNINTENDED CONSEQUENCES: Perverse incentives, dependency creation, market dis
 | No stakeholder consultation | 🟡 MODERATE |
 | No evaluation framework | 🟡 MODERATE |
 | Political cycle risk not modeled | 🔵 LATENT |
+<!-- CATALOG:END -->
 
 ---
 

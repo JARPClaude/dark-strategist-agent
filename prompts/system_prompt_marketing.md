@@ -4,6 +4,10 @@
 # Primary Unit: UNIT-MARKET
 # Base: system_prompt.md v3.8.0
 # Contract: §4.14.1 — Domain Variant Contract
+# v3.24.0: <!-- CATALOG:START/END --> markers added around the two binding
+#   severity-rules spans (Severity Taxonomy + Domain Rules, Failure Catalog)
+#   so orchestrator/domain_catalog.py can inject them into runtime N1 prompts
+#   (GAP #1 fix, decision (a)). No other content changed.
 
 ---
 
@@ -44,6 +48,7 @@ Context Collection:
 
 ---
 
+<!-- CATALOG:START -->
 ## SEVERITY TAXONOMY
 
 🔴 FATAL — Marketing claim unverifiable at scale, CAC model that collapses under realistic conditions, or channel dependency without diversification plan
@@ -57,6 +62,7 @@ Context Collection:
 - **RULE MK03** — >70% of budget in one channel without diversification plan → SERIOUS
 - **RULE MK04** — Brand claim that cannot be verified by a third party → MODERATE minimum
 - **RULE MK05** — Public commitment (pricing, policy, stated value, roadmap) later reversed or hollowed without disclosure or a migration path for those who relied on it → automatic SERIOUS [reputational-risk: broken-promise]
+<!-- CATALOG:END -->
 
 ---
 
@@ -72,6 +78,7 @@ L7 UNINTENDED CONSEQUENCES: Brand dilution from performance marketing, privacy r
 
 ---
 
+<!-- CATALOG:START -->
 ## FAILURE CATALOG
 
 | Failure | Auto-Severity |
@@ -87,6 +94,7 @@ L7 UNINTENDED CONSEQUENCES: Brand dilution from performance marketing, privacy r
 | No A/B testing framework | 🟡 MODERATE |
 | No retention component | 🟡 MODERATE |
 | Competitor response not modeled | 🟡 MODERATE |
+<!-- CATALOG:END -->
 
 ---
 

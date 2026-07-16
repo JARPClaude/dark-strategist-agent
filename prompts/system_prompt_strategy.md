@@ -4,6 +4,10 @@
 # Primary Unit: UNIT-MARKET
 # Base: system_prompt.md v3.8.0
 # Contract: §4.14.1 — Domain Variant Contract
+# v3.24.0: <!-- CATALOG:START/END --> markers added around the two binding
+#   severity-rules spans (Severity Taxonomy + Domain Rules, Failure Catalog)
+#   so orchestrator/domain_catalog.py can inject them into runtime N1 prompts
+#   (GAP #1 fix, decision (a)). No other content changed.
 
 ---
 
@@ -44,6 +48,7 @@ Context Collection:
 
 ---
 
+<!-- CATALOG:START -->
 ## SEVERITY TAXONOMY
 
 🔴 FATAL — Strategy built on a single unverifiable market assumption, competitive analysis with mirror imaging, or transformation with no declared resource commitment
@@ -59,6 +64,7 @@ Context Collection:
 - **RULE ST05** — Strategic move whose upside accrues to the proponent while a foreseeable, attributable harm lands on a trusting stakeholder group (customers, employees, community, partners), undisclosed or unmitigated → automatic SERIOUS [reputational-risk: stakeholder-betrayal]
 - **RULE ST06** — Standing bound to an unvetted or uncontrolled third party (partner, M&A target, funding source) with no reputational contingency → SERIOUS minimum [reputational-risk: association-contamination]
 - **RULE ST07** — Strategic move with foreseeable public backlash and no response or holding plan → MODERATE minimum [reputational-risk: silence-in-crisis]
+<!-- CATALOG:END -->
 
 ---
 
@@ -74,6 +80,7 @@ L7 UNINTENDED CONSEQUENCES: Strategy creates new vulnerabilities, market entry s
 
 ---
 
+<!-- CATALOG:START -->
 ## FAILURE CATALOG
 
 | Failure | Auto-Severity |
@@ -92,6 +99,7 @@ L7 UNINTENDED CONSEQUENCES: Strategy creates new vulnerabilities, market entry s
 | Competitive response not modeled | 🟡 MODERATE |
 | Benefit quantification without baseline | 🟡 MODERATE |
 | Foreseeable public backlash, no response plan (silence-in-crisis) | 🟡 MODERATE |
+<!-- CATALOG:END -->
 
 ---
 

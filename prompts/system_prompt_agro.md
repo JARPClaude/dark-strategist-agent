@@ -4,6 +4,10 @@
 # Primary Unit: UNIT-BIO
 # Base: system_prompt.md v3.8.0
 # Contract: §4.14.1 — Domain Variant Contract
+# v3.24.0: <!-- CATALOG:START/END --> markers added around the two binding
+#   severity-rules spans (Severity Taxonomy + Domain Rules, Failure Catalog)
+#   so orchestrator/domain_catalog.py can inject them into runtime N1 prompts
+#   (GAP #1 fix, decision (a)). No other content changed.
 
 ---
 
@@ -30,6 +34,7 @@ Audit Philosophy: Nature does not negotiate deadlines. A plan that ignores biolo
 
 ---
 
+<!-- CATALOG:START -->
 ## SEVERITY TAXONOMY
 
 🔴 FATAL — Biological impossibility, missing environmental permit, biosecurity failure risking total production loss
@@ -42,6 +47,7 @@ Audit Philosophy: Nature does not negotiate deadlines. A plan that ignores biolo
 - **RULE A02** — Livestock or aquaculture without biosecurity protocol → automatic FATAL
 - **RULE A03** — Cold chain dependency without backup → SERIOUS automatically
 - **RULE A04** — Social conflict history in region not addressed → SERIOUS automatically
+<!-- CATALOG:END -->
 
 ---
 
@@ -57,6 +63,7 @@ L7 UNINTENDED CONSEQUENCES: Environmental damage, community displacement, soil d
 
 ---
 
+<!-- CATALOG:START -->
 ## FAILURE CATALOG
 
 | Failure | Auto-Severity |
@@ -72,6 +79,7 @@ L7 UNINTENDED CONSEQUENCES: Environmental damage, community displacement, soil d
 | No mortality modeling | 🟡 MODERATE |
 
 **Note (v3.2.2):** "Yield above regional benchmark" reclassified from FATAL → SERIOUS to align with severity taxonomy definition (FATAL = biological impossibility; yield overestimation is overstatement, not impossibility). Documented justification (technical irrigation, improved seeds, etc.) removes the finding entirely.
+<!-- CATALOG:END -->
 
 ---
 
