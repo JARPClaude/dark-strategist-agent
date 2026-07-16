@@ -1,17 +1,18 @@
 # Dark Strategist — Continuity Prompt v38
 
 **Sesión origen:** 39 (Cowork / Claude for Windows) · **Fecha:** 15/07/2026
-**Reemplaza:** v37 (borrar v37 — v38 único continuity vigente)
+**Reemplaza:** v37 (borrado — v38 único continuity vigente)
+**Rev:** 2 (cierre de s39 — infraestructura del smoke desbloqueada parcialmente)
 
 ---
 
 ## ESTADO DEL SISTEMA
 
 - **DS versión en repo:** v3.23.0 (cert PA-20260712-002 ACTIVE). **NO bumpeado, NO certificado.**
-- **HEAD remoto DS:** `639e06f5` (parent `02242a87`) — commit WIP de s39, **pusheado y verificado por read-back del árbol**.
-- **HEAD remoto jarp-toolkit:** `514fa026` (parent `7e29023`) — sin cambios en s39.
+- **HEAD remoto DS:** `1b4c669c` (parent `639e06f5`) — commit del continuity v38. **El fix GAP #1 está en `639e06f5`**, ambos pusheados y verificados por read-back del árbol.
+- **HEAD remoto jarp-toolkit:** `514fa026` (parent `7e29023`) — **sin cambios en s39** (notas #34/#43 quedaron desactualizadas, ver BACKLOG).
 - **PA-agent:** v1.3.0 (PA-20260527-002 ACTIVE).
-- **Working tree:** LIMPIO. Todo el trabajo de s38+s39 está commiteado y pusheado.
+- **Working tree:** LIMPIO. Todo s38+s39 commiteado y pusheado.
 - **Candidato:** v3.24.0 — falta smoke + cert + bump.
 
 ---
@@ -49,18 +50,19 @@ Razón: el cert de v3.24.0 afirma *"la inyección ocurre"*. Un `""` indistinguib
 | `orchestrator/catalogs.py` | 31298 | M (`DOMAIN_PROMPT_FILE`, 19 entradas) |
 | `orchestrator/tribunal_transversal.py` | 42323 | M (1 línea `prompts_dir`) |
 | `prompts/system_prompt_*.md` | ×19 | M (solo marcadores + header) |
-| `dark-strategist-continuity-prompt_v37.md` | 6449 | A (v36 rotado) |
+| `dark-strategist-continuity-prompt_v38.md` | 12814 | A (v37 rotado) |
 
 `router.py` (5199) intacto y huérfano. `orchestrator/_livewatch` **NO trackeado** (verificado por árbol).
 
 ### Evidencia acumulada (toda medida, ninguna inferida)
 
 - **224/224 offline**: extracción ×19, leak guards 7×19, superficie de inyección ×6, anomaly warning ×6.
-- **2 corridas live $0** — LW-5/6/7 intactas bajo el código nuevo, por **dos vectores de colapso distintos**:
-  - `DS-5F6CD814` — auth error → `INDETERMINATE — TRIBUNAL COLLAPSE`, 0/40.
+- **3 corridas live $0** — LW-5/6/7 intactas bajo el código nuevo, por **tres vectores de colapso independientes**:
+  - `DS-5F6CD814` — auth error (sin key) → `INDETERMINATE — TRIBUNAL COLLAPSE`, 0/40, 0.3s.
   - `DS-C7F42901` — connection error (proxy caído) → idem, 0/40, 41s.
-- **`Domain: Legal` confirmado en runtime real** vía `--document` (`--verbose`).
-- **El catálogo Legal SÍ entra en los 5 prompts Forenses**: en `DS-C7F42901` los prompts se construyeron completos antes del fallo HTTP y **no hubo `[DOMAIN_CATALOG] WARNING`**. Con (b) activo, ese silencio es dato, no suposición.
+  - `DS-EEB1F05B` — **503 upstream** (`NVIDIA_NIM_API_KEY is not set`, con `request_id`) → idem, 0/40, 6.5s.
+- **`Domain: Legal` confirmado en runtime real** vía `--document` (`--verbose`), en las 3 corridas.
+- **El catálogo Legal SÍ entra en los 5 prompts Forenses**: en `DS-C7F42901` y `DS-EEB1F05B` los prompts se construyeron completos antes del fallo HTTP y **no hubo `[DOMAIN_CATALOG] WARNING`**. Con (b) activo, ese silencio es dato, no suposición.
 - Prompt Forense Legal = **11.847 chars** (con LG08/LG09/GEOFENCE **y** `OUTPUT FORMAT (JSON)` coexistiendo). Rol = 1.527 chars, limpio.
 
 ---
@@ -68,12 +70,20 @@ Razón: el cert de v3.24.0 afirma *"la inyección ocurre"*. Un `""` indistinguib
 ## LO QUE FALTA — para cerrar v3.24.0
 
 1. **Smoke NVIDIA ($0, NO es evidencia de cert).** Única pregunta técnica abierta del fix: ¿el prompt Forense de 11.847 chars **parsea limpio**, o el bloque compite con el contrato JSON y `_call_agent` cae a `{"raw_output":…, "UNKNOWN"}`? Mirar SOLO: `agents_consulted > 0` y FOR con `verdict != UNKNOWN`. El veredicto de NVIDIA es irrelevante (#34: las corridas libres estresan orquestación, no síntesis).
-   **BLOQUEADO en s39:** `uv` NO está instalado; `fcc-server` no disponible. Requiere instalar `uv` (≥0.11.0) + Python ≥3.14.
+
+   **INFRAESTRUCTURA YA RESUELTA en s39 (no rehacer):**
+   - `uv 0.11.29` **instalado** en `C:\Users\jrodr\.local\bin` — **NO está en el PATH por defecto**:
+     `$env:Path = "C:\Users\jrodr\.local\bin;$env:Path"`
+   - Proxy **arranca OK**: `cd free-claude-code` → `uv run fcc-server` (81 packages, ~4s). Uvicorn en `0.0.0.0:8082`, Admin UI `http://127.0.0.1:8082/admin`, `/health` 200.
+   - **`MODEL_OPUS` está bien mapeado**: el 503 de `DS-EEB1F05B` lo prueba — el proxy resolvió `claude-opus-4-7` → backend NVIDIA NIM y falló por credencial, no por ruteo.
+
+   **ÚNICO BLOQUEO RESTANTE: `NVIDIA_NIM_API_KEY`.** Sacar key en `https://build.nvidia.com/settings/api-keys` → en `free-claude-code`: `Copy-Item .env.example .env`, poner `NVIDIA_NIM_API_KEY=nvapi-...`, **relanzar el server** (el `.env` se lee al arranque), re-correr DS.
+
    **Riesgo bajo**: los 133 leak-guards prueban que ningún contrato competidor entró en los bloques; el bloque lleva instrucción explícita de no redefinir formato; el `OUTPUT FORMAT (JSON)` va al final. Y si revienta, `_call_agent` degrada sin crashear.
 
 2. **Cert SUSTANTIVO re-scopeado — CAMINO 3 (decisión de JARP en s39).**
 
-   **PODRÁ afirmar:** 19/19 migrados y extracción correcta · sin fuga de contrato competidor · inyección **Forense-only**, Rol limpio · `--document` resuelve `Legal` en runtime · LG08/LG09/GEOFENCE presentes en el prompt Forense junto al JSON · guardas LW-5/6/7 sobreviven al cambio · la falla de inyección es **observable**.
+   **PODRÁ afirmar:** 19/19 migrados y extracción correcta · sin fuga de contrato competidor · inyección **Forense-only**, Rol limpio · `--document` resuelve `Legal` en runtime · LG08/LG09/GEOFENCE presentes en el prompt Forense junto al JSON · guardas LW-5/6/7 sobreviven al cambio (3 vectores) · la falla de inyección es **observable**.
 
    **DEBERÁ declarar como NO evidenciado:**
    - **WATCH live L07 ABIERTO — 4ª sesión (s36→s39).** Que el N1 aplique LG08/LG09 como base-FATAL bajo Opus **no está medido**. Que el fixture salga INVIABLE, tampoco.
@@ -83,15 +93,20 @@ Razón: el cert de v3.24.0 afirma *"la inyección ocurre"*. Un `""` indistinguib
 3. **Bump v3.24.0:** `bump_stamps.ps1 -OldVersion 3.23.0 -NewVersion 3.24.0 -Apply` + one-shot Python (banners orquestador, CHANGELOG, roadmap rows) + ACTIVE en README/CLAUDE.
 4. **Sync canónicos** (posicional, ambos) + **continuity v39** + push.
 
-**Por qué no hubo `sk-ant`:** no hay `.env`, `ANTHROPIC_API_KEY` NOT SET, no hay `config.json`. JARP declaró en s39 que ya no usa `ANTHROPIC_API_KEY` y que usará NVIDIA — **esto contradice la nota #34 vigente y el propio v37**; ver BACKLOG.
+**Por qué no hubo `sk-ant`:** no hay `.env` en DS, `ANTHROPIC_API_KEY` NOT SET, no hay `config.json`. JARP declaró en s39 que ya no usa `ANTHROPIC_API_KEY` y que usará NVIDIA — **esto contradice la nota #34 vigente y el propio v37**; ver BACKLOG.
 
 ---
 
 ## BACKLOG ABIERTO
 
 **Gobernanza (resolver antes o durante el cert):**
-- **Nota #34 vs. realidad.** #34 exige *"real Opus (sk-ant, no proxy) for cert-grade live evidence only"* y dice que las corridas libres **no** evidencian calidad de síntesis. JARP declaró en s39 que usará NVIDIA por costo cero. **Camino 3 evita el choque** (no certifica juicio del N1), pero si en el futuro se quiere certificar comportamiento forense con NVIDIA, **#34 debe editarse formalmente en ambos canónicos** — con la consecuencia de que DS nunca tendría evidencia cert-grade sobre `claude-opus-4-7`, su modelo de producción declarado.
-- **Nota #34 / entrada #43 DESACTUALIZADAS:** documentan `uv run uvicorn server:app` y "Python 3.14+". Real: `free-claude-code` **v4.6.4**, layout `src/free_claude_code`, entry point `fcc-server = free_claude_code.cli.entrypoints:serve`, `uv>=0.11.0`. Arranque correcto: **`uv run fcc-server`**.
+- **Nota #34 vs. realidad — DECISIÓN PENDIENTE DE JARP.** #34 exige *"real Opus (sk-ant, no proxy) for cert-grade live evidence only"* y dice que las corridas libres **no** evidencian calidad de síntesis. JARP declaró en s39 que usará NVIDIA por costo cero. **Camino 3 evita el choque** (no certifica juicio del N1), pero si en el futuro se quiere certificar comportamiento forense con NVIDIA, **#34 debe editarse formalmente en ambos canónicos** — con la consecuencia de que DS nunca tendría evidencia cert-grade sobre `claude-opus-4-7`, su modelo de producción declarado. Volverá en el próximo cert de superficie forense.
+- **Nota #34 / entrada #43 DESACTUALIZADAS — corregir en jarp-toolkit (no se hizo en s39):**
+  - Documentan `uv run uvicorn server:app` y `server.py`. **NO EXISTE** — repo real `free-claude-code` **v4.6.4**, layout `src/free_claude_code`, sin `server.py` en la raíz.
+  - Entry point real: `fcc-server = free_claude_code.cli.entrypoints:serve`. **Arranque correcto: `uv run fcc-server`.**
+  - `requires-python = ">=3.14.0"`, `uv >= 0.11.0`. Instalar uv: `irm https://astral.sh/uv/install.ps1 | iex` → queda en `C:\Users\jrodr\.local\bin` (agregar al PATH manualmente).
+  - Requiere `NVIDIA_NIM_API_KEY` en el `.env` del **proxy** (plantilla: `.env.example`).
+- **Reglas operativas nuevas para añadir al toolkit:** ver LECCIÓN TRANSVERSAL.
 
 **v3.25.0 (candidatos):**
 - **(a) `--document` + `--type`:** hoy el `if/elif` de `main.py` **descarta el documento en silencio** si vienen los 3 flags. No existe la vía documento-real + dominio-pinneado. Bug por derecho propio.
@@ -116,11 +131,21 @@ Razón: el cert de v3.24.0 afirma *"la inyección ocurre"*. Un `""` indistinguib
 ⚠️ **v37 mandaba usar `legal_ai_companion_tos.txt` — NO EXISTE.**
 El fixture bueno es `ai_governance_companion_minors.txt`: ToS de companion AI con cohorte declarada 13-17 sin verificación de edad ("growth strength"), crisis de autolesión respondida alentando a seguir en la app con ruteo externo **explícitamente evitado por retención**, sin disclosure de IA, positioning "therapy-grade" sin supervisión clínica, sin audit trail, cierra con *"no hay regulación, no adoptamos controles"* — exactamente lo que LG08/LG09 anulan por jurisdiction-independent. **INVIABLE de manual.** Dispara LG08 + LG09.
 
-**Comando del e2e (desde la RAÍZ del repo, no desde `orchestrator/`):**
-```
+**Secuencia completa del smoke/e2e (verificada en s39 hasta el 503):**
+```powershell
+# Ventana 1 — proxy
+$env:Path = "C:\Users\jrodr\.local\bin;$env:Path"
+cd "C:\Users\jrodr\OneDrive\Documentos 1\GitHub\free-claude-code"
+uv run fcc-server          # requiere .env con NVIDIA_NIM_API_KEY
+
+# Ventana 2 — DS, desde la RAÍZ del repo (NO desde orchestrator/)
+cd "C:\Users\jrodr\OneDrive\Documentos 1\GitHub\dark-strategist-agent"
+$env:ANTHROPIC_API_KEY = "dummy-for-proxy"
+$env:ANTHROPIC_BASE_URL = "http://localhost:8082"
 python orchestrator\main.py --document orchestrator\_livewatch\ai_governance_companion_minors.txt --tribunal --regime adversarial --verbose
 ```
 `--verbose` imprime el ctx **antes** de la 1ª llamada: si no dice `Domain: Legal`, Ctrl-C y $0 gastados.
+⚠️ **Para cualquier e2e cert-grade con `sk-ant`: `Remove-Item Env:ANTHROPIC_BASE_URL` primero** o la evidencia se contamina (#34).
 
 ---
 
@@ -129,7 +154,7 @@ python orchestrator\main.py --document orchestrator\_livewatch\ai_governance_com
 **Ni el texto canónico ni Claude son fuente. La fuente es el sistema respondiendo.**
 
 Cuatro alucinaciones cazadas en s38/s39, todas del mismo mecanismo — texto escrito de memoria describiendo un estado que nadie verificó:
-1. `system_prompt_startup.md` inventado (s38, cazado por `git diff --stat`).
+1. `system_prompt_startup.md` inventado (s38).
 2. Docstrings afirmando "18 variants not migrated" (eran 19).
 3. Fixture `legal_ai_companion_tos.txt` inexistente (v37).
 4. Nota #34 documentando un arranque que `free-claude-code` abandonó hace versiones.
@@ -143,21 +168,23 @@ Y **tres predicciones falladas de Claude** en s39: "3 files changed" (eran 23), 
 - **`mi-filesystem` puede dejar archivos con el path colapsado como nombre** en la raíz del repo (visto en s39: `ersjrodrOneDrive…`, 3900 bytes, PUA U+F022). Solo visible por `git status --short`.
 - **Al investigar basura, leer el contenido ANTES de borrar** (en s39 se borró sin diagnosticar — error).
 - **Releer el archivo target inmediatamente antes de construir cualquier ancla**, aun si lo editaste hace 3 turnos (así se cazó el residuo `pilot` de la línea 3).
+- **Todo doc canónico envejece en la misma sesión que se escribe.** Este v38 se desactualizó 20 min después de crearse (`uv` pasó de ausente a instalado). Releer y corregir antes de cerrar, no confiar en lo escrito hace un rato.
 
 ---
 
 ## PROTOCOLO DE INICIO (s40)
 
 **PHASE 0:**
-- HEADs remotos reales (`list_commits perPage=3`): DS debería estar en `639e06f5` si nadie tocó nada; jarp-toolkit en `514fa026`.
+- HEADs remotos reales (`list_commits perPage=3`): DS debería estar en `1b4c669c` si nadie tocó nada; jarp-toolkit en `514fa026`.
 - Cert registry: ambos canónicos concuerdan **POSICIONALMENTE** en v3.23.0 / PA-20260712-002 (8 posiciones; lección drift s33/s34 — **NO `Select-String`**).
 - `orchestrator/_livewatch` NO trackeado — **por read-back del árbol** (`get_file_contents orchestrator/` → sin `_livewatch`), no por commit msg.
 - Working tree: `git status --short`.
 
 **PHASE 1 — decisión, esperar GO.** Candidatos:
-- **(b1) cerrar v3.24.0** — instalar `uv` → smoke → cert camino 3 → bump → sync → continuity v39 → push.
-- **(b2) SubAgentSpawner** (mismo bug, v3.25.0).
-- **(b3) (a) + (c)** — CLI y `prompts_dir` anclado.
-- **(b4) `router.py` cleanup** (solo post-cert de v3.24.0).
+- **(b1) cerrar v3.24.0** — key NVIDIA en el `.env` del proxy → smoke → cert camino 3 → bump → sync canónicos → continuity v39 → push. *(`uv` y el proxy ya están listos; ver LO QUE FALTA #1.)*
+- **(b2) sync jarp-toolkit** — corregir notas #34/#43 + añadir las reglas operativas nuevas. No depende de ninguna key.
+- **(b3) SubAgentSpawner** (mismo bug `prompts_dir`, v3.25.0).
+- **(b4) (a) + (c)** — CLI y `prompts_dir` anclado.
+- **(b5) `router.py` cleanup** (solo post-cert de v3.24.0).
 
 **STANDING:** sistema más robusto/valioso/eficiente; nunca barato-dormido sobre valor real. **Verificar contra fuente real antes de dar por bueno — medir, no inferir.** Trabajar en silencio, priorizar tokens. Español para conversación, inglés estricto para código/comentarios (prefijo `//--- `).
