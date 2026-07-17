@@ -453,6 +453,80 @@ DOMAIN_MAP = {
     "seed": "Startup", "series_a": "Startup", "runway": "Startup",
 }
 
+# ─── DOMAIN CONTENT SIGNALS (LW-8, v3.24.0) ───────────────────────────────────
+# Matched against the DOCUMENT TEXT, never against a filename.
+#
+# WHY THIS EXISTS: DOMAIN_MAP resolves a domain from `type` or from the
+# subscenario stem. In `--document` mode the stem IS the filename, so a Legal
+# document named `mindmate_tos.txt` resolved to the "General" sink, which
+# declares no DOMAIN_PROMPT_FILE entry, so load_domain_catalog returned ""
+# SILENTLY and the binding severity rules (RULE LG08 minors / RULE LG09
+# self-harm crisis - jurisdiction-independent auto-FATAL) never reached the
+# Forense N1 prompts. That is LW-8: the filename decided whether the hard gates
+# applied. This table lets the document decide instead.
+#
+# WHY NOT REUSE DOMAIN_MAP AGAINST THE DOCUMENT: measured and rejected in s41.
+# DOMAIN_MAP keys match by whole-token OR token-prefix, and include long generic
+# words - `health` (Medical), `content` (Media), `property` (Real Estate),
+# `security` (Cybersecurity), `process` (Operations), `people` (Human
+# Resources). Any AI product ToS says "mental health", "intellectual property",
+# "user content", "data security". Over prose those keys route the WRONG
+# catalog with the appearance of success - strictly worse than the General sink.
+# DOMAIN_MAP is a STEM vocabulary (one string, one topic); it is not a prose
+# vocabulary. Both are kept, each used only where it is sound.
+#
+# PROVENANCE OF THESE SIGNALS - nothing here is invented:
+#   Source: prompts/system_prompt_legal.md :: "Sub-Area Auto-Detection Signals"
+#   (rows L01-L12), certified under PA-20260712-002.
+#   This list is a STRICT SUBSET of that table. Generic terms carrying no legal
+#   specificity are EXCLUDED because they false-positive over non-legal prose:
+#     vendor, saas, subscription, board, termination, classification, consent,
+#     policy, gap analysis, security, debt, title, patent, oss, c&d.
+#   Excluding never adds meaning; it only narrows a certified list. No signal
+#   outside the certified table is admitted here.
+#
+# SCOPE: domain-level routing only ("this is a Legal document"). Sub-area
+# selection (L01-L12) stays inside the N1 prompt, unchanged.
+#
+# COVERAGE: a domain absent from this table simply never wins - it scores 0, no
+# hint is produced, resolution falls to the General sink, and that outcome is
+# DECLARED via RuntimeContext.domain_resolution == "general-sink". Absence is
+# therefore never silent. Adding a domain is a content-only change; no code
+# change is required. LW-8 is CRITICAL because of the L07 irreversible-harm
+# gates (LG08/LG09), which live in Legal - the routing is fixed where the harm
+# is, and the provenance is declared everywhere.
+DOMAIN_CONTENT_SIGNALS = {
+    "Legal": [
+        # L01 Commercial
+        "nda", "msa", "sow",
+        # L02 Corporate / M&A
+        "merger", "acquisition", "due diligence", "shareholder",
+        # L03 Employment
+        "employment", "severance", "non-compete",
+        # L04 Privacy
+        "gdpr", "dsar", "dpa", "pia", "ccpa", "data processing",
+        # L05 Product
+        "product launch", "marketing claim", "tos", "eula", "warranty",
+        # L06 Regulatory
+        "regulatory filing", "compliance framework",
+        # L07 AI Governance - all 13 signals, verbatim from the certified table
+        "ai governance", "ai assessment", "algorithmic", "ai vendor",
+        "minors", "age verification", "parental consent", "mental health",
+        "emotional dependency", "crisis protocol", "self-harm",
+        "companion ai", "chatbot safety",
+        # L08 IP
+        "trademark", "dmca", "copyright", "fto",
+        # L09 Litigation
+        "demand letter", "claim chart", "deposition", "settlement", "litigation",
+        # L10 Real Estate
+        "lease", "purchase agreement", "zoning", "real estate",
+        # L11 Finance
+        "loan agreement", "covenant", "intercreditor",
+        # L12 Public Regulatory
+        "government contract", "procurement", "public tender", "rfp",
+    ],
+}
+
 # ─── DOMAIN PROPMT FILE ───────────────────────────────────────────────────────
 
 DOMAIN_PROMPT_FILE = {

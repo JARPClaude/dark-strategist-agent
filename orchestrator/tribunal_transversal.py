@@ -21,6 +21,7 @@ import anthropic
 
 from schema import RuntimeContext, AgentVerdictOutput, UnifiedVerdictOutput, Finding, compute_confidence, should_escalate
 from archetype_lenses import select_lenses, build_lens_directive
+from context_builder import describe_domain_resolution
 from prompt_engine import PromptEngine
 from budget_controller import BudgetController
 from sub_agent_spawner import SubAgentSpawner
@@ -732,6 +733,10 @@ class TribunalTransversal:
             for f in (unified.fatal_findings + unified.serious_findings
                       + unified.moderate_findings + unified.latent_findings))
         slop = score_prose(_slop_src)
+        #--- LW-8 (v3.24.0): declare HOW the domain was decided. A filename-driven
+        #--- resolution must never be readable as a document-driven one, and the
+        #--- General sink (no catalog -> no LG08/LG09) must never be silent.
+        domain_res = describe_domain_resolution(ctx)
         rol_lines = "\n".join([
             f"    {a['id']}  {a['role'][:45]}  stance={a['stance']}"
             for a in t.get("rol_agents", [])
@@ -769,6 +774,7 @@ Session: DS-{self.session_id} | Duration: {round(duration,1)}s
 
 AGENTE FORENSE ORQUESTADOR (AFO)
   Domain:      {ctx.domain} / {ctx.subscenario}
+  Resolved by: {domain_res}
   Regime:      {ctx.regime} — {ctx.regime_description}
   Tribunal:    {ctx.tribunal_label}
   Synthesized: YES — VEREDICTO FORENSE UNIFICADO

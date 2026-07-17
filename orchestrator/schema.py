@@ -206,6 +206,17 @@ class RuntimeContext(BaseModel):
 
     # Auto-resolved by ContextBuilder
     domain: str = Field(default="General")
+    # LW-8 (v3.24.0) — HOW `domain` was decided. NON-BINDING, report-only: it
+    # never touches final_verdict, Finding, or any severity. It exists so a
+    # filename-driven resolution can never pass silently for a content-driven
+    # one, and so the General sink (no catalog -> no LG08/LG09 injection) is
+    # always visible to the reader. Same family as v3.15.0 signal-provenance.
+    # Values: declared-type | subscenario-keyword | document-content |
+    #         general-sink | unknown
+    domain_resolution: str = Field(default="unknown")
+    # Distinct content signals found per catalog-bearing domain (LW-8 evidence).
+    # Empty in case-based mode (no document text) or when nothing matched.
+    domain_signals: dict[str, list[str]] = Field(default_factory=dict)
     regime_description: str = Field(default="Standard analysis — balanced perspective")
 
     # Active roles (from ROLE_CATALOG)

@@ -35,7 +35,7 @@ import argparse
 from pathlib import Path
 
 from dotenv import load_dotenv
-from context_builder import ContextBuilder
+from context_builder import ContextBuilder, resolve_domain_from_content
 from tribunal_transversal import TribunalTransversal
 
 load_dotenv()
@@ -52,7 +52,15 @@ def load_config(config_path: str = "config.json") -> dict:
             "model": os.getenv("DS_MODEL", "claude-opus-4-7"),
             "max_tokens": int(os.getenv("DS_MAX_TOKENS", "8192"))
         },
-        "prompts_dir": os.getenv("DS_PROMPTS_DIR", "./prompts"),
+        #--- v3.24.0 (fix #5): anchor to the repo, not the CWD. The former
+        #--- './prompts' default made catalog injection depend on the directory
+        #--- the operator happened to launch from — invoking main.py from
+        #--- orchestrator/ (the CWD its own usage block documents) yielded "" for
+        #--- all 19 domains. DS_PROMPTS_DIR still overrides when set.
+        "prompts_dir": os.getenv(
+            "DS_PROMPTS_DIR",
+            str(Path(__file__).resolve().parent.parent / "prompts")
+        ),
         "tribunal": {
             "max_agents": 7,
             "max_calls_total": 40,
@@ -218,10 +226,18 @@ def main():
             sys.exit(1)
         from ingest import ingest_document
         document = ingest_document(str(doc_path))
+        #--- LW-8 (v3.24.0): the document is stronger evidence than its filename.
+        #--- Resolved HERE because main.py owns ingestion; ContextBuilder stays
+        #--- document-free (v3.8.0) and receives a resolved domain STRING only.
+        #--- Non-binding on the verdict: it selects which certified severity
+        #--- catalog reaches the Forense N1 prompts, nothing else.
+        domain_hint, domain_signal_evidence = resolve_domain_from_content(document)
         # Auto-infer case from document
         case = {
             "type": "general",
             "subscenario": doc_path.stem,
+            "domain_hint": domain_hint,
+            "domain_signal_evidence": domain_signal_evidence,
             "objective": "identify risks and failure modes",
             "regime": args.regime,
             "run_ssm": args.ssm,

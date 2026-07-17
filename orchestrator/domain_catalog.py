@@ -60,10 +60,26 @@ ANOMALY WARNING (v3.24.0 — fail-safe must not mean fail-silent):
   same class of defect GAP #1 itself was: a surface declared binding that the
   runtime may not actually consume. The fallback stays (never crash the
   tribunal); it just stops being mute.
-  Known live trigger (s39): the './prompts' default resolves against the CWD,
-  so invoking main.py from orchestrator/ - the CWD its own usage documents -
-  yields "" for all 19 domains. Anchoring prompts_dir to the repo is deferred
-  to v3.25.0; this warning makes the condition observable meanwhile.
+  Historic live trigger (s39, FIXED in v3.24.0): the './prompts' default
+  resolved against the CWD, so invoking main.py from orchestrator/ - the CWD
+  its own usage block documents - yielded "" for all 19 domains. main.py now
+  anchors the default to the repo (Path(__file__).parent.parent / "prompts");
+  DS_PROMPTS_DIR still overrides. The warning stays: a wrong DS_PROMPTS_DIR, a
+  moved prompts/ dir, or a lost marker pair still produce "" and must not be
+  mute.
+
+UPSTREAM OF THIS MODULE (LW-8, v3.24.0):
+  Case (1) below - "General declares no catalog, expected and silent" - is
+  true of THIS module but was load-bearing for a defect one layer up. In
+  `--document` mode ContextBuilder resolved the domain from the FILENAME STEM,
+  so a Legal document named `mindmate_tos.txt` landed on the General sink and
+  reached case (1): "" returned, silently, correctly, and the LG08/LG09 hard
+  gates never applied. The filename decided whether the gates ran. Fixed
+  upstream: ContextBuilder now falls back to document-content resolution on
+  the General sink only (never overriding a stem match, so LW-1 routing is
+  byte-identical), and RuntimeContext.domain_resolution declares the
+  provenance in the transparency report. This module is unchanged: General
+  having no catalog was never the lie - claiming the document was General was.
 
 SCOPE OF WHAT GOES INSIDE THE MARKERS (per variant, decided during migration):
   Include:  severity taxonomy, GEOFENCE / tier-shift rules, "Domain Rules"
@@ -143,7 +159,8 @@ def load_domain_catalog(domain: str, prompts_dir: str) -> str:
             f"this domain's binding severity rules will NOT reach the Forense N1 "
             f"prompts; severity falls back to generic model judgement. Check "
             f"prompts_dir (config key 'prompts_dir' / env DS_PROMPTS_DIR; the "
-            f"'./prompts' default resolves against the CWD, not the repo root)."
+            f"default is anchored to <repo>/prompts since v3.24.0, so this "
+            f"usually means DS_PROMPTS_DIR is set wrong or prompts/ moved)."
         )
         _cache[key] = ""
         return ""
