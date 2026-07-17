@@ -148,18 +148,25 @@ Y `subscenario-keyword` dice textualmente *«matched a keyword in the SUBSCENARI
 
 ---
 
-## 🔴 ACCIÓN DE CIERRE PENDIENTE, SIN VERIFICAR
+## ✅ INCIDENTE DE CREDENCIAL — CERRADO EN s41
 
-**`NVIDIA_NIM_API_KEY` COMPROMETIDA.** En s41 JARP pegó el `.env` completo de `~/.fcc/` en el chat, en texto plano. La key (`nvapi-wkEM…`, org `JARP`, key `dark-strategist`, 12 meses) quedó en el transcript de claude.ai. **Se pidió rotación dos veces; JARP no respondió. NO SE PUEDE DAR POR HECHA.**
+**`NVIDIA_NIM_API_KEY` fue COMPROMETIDA y ROTADA en la misma sesión.** JARP pegó el `.env` completo de `~/.fcc/` en el chat, en texto plano; la key (`nvapi-wkEM…`, org `JARP`, key `dark-strategist`, 12 meses) quedó en el transcript de claude.ai.
 
-Agravante: `HOST=0.0.0.0` → `/v1/messages` escucha en toda la LAN.
+**Cerrado:** JARP **revocó `dark-strategist` en build.nvidia.com** (la revocación es la acción; emitir una nueva NO invalida la vieja), emitió `dark-strategist-2`, y la cargó editando `~/.fcc/.env` directo. Verificado por JARP con el filtro que no imprime secretos. **Declarado por JARP, no verificable por Claude** (sin acceso al portal). **Verificación indirecta en s42: el proxy arranca y un agente contesta.**
 
-**Acción: revocar `dark-strategist` en build.nvidia.com, emitir nueva, cargar por la Admin UI** (que para *escribir* secretos sí sirve; el agujero del hallazgo #7 es solo para vaciarlos).
+⚠️ **Pendiente menor:** `HOST=0.0.0.0` → `/v1/messages` escucha en toda la LAN.
 
-**Regla nueva: NUNCA volcar un `.env` completo a una conversación.**
+**Reglas firmes que deja el incidente:**
+- **NUNCA volcar un `.env` completo a una conversación.** Filtrar siempre:
 ```powershell
 Get-Content "$env:USERPROFILE\.fcc\.env" | Where-Object { $_ -notmatch '(KEY|TOKEN|SECRET)=.+' }
 ```
+- Para leer estado sin exponer valores:
+```powershell
+Get-Content "$env:USERPROFILE\.fcc\.env" | Where-Object { $_ -match '^(NVIDIA_NIM_API_KEY|ANTHROPIC_AUTH_TOKEN)=' } | ForEach-Object { ($_ -split '=')[0] + " -> " + $(if (($_ -split '=',2)[1]) { "con valor ($((($_ -split '=',2)[1]).Length) chars)" } else { "VACIO" }) }
+```
+- **El badge `CONFIGURED` de la Admin UI significa «la variable no está vacía». NO significa válida.** Mostró `CONFIGURED` con la key ya revocada adentro. Mismo patrón que LW-8: un indicador que informa presencia y se lee como corrección.
+- **Las credenciales se pisan por `notepad` sobre `~/.fcc/.env`, no por la Admin UI.** La UI es write-only/replace-only (hallazgo #7) y la tarjeta del provider ni siquiera expone input. El `.env` es la fuente; la UI solo lo escribe. **El `.env` se lee al ARRANQUE: editarlo con el server corriendo no cambia nada hasta reiniciar.**
 
 ---
 
